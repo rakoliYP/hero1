@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>견습에서 전설까지 v3.4 : 나만의 모험가 키우기</title>
+<title>견습에서 전설까지 v3.5 : 나만의 모험가 키우기</title>
 <style>
   :root {
     --bg-main: #0a0d14;
@@ -738,7 +738,7 @@
 <div class="container">
   <header>
     <div class="logo-title">
-      <h1>⚔️ 견습에서 전설까지 <span style="font-size: 0.72rem; background: #f59e0b22; color: var(--primary); padding: 2px 7px; border-radius: 10px; border: 1px solid #f59e0b44;">v3.4</span></h1>
+      <h1>⚔️ 견습에서 전설까지 <span style="font-size: 0.72rem; background: #f59e0b22; color: var(--primary); padding: 2px 7px; border-radius: 10px; border: 1px solid #f59e0b44;">v3.5</span></h1>
       <p>15세 견습생부터 전설의 영웅까지 · 나만의 모험가 육성기</p>
     </div>
     <div class="header-actions">
@@ -1088,10 +1088,11 @@
           </div>
 
           <div style="font-size: 0.78rem; color: #cbd5e1; background: #0c1424; padding: 8px 10px; border-radius: 8px; width: 100%; text-align: left; line-height: 1.45; border: 1px solid #1e293b;">
-            🔥 <b>v3.4 대장간 핵심 규칙</b>:<br>
-            • <b>모든 구간 3% 확률로 2단계 대성공(+2강)</b> 발동!<br>
-            • <b>5강마다(+5, 10, 15, 20) 스탯 폭증 보너스</b>가 직업 주력 전투력에 즉시 반영!<br>
-            • <b>+1~14강</b>: 실패 시 등급 유지 | <b>+15~20강</b>: 실패 시 <b>1강만 하락</b>
+            🔥 <b>v3.5 대장간 핵심 규칙</b>:<br>
+            • <b>1~10강 90% 고정</b> | <b>11~15강 88%~80%</b> | <b>16~20강 75%~55%</b><br>
+            • <b>전 구간 3% 확률로 2단계 대성공(+2강)</b> 발동!<br>
+            • <b>5강마다(+5, 10, 15, 20) 스탯 폭증</b> | <b>15강부터 실패 시 1강 하락</b><br>
+            • 고강화 단계는 많은 골드가 소모되어 신중한 도전이 필요합니다.
           </div>
 
           <!-- Rapid Feedback Toast directly above forge button -->
@@ -1474,9 +1475,19 @@ const QUEST_MASTER_POOL = [
   { id: 'q15', title: '신화적 드래곤 비늘 수확', minRank: 'S', reqStat: 'def', reqVal: 85, hpCost: 55, gold: 12000, fame: 260, statReward: { stat: 'def', val: 5 }, desc: '드래곤 서식지에서 최고급 자재 채취. [방어 +5]' }
 ];
 
+// v3.5 Requested Enhancement Rates: 1~10 (90% fixed), 11~15 (-2% each), 16~20 (-5% each)
 const FORGE_RATES = [
-  100, 100, 100, 95, 90, 85, 80, 75, 70, 65, 60, 55, 50, 45, 40,
-  35, 30, 25, 20, 15
+  90, 90, 90, 90, 90, 90, 90, 90, 90, 90, // 0~9 -> +1~10강 (90% 고정)
+  88, 86, 84, 82, 80,                     // 10~14 -> +11~15강 (90%에서 2%씩 감소)
+  75, 70, 65, 60, 55                      // 15~19 -> +16~20강 (80%에서 5%씩 감소)
+];
+
+// v3.5 High-Stakes Gold Costs (Makes 20강 rare and valuable, prevents cheap spam)
+const FORGE_COSTS = [
+  150, 220, 320, 450, 650,        // +1~5강
+  950, 1400, 2000, 2900, 4200,    // +6~10강
+  6000, 8500, 12000, 17000, 24000,// +11~15강
+  33000, 45000, 60000, 80000, 110000 // +16~20강
 ];
 
 /* ==================== STATE ==================== */
@@ -1945,7 +1956,7 @@ function takeRestAction() {
   advanceSeason();
 }
 
-/* ==================== FORGE & SEPARATE SHOP TABS (v3.4) ==================== */
+/* ==================== FORGE & SEPARATE SHOP TABS (v3.5) ==================== */
 function openForgeModal() {
   playSound('click');
   switchForgeSubTab('upgrade');
@@ -1998,7 +2009,7 @@ function selectForgeTarget(type) {
     failPenalty = '⚠️ 1강 하락 (파손 없음)';
   }
 
-  let cost = Math.round(45 * Math.pow(1.21, curPlus));
+  let cost = curPlus < 20 ? FORGE_COSTS[curPlus] : FORGE_COSTS[19];
   document.getElementById('forgeRateSuccess').textContent = curPlus >= 20 ? 'MAX' : (successRate + '%');
   document.getElementById('forgeRateFailPenalty').textContent = failPenalty;
   document.getElementById('forgeCost').textContent = curPlus >= 20 ? '최고단계' : (cost.toLocaleString() + ' G');
@@ -2019,7 +2030,7 @@ function attemptForge() {
     return;
   }
 
-  let cost = Math.round(45 * Math.pow(1.21, curPlus));
+  let cost = curPlus < 20 ? FORGE_COSTS[curPlus] : FORGE_COSTS[19];
   if (state.gold < cost) {
     showForgeToast('downgrade', '❌ 골드가 부족합니다! 던전이나 의뢰를 완수하고 오세요.');
     return;
