@@ -2,8 +2,8 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>견습에서 전설까지 v3.0 : 나만의 모험가 키우기</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>견습에서 전설까지 : 나만의 모험가 키우기 (Mobile Optimized)</title>
 <style>
   :root {
     --bg-main: #0a0d14;
@@ -21,7 +21,14 @@
     --gold: #fbbf24;
   }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Pretendard", "Segoe UI", Roboto, sans-serif; }
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Pretendard", "Segoe UI", Roboto, sans-serif;
+    word-break: keep-all;
+    -webkit-tap-highlight-color: transparent;
+  }
 
   body {
     background-color: var(--bg-main);
@@ -30,7 +37,8 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 16px;
+    padding: 12px;
+    padding-bottom: 32px;
   }
 
   .container {
@@ -38,32 +46,33 @@
     max-width: 960px;
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 12px;
   }
 
+  /* Header */
   header {
     background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
     border: 1px solid var(--border);
     border-radius: 14px;
-    padding: 16px 22px;
+    padding: 14px 18px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.4);
   }
 
   .logo-title h1 {
-    font-size: 1.35rem;
+    font-size: 1.25rem;
     font-weight: 800;
     color: var(--primary);
     display: flex;
     align-items: center;
-    gap: 8px;
-    letter-spacing: -0.5px;
+    gap: 6px;
+    letter-spacing: -0.3px;
   }
 
   .logo-title p {
-    font-size: 0.82rem;
+    font-size: 0.8rem;
     color: var(--text-muted);
     margin-top: 2px;
   }
@@ -87,58 +96,78 @@
     padding: 8px 12px;
     border-radius: 8px;
     font-size: 0.82rem;
-    font-weight: 600;
+    font-weight: 700;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.15s ease;
   }
 
-  .tab-btn:hover { background: var(--bg-card-hover); color: var(--text-main); }
+  .tab-btn:active { transform: scale(0.96); }
   .tab-btn.active {
     background: var(--primary);
     color: #0b0f19;
     border-color: var(--primary);
-    font-weight: 700;
+    font-weight: 800;
   }
 
   .btn-new-char-header {
     background: #334155;
     border: 1px solid var(--border);
     color: #cbd5e1;
-    padding: 7px 10px;
+    padding: 8px 10px;
     border-radius: 8px;
-    font-size: 0.78rem;
-    font-weight: 600;
+    font-size: 0.8rem;
+    font-weight: 700;
     cursor: pointer;
     display: flex;
     align-items: center;
     gap: 4px;
-    transition: all 0.2s ease;
   }
-  .btn-new-char-header:hover { background: #475569; color: #fff; }
+  .btn-new-char-header:active { transform: scale(0.96); background: #475569; }
 
-  /* Grid Layout */
+  /* Grid Layout (Desktop vs Mobile) */
   .game-grid {
     display: grid;
     grid-template-columns: 320px 1fr;
-    gap: 16px;
+    gap: 12px;
   }
 
-  @media (max-width: 820px) {
-    .game-grid { grid-template-columns: 1fr; }
-    header { flex-direction: column; gap: 12px; align-items: flex-start; }
-    .header-actions { width: 100%; justify-content: space-between; overflow-x: auto; }
+  @media (max-width: 768px) {
+    body { padding: 8px; padding-bottom: 24px; }
+    .container { gap: 10px; }
+    header {
+      flex-direction: column;
+      gap: 10px;
+      align-items: flex-start;
+      padding: 12px 14px;
+    }
+    .header-actions {
+      width: 100%;
+      justify-content: space-between;
+    }
+    .nav-tabs {
+      flex: 1;
+      overflow-x: auto;
+    }
+    .tab-btn {
+      padding: 8px 10px;
+      font-size: 0.78rem;
+      white-space: nowrap;
+    }
+    .game-grid {
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
   }
 
-  /* Left Panel */
+  /* Character Panel */
   .char-panel {
     background: var(--bg-card);
     border: 1px solid var(--border);
     border-radius: 14px;
-    padding: 20px;
+    padding: 16px;
     display: flex;
     flex-direction: column;
-    gap: 14px;
-    height: fit-content;
+    gap: 12px;
   }
 
   .char-header {
@@ -146,7 +175,7 @@
     align-items: center;
     justify-content: space-between;
     border-bottom: 1px solid var(--border);
-    padding-bottom: 12px;
+    padding-bottom: 10px;
   }
 
   .char-identity h2 {
@@ -161,15 +190,16 @@
     font-size: 0.82rem;
     color: #60a5fa;
     margin-top: 2px;
-    font-weight: 600;
+    font-weight: 700;
   }
 
   .badge-rank {
-    font-size: 0.85rem;
-    font-weight: 800;
-    padding: 4px 10px;
-    border-radius: 6px;
+    font-size: 0.88rem;
+    font-weight: 900;
+    padding: 5px 12px;
+    border-radius: 8px;
     text-transform: uppercase;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
   }
 
   .rank-F { background: #334155; color: #cbd5e1; }
@@ -182,30 +212,29 @@
   .rank-LEGEND { background: linear-gradient(135deg, #701a75, #c026d3); color: #fdf4ff; box-shadow: 0 0 15px rgba(232,121,249,0.7); }
 
   .passive-badge {
-    background: #1e293b;
-    border: 1px solid #334155;
-    padding: 8px 10px;
-    border-radius: 8px;
-    font-size: 0.78rem;
-    line-height: 1.4;
+    background: #111a2e;
+    border: 1px solid #233453;
+    padding: 10px 12px;
+    border-radius: 10px;
+    font-size: 0.82rem;
+    line-height: 1.45;
   }
-
-  .passive-title { color: var(--gold); font-weight: 700; margin-bottom: 2px; }
+  .passive-title { color: var(--gold); font-weight: 800; margin-bottom: 2px; }
 
   .status-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-size: 0.88rem;
+    font-size: 0.9rem;
   }
 
   .gauge-wrap {
     width: 100%;
-    background: #0f172a;
-    height: 10px;
-    border-radius: 5px;
+    background: #090e17;
+    height: 12px;
+    border-radius: 6px;
     overflow: hidden;
-    margin-top: 4px;
+    margin-top: 5px;
     border: 1px solid #1e293b;
   }
 
@@ -216,7 +245,7 @@
     background: linear-gradient(135deg, #1e293b 0%, #172554 100%);
     border: 1px solid #2563eb66;
     border-radius: 10px;
-    padding: 12px;
+    padding: 12px 14px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -224,24 +253,29 @@
 
   .stats-matrix {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(4, 1fr);
     gap: 8px;
-    background: #0c121e;
-    padding: 12px;
+    background: #090e17;
+    padding: 10px;
     border-radius: 10px;
     border: 1px solid var(--border);
+    text-align: center;
+  }
+
+  @media (max-width: 400px) {
+    .stats-matrix { grid-template-columns: repeat(2, 1fr); }
   }
 
   .stat-item { display: flex; flex-direction: column; gap: 2px; }
-  .stat-label { font-size: 0.75rem; color: var(--text-muted); font-weight: 600; }
-  .stat-value { font-size: 1.05rem; font-weight: 800; color: #ffffff; }
+  .stat-label { font-size: 0.76rem; color: var(--text-muted); font-weight: 700; }
+  .stat-value { font-size: 1.1rem; font-weight: 900; color: #ffffff; }
 
   .equipment-box {
-    background: #0c121e;
+    background: #090e17;
     border-radius: 10px;
     padding: 12px;
     border: 1px solid var(--border);
-    font-size: 0.82rem;
+    font-size: 0.85rem;
     display: flex;
     flex-direction: column;
     gap: 8px;
@@ -255,46 +289,50 @@
     border-bottom: 1px dashed #1e293b;
   }
   .equip-slot:last-child { border-bottom: none; }
-  .equip-name { font-weight: 700; color: #e2e8f0; }
+  .equip-name { font-weight: 800; color: #e2e8f0; }
 
   /* Right Action Area */
   .action-panel {
     background: var(--bg-card);
     border: 1px solid var(--border);
     border-radius: 14px;
-    padding: 20px;
+    padding: 16px;
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 14px;
   }
 
   .turn-banner {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: #0c121e;
+    background: #090e17;
     border: 1px solid var(--border);
-    padding: 12px 18px;
+    padding: 12px 16px;
     border-radius: 10px;
   }
 
-  .turn-info { font-size: 1.05rem; font-weight: 800; }
-  .season-tag { color: var(--primary); margin-left: 6px; }
+  .turn-info { font-size: 1.1rem; font-weight: 900; }
+  .season-tag { color: var(--primary); margin-left: 4px; }
 
   .gold-fame {
     display: flex;
-    gap: 16px;
+    gap: 14px;
     font-size: 0.95rem;
-    font-weight: 700;
+    font-weight: 800;
   }
   .gold-val { color: var(--gold); }
   .fame-val { color: #38bdf8; }
 
-  /* Main Action Grid */
+  /* Actions Grid: Large Mobile-friendly Buttons */
   .actions-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(135px, 1fr));
+    grid-template-columns: repeat(2, 1fr);
     gap: 10px;
+  }
+
+  @media (min-width: 600px) {
+    .actions-grid { grid-template-columns: repeat(3, 1fr); }
   }
 
   .act-btn {
@@ -302,86 +340,70 @@
     border: 1px solid var(--border);
     color: var(--text-main);
     padding: 14px 10px;
-    border-radius: 10px;
-    font-weight: 700;
-    font-size: 0.9rem;
+    min-height: 72px;
+    border-radius: 12px;
+    font-weight: 800;
+    font-size: 0.92rem;
     cursor: pointer;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 6px;
-    transition: all 0.2s ease;
+    justify-content: center;
+    gap: 4px;
+    transition: all 0.15s ease;
+    text-align: center;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.25);
   }
 
-  .act-btn .icon { font-size: 1.5rem; }
-  .act-btn .desc { font-size: 0.72rem; color: var(--text-muted); font-weight: 400; text-align: center; }
+  .act-btn .icon { font-size: 1.4rem; }
+  .act-btn .desc { font-size: 0.72rem; color: var(--text-muted); font-weight: 500; line-height: 1.2; }
 
-  .act-btn:hover:not(:disabled) {
-    background: var(--bg-card-hover);
-    border-color: var(--primary);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 14px rgba(0,0,0,0.3);
+  .act-btn:active {
+    transform: scale(0.97);
+    filter: brightness(1.15);
   }
 
   .act-btn.primary-act {
     background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
     border-color: #3b82f6;
   }
-  .act-btn.primary-act:hover:not(:disabled) {
-    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-    border-color: #60a5fa;
-  }
-
   .act-btn.forge-act {
     background: linear-gradient(135deg, #78350f 0%, #92400e 100%);
     border-color: #f59e0b;
   }
-  .act-btn.forge-act:hover:not(:disabled) {
-    background: linear-gradient(135deg, #92400e 0%, #b45309 100%);
-    border-color: #fbbf24;
-  }
-
   .act-btn.boss-act {
     background: linear-gradient(135deg, #881337 0%, #9f1239 100%);
     border-color: #f43f5e;
   }
-  .act-btn.boss-act:hover:not(:disabled) {
-    background: linear-gradient(135deg, #9f1239 0%, #be123c 100%);
-    border-color: #fb7185;
-  }
-
-  .act-btn:disabled {
-    opacity: 0.4;
-    cursor: not-allowed;
-    transform: none !important;
+  .act-btn.retire-act {
+    grid-column: 1 / -1;
+    min-height: 52px;
+    background: #1e1b2e;
+    border-color: #7f1d1d;
+    padding: 10px;
   }
 
   /* Log Area */
   .log-container {
-    background: #090d16;
+    background: #070a10;
     border: 1px solid #1a2333;
     border-radius: 10px;
-    padding: 14px;
-    height: 250px;
+    padding: 12px;
+    height: 220px;
     overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
     display: flex;
     flex-direction: column;
     gap: 8px;
-    font-size: 0.85rem;
+    font-size: 0.88rem;
     line-height: 1.45;
   }
 
   .log-entry {
     padding: 8px 12px;
-    border-radius: 6px;
+    border-radius: 8px;
     background: #111827;
     border-left: 4px solid #374151;
-    animation: fadeIn 0.2s ease-in;
-  }
-
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(4px); }
-    to { opacity: 1; transform: translateY(0); }
   }
 
   .log-entry.dungeon { border-left-color: #3b82f6; }
@@ -391,19 +413,19 @@
   .log-entry.rank { border-left-color: #a855f7; background: #191424; }
   .log-entry.forge { border-left-color: #f97316; background: #1f1610; }
 
-  .log-season { color: var(--text-muted); font-size: 0.72rem; margin-right: 6px; }
+  .log-season { color: var(--text-muted); font-size: 0.75rem; margin-right: 4px; }
 
-  /* Modals */
+  /* Modals (Responsive Bottom-sheet style on Mobile) */
   .modal-overlay {
     display: none;
     position: fixed;
     top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.8);
+    background: rgba(0,0,0,0.82);
     backdrop-filter: blur(4px);
     z-index: 100;
     justify-content: center;
     align-items: center;
-    padding: 16px;
+    padding: 12px;
   }
 
   .modal-box {
@@ -412,65 +434,97 @@
     border-radius: 16px;
     width: 100%;
     max-width: 620px;
-    padding: 24px;
+    max-height: 90vh;
+    padding: 20px;
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 14px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+    overflow: hidden;
   }
 
-  .modal-box h3 { font-size: 1.25rem; font-weight: 800; color: var(--text-main); display: flex; align-items: center; gap: 8px; }
-  .modal-content { display: flex; flex-direction: column; gap: 12px; }
+  @media (max-width: 600px) {
+    .modal-overlay {
+      align-items: flex-end;
+      padding: 0;
+    }
+    .modal-box {
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+      max-height: 88vh;
+      padding: 16px;
+    }
+  }
 
-  .item-list { display: flex; flex-direction: column; gap: 8px; max-height: 400px; overflow-y: auto; }
+  .modal-box h3 { font-size: 1.2rem; font-weight: 800; color: var(--text-main); display: flex; align-items: center; gap: 8px; }
+  .item-list { display: flex; flex-direction: column; gap: 8px; overflow-y: auto; -webkit-overflow-scrolling: touch; padding-right: 4px; }
   
   .item-row {
-    background: #0c121e;
+    background: #090e17;
     border: 1px solid var(--border);
-    padding: 12px;
+    padding: 12px 14px;
     border-radius: 10px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
+  }
+
+  @media (max-width: 480px) {
+    .item-row {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 10px;
+    }
+    .item-row .btn-group {
+      display: grid !important;
+      grid-template-columns: 1fr 1fr;
+      width: 100%;
+    }
   }
 
   .item-row-info { display: flex; flex-direction: column; gap: 3px; flex: 1; }
-  .item-row-title { font-weight: 700; font-size: 0.92rem; display: flex; align-items: center; gap: 6px; }
-  .item-row-desc { font-size: 0.78rem; color: var(--text-muted); line-height: 1.35; }
+  .item-row-title { font-weight: 800; font-size: 0.95rem; display: flex; align-items: center; gap: 6px; }
+  .item-row-desc { font-size: 0.8rem; color: var(--text-muted); line-height: 1.35; }
 
   .btn-sm {
-    padding: 8px 16px;
+    padding: 10px 16px;
+    min-height: 42px;
     border-radius: 8px;
     border: none;
-    font-size: 0.85rem;
-    font-weight: 700;
+    font-size: 0.88rem;
+    font-weight: 800;
     cursor: pointer;
     background: var(--primary);
     color: #000;
-    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     white-space: nowrap;
+    transition: all 0.15s ease;
   }
-  .btn-sm:hover:not(:disabled) { background: var(--primary-hover); }
+  .btn-sm:active { transform: scale(0.96); }
   .btn-sm:disabled { opacity: 0.35; cursor: not-allowed; }
 
   .btn-close {
     background: #334155;
     color: #fff;
     border: none;
-    padding: 10px;
-    border-radius: 8px;
+    padding: 12px;
+    border-radius: 10px;
     cursor: pointer;
-    font-weight: 600;
+    font-weight: 800;
+    font-size: 0.95rem;
+    text-align: center;
   }
-  .btn-close:hover { background: #475569; }
+  .btn-close:active { background: #475569; }
 
   /* Forge UI */
   .forge-display {
-    background: #090e18;
-    border: 2px dashed #f59e0b44;
+    background: #070a10;
+    border: 2px dashed #f59e0b55;
     border-radius: 12px;
-    padding: 20px;
+    padding: 16px;
     text-align: center;
     display: flex;
     flex-direction: column;
@@ -478,50 +532,53 @@
     gap: 12px;
   }
 
-  .forge-item-title { font-size: 1.3rem; font-weight: 900; }
+  .forge-item-title { font-size: 1.25rem; font-weight: 900; }
   .forge-rate-box {
     display: flex;
-    gap: 14px;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
     font-size: 0.88rem;
-    background: #131d2e;
-    padding: 8px 18px;
-    border-radius: 20px;
+    background: #111a2e;
+    padding: 8px 16px;
+    border-radius: 12px;
     border: 1px solid #1e2e47;
+    width: 100%;
   }
 
-  /* Combat Duel UI */
+  /* Duel Arena UI */
   .duel-arena {
-    background: #090e18;
+    background: #070a10;
     border: 1px solid var(--border);
     border-radius: 12px;
-    padding: 16px;
+    padding: 14px;
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 12px;
   }
 
   .duel-combatants {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 16px;
+    gap: 10px;
   }
 
   .combatant-card {
-    background: #131d2e;
+    background: #111a2e;
     border-radius: 10px;
-    padding: 12px;
+    padding: 10px;
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 5px;
   }
 
   .combat-log {
-    height: 120px;
-    background: #060911;
+    height: 110px;
+    background: #05070c;
     border-radius: 8px;
     padding: 10px;
     overflow-y: auto;
-    font-size: 0.8rem;
+    font-size: 0.82rem;
     display: flex;
     flex-direction: column;
     gap: 4px;
@@ -533,29 +590,31 @@
     grid-template-columns: 1fr 1fr;
     gap: 8px;
   }
+  .combat-btns .btn-sm { min-height: 48px; }
 
-  /* Ranking table */
+  /* Ranking Table */
   .ranking-table {
     width: 100%;
     border-collapse: collapse;
     font-size: 0.85rem;
-    margin-top: 10px;
+    margin-top: 8px;
   }
   .ranking-table th, .ranking-table td {
-    padding: 10px;
+    padding: 10px 8px;
     text-align: left;
     border-bottom: 1px solid var(--border);
   }
-  .ranking-table th { background: #0c121e; color: var(--text-muted); }
-  .ranking-table tr:hover { background: var(--bg-card-hover); }
+  .ranking-table th { background: #070a10; color: var(--text-muted); font-size: 0.8rem; }
 
   .sound-btn {
     background: transparent;
     border: none;
     color: var(--text-muted);
     cursor: pointer;
-    font-size: 1.15rem;
-    padding: 4px;
+    font-size: 1.25rem;
+    padding: 6px;
+    display: flex;
+    align-items: center;
   }
 </style>
 </head>
@@ -564,23 +623,23 @@
 <div class="container">
   <header>
     <div class="logo-title">
-      <h1>⚔️ 견습에서 전설까지 <span style="font-size: 0.75rem; background: #f59e0b22; color: var(--primary); padding: 2px 8px; border-radius: 12px; border: 1px solid #f59e0b44;">v3.0 Balanced</span></h1>
-      <p>부드러운 20강 강화 곡선 · 풍부한 의뢰 성장 · 피로도 없는 원클릭 던전 탐험</p>
+      <h1>⚔️ 견습에서 전설까지 <span style="font-size: 0.72rem; background: #f59e0b22; color: var(--primary); padding: 2px 7px; border-radius: 10px; border: 1px solid #f59e0b44;">v3.0 Mobile</span></h1>
+      <p>15세 견습생부터 전설의 영웅까지 · 나만의 모험가 육성기</p>
     </div>
     <div class="header-actions">
       <div class="nav-tabs">
-        <button class="tab-btn active" id="tabPlay" onclick="switchTab('play')">모험 진행</button>
+        <button class="tab-btn active" id="tabPlay" onclick="switchTab('play')">모험</button>
         <button class="tab-btn" id="tabHall" onclick="switchTab('hall')">명예의 전당</button>
-        <button class="tab-btn" id="tabData" onclick="switchTab('data')">데이터 관리</button>
+        <button class="tab-btn" id="tabData" onclick="switchTab('data')">데이터</button>
       </div>
-      <button class="btn-new-char-header" onclick="openNewGameModal()" title="새로운 모험가 생성">🔄 새 게임</button>
+      <button class="btn-new-char-header" onclick="openNewGameModal()" title="새 모험가 생성">🔄 새 게임</button>
       <button class="sound-btn" id="sndToggle" onclick="toggleSound()" title="사운드 토글">🔊</button>
     </div>
   </header>
 
   <!-- PLAY VIEW -->
   <div id="viewPlay" class="game-grid">
-    <!-- Left: Character Panel (No more accidental new character button!) -->
+    <!-- Character Panel -->
     <div class="char-panel">
       <div class="char-header">
         <div class="char-identity">
@@ -593,13 +652,13 @@
       <!-- Class Passive Badge -->
       <div class="passive-badge" id="uiPassive">
         <div class="passive-title">고유 특성: 강철의 의지</div>
-        <div id="uiPassiveDesc" style="color: #cbd5e1;">받는 피해 20% 감소, 던전 보스에게 치명타율 +20%</div>
+        <div id="uiPassiveDesc" style="color: #cbd5e1;">받는 피해 20% 감소, 던전 보스 치명타 +20%</div>
       </div>
 
       <div>
         <div class="status-row">
-          <span style="color: var(--text-muted); font-weight: 600;">생명력 (HP)</span>
-          <span id="uiHpText" style="font-weight: 800;">120 / 120</span>
+          <span style="color: var(--text-muted); font-weight: 700;">생명력 (HP)</span>
+          <span id="uiHpText" style="font-weight: 900; color:#fff;">120 / 120</span>
         </div>
         <div class="gauge-wrap">
           <div class="gauge-bar hp-bar" id="uiHpBar" style="width: 100%;"></div>
@@ -608,148 +667,142 @@
 
       <div class="overall-power">
         <div>
-          <div style="font-size: 0.75rem; color: #93c5fd; font-weight: 700;">종합 전투력 (CP)</div>
-          <div style="font-size: 1.4rem; font-weight: 900; color: #fff;" id="uiCp">48</div>
+          <div style="font-size: 0.78rem; color: #93c5fd; font-weight: 800;">종합 전투력 (CP)</div>
+          <div style="font-size: 1.45rem; font-weight: 900; color: #fff;" id="uiCp">48</div>
         </div>
         <div style="text-align: right;">
-          <div style="font-size: 0.75rem; color: var(--text-muted);">전투 등급 환산</div>
-          <div style="font-size: 0.85rem; font-weight: 700; color: #facc15;" id="uiTierEstimate">최하위 견습생</div>
+          <div style="font-size: 0.75rem; color: var(--text-muted);">전투 등급</div>
+          <div style="font-size: 0.88rem; font-weight: 800; color: #facc15;" id="uiTierEstimate">최하위 견습생</div>
         </div>
       </div>
 
       <div class="stats-matrix">
         <div class="stat-item">
-          <span class="stat-label">⚔️ 근력 (STR)</span>
+          <span class="stat-label">⚔️ 근력</span>
           <span class="stat-value" id="uiStr">18</span>
         </div>
         <div class="stat-item">
-          <span class="stat-label">✨ 마력 (INT)</span>
+          <span class="stat-label">✨ 마력</span>
           <span class="stat-value" id="uiInt">6</span>
         </div>
         <div class="stat-item">
-          <span class="stat-label">🏃 민첩 (DEX)</span>
+          <span class="stat-label">🏃 민첩</span>
           <span class="stat-value" id="uiDex">10</span>
         </div>
         <div class="stat-item">
-          <span class="stat-label">🛡️ 방어 (DEF)</span>
+          <span class="stat-label">🛡️ 방어</span>
           <span class="stat-value" id="uiDef">14</span>
         </div>
       </div>
 
       <div class="equipment-box">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px;">
-          <span style="font-size: 0.78rem; font-weight: 700; color: var(--text-muted);">장착 전용 장비</span>
-          <span style="font-size: 0.72rem; color: #f59e0b;">최대 +20강 강화 가능</span>
-        </div>
         <div class="equip-slot">
-          <span style="color: var(--text-muted);">무기:</span>
+          <span style="color: var(--text-muted); font-weight:600;">무기:</span>
           <span class="equip-name" id="uiWeapon">훈련용 대검 (+0)</span>
         </div>
         <div class="equip-slot">
-          <span style="color: var(--text-muted);">방어구:</span>
+          <span style="color: var(--text-muted); font-weight:600;">방어구:</span>
           <span class="equip-name" id="uiArmor">가죽 덧댄 갑옷 (+0)</span>
         </div>
         <div class="equip-slot">
-          <span style="color: var(--text-muted);">장신구:</span>
+          <span style="color: var(--text-muted); font-weight:600;">장신구:</span>
           <span class="equip-name" id="uiArtifact">용기의 부적</span>
         </div>
       </div>
     </div>
 
-    <!-- Right: Actions & Log Panel -->
+    <!-- Actions & Logs -->
     <div class="action-panel">
       <div class="turn-banner">
         <div class="turn-info">
           <span id="uiAge">15</span>세 <span class="season-tag" id="uiSeason">🌸 봄</span>
-          <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: normal; margin-left: 8px;" id="uiCareerTurn">(활동 1년차)</span>
+          <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600; margin-left: 6px;" id="uiCareerTurn">(1년차)</span>
         </div>
         <div class="gold-fame">
           <div>💰 <span class="gold-val" id="uiGold">150</span> G</div>
-          <div>🎖️ 명성 <span class="fame-val" id="uiFame">10</span></div>
+          <div>🎖️ <span class="fame-val" id="uiFame">10</span></div>
         </div>
       </div>
 
-      <!-- Action Buttons Grid -->
+      <!-- Action Buttons Grid (Touch-Friendly) -->
       <div class="actions-grid">
         <button class="act-btn primary-act" onclick="openDungeonSelectModal()">
           <span class="icon">🗺️</span>
-          <span>12단계 던전 탐험</span>
-          <span class="desc">피로도 없는 1클릭 파밍·토벌</span>
+          <span>12단계 던전</span>
+          <span class="desc">1클릭 파밍·토벌</span>
         </button>
 
         <button class="act-btn" onclick="openQuestBoardModal()">
           <span class="icon">📜</span>
-          <span>길드 의뢰 게시판</span>
-          <span class="desc">시즌 6종 의뢰 · 스탯 동반 성장</span>
+          <span>길드 의뢰 (6건)</span>
+          <span class="desc">스탯 영구 성장</span>
         </button>
 
         <button class="act-btn" onclick="openTrainingModal()">
           <span class="icon">🏋️</span>
           <span>스탯 집중 수련</span>
-          <span class="desc">체력 20 소모 · 능력치 성장</span>
+          <span class="desc">체력 20 소모</span>
         </button>
 
         <button class="act-btn" onclick="takeRestAction()">
           <span class="icon">🏨</span>
           <span>여관 휴식 / 치료</span>
-          <span class="desc">체력 완전 회복 (골드 소모)</span>
+          <span class="desc">HP 100% 회복</span>
         </button>
 
         <button class="act-btn forge-act" onclick="openForgeModal()">
           <span class="icon">🔨</span>
-          <span>대장간 강화 (+20강)</span>
-          <span class="desc">안전 강화 ~14강 / 15강부터 하락</span>
+          <span>대장간 강화 (+20)</span>
+          <span class="desc">장비 강화 & 상점</span>
         </button>
 
         <button class="act-btn boss-act" id="btnExam" onclick="openPromotionModal()">
           <span class="icon">⚔️</span>
           <span id="txtExamBtn">승급 결투 심사</span>
-          <span class="desc" id="txtExamDesc">심사관과 턴제 대련</span>
+          <span class="desc" id="txtExamDesc">1:1 실시간 대련</span>
         </button>
 
-        <button class="act-btn" id="btnRetire" style="grid-column: span 2; border-color: #b91c1c;" onclick="confirmRetirement()">
-          <span class="icon">📜</span>
-          <span>명예로운 은퇴 선언 (커리어 정산)</span>
-          <span class="desc">모험을 마치고 명예의 전당에 영구 등재합니다</span>
+        <button class="act-btn retire-act" id="btnRetire" onclick="confirmRetirement()">
+          <span>📜 명예로운 은퇴 선언 (커리어 정산 및 전당 등재)</span>
         </button>
       </div>
 
       <!-- Activity Log -->
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px;">
-        <span style="font-size: 0.85rem; font-weight: 700; color: var(--text-muted);">모험 일지 (활동 로그)</span>
-        <button onclick="clearLogs()" style="background:none; border:none; color: var(--text-muted); font-size: 0.75rem; cursor:pointer;">기록 비우기</button>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 2px;">
+        <span style="font-size: 0.88rem; font-weight: 800; color: var(--text-muted);">활동 일지 (모험 기록)</span>
+        <button onclick="clearLogs()" style="background:none; border:none; color: var(--text-muted); font-size: 0.78rem; cursor:pointer;">기록 비우기</button>
       </div>
       <div class="log-container" id="logBox"></div>
     </div>
   </div>
 
   <!-- HALL OF FAME VIEW -->
-  <div id="viewHall" style="display: none; background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 24px;">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+  <div id="viewHall" style="display: none; background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 18px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
       <div>
-        <h2 style="font-size: 1.3rem; color: var(--primary);">🏛️ 명예의 전당 (역대 은퇴 모험가 랭킹)</h2>
-        <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 4px;">도전 끝에 은퇴한 모험가들의 최종 기록과 평점입니다.</p>
+        <h2 style="font-size: 1.25rem; color: var(--primary);">🏛️ 명예의 전당 (역대 랭킹)</h2>
+        <p style="font-size: 0.82rem; color: var(--text-muted);">은퇴한 모험가들의 최종 기록입니다.</p>
       </div>
       <div style="display: flex; gap: 8px;">
         <button class="btn-sm" style="background: #10b981;" onclick="openNewGameModal()">✨ 새 모험가 생성</button>
-        <button class="btn-sm" onclick="exportSaveData()">기록 내보내기</button>
+        <button class="btn-sm" onclick="exportSaveData()">내보내기</button>
       </div>
     </div>
 
-    <div style="overflow-x: auto;">
+    <div style="overflow-x: auto; -webkit-overflow-scrolling: touch;">
       <table class="ranking-table">
         <thead>
           <tr>
             <th>순위</th>
-            <th>모험가</th>
+            <th>이름</th>
             <th>클래스</th>
-            <th>최종 등급</th>
-            <th>활동 기간</th>
+            <th>등급</th>
+            <th>활동</th>
             <th>최고 CP</th>
             <th>명성</th>
-            <th>처치 보스</th>
-            <th>은퇴 후 생애</th>
-            <th>최종 평점</th>
+            <th>보스</th>
+            <th>생애</th>
+            <th>평점</th>
           </tr>
         </thead>
         <tbody id="hallTableBody"></tbody>
@@ -758,54 +811,51 @@
   </div>
 
   <!-- DATA VIEW -->
-  <div id="viewData" style="display: none; background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 24px; display: flex; flex-direction: column; gap: 16px;">
-    <h2 style="font-size: 1.25rem; color: var(--text-main);">💾 데이터 백업 및 초기화</h2>
-    <p style="font-size: 0.85rem; color: var(--text-muted);">브라우저에 저장된 진행 상황과 랭킹 데이터를 파일로 관리합니다.</p>
+  <div id="viewData" style="display: none; background: var(--bg-card); border: 1px solid var(--border); border-radius: 14px; padding: 18px; display: flex; flex-direction: column; gap: 14px;">
+    <h2 style="font-size: 1.25rem; color: var(--text-main);">💾 데이터 백업 및 복원</h2>
+    <p style="font-size: 0.82rem; color: var(--text-muted);">브라우저 저장소의 진행 상황을 파일로 보관하거나 가져옵니다.</p>
 
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
-      <div style="background: #0c121e; padding: 18px; border-radius: 10px; border: 1px solid var(--border); display: flex; flex-direction: column; gap: 10px;">
-        <h3 style="font-size: 1rem; color: #60a5fa;">📤 세이브 데이터 내보내기</h3>
-        <p style="font-size: 0.8rem; color: var(--text-muted);">현재 모험가 데이터와 명예의 전당을 JSON 파일로 저장합니다.</p>
-        <button class="btn-sm" style="align-self: flex-start;" onclick="exportSaveData()">파일로 저장하기 (.json)</button>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+      <div style="background: #090e17; padding: 14px; border-radius: 10px; border: 1px solid var(--border); display: flex; flex-direction: column; gap: 8px;">
+        <h3 style="font-size: 0.95rem; color: #60a5fa;">📤 세이브 내보내기</h3>
+        <p style="font-size: 0.78rem; color: var(--text-muted);">현재 모험가 및 전당 기록을 JSON으로 저장합니다.</p>
+        <button class="btn-sm" onclick="exportSaveData()">파일로 저장</button>
       </div>
 
-      <div style="background: #0c121e; padding: 18px; border-radius: 10px; border: 1px solid var(--border); display: flex; flex-direction: column; gap: 10px;">
-        <h3 style="font-size: 1rem; color: #34d399;">📥 세이브 데이터 가져오기</h3>
-        <p style="font-size: 0.8rem; color: var(--text-muted);">백업해 둔 JSON 파일을 업로드하여 진행 상태를 복원합니다.</p>
+      <div style="background: #090e17; padding: 14px; border-radius: 10px; border: 1px solid var(--border); display: flex; flex-direction: column; gap: 8px;">
+        <h3 style="font-size: 0.95rem; color: #34d399;">📥 세이브 불러오기</h3>
+        <p style="font-size: 0.78rem; color: var(--text-muted);">저장된 JSON 백업 파일을 업로드합니다.</p>
         <input type="file" id="fileImport" accept=".json" style="display: none;" onchange="importSaveData(event)">
-        <button class="btn-sm" style="align-self: flex-start; background: #10b981;" onclick="document.getElementById('fileImport').click()">파일 불러오기</button>
+        <button class="btn-sm" style="background: #10b981;" onclick="document.getElementById('fileImport').click()">파일 불러오기</button>
       </div>
     </div>
 
-    <div style="margin-top: 10px; padding-top: 16px; border-top: 1px solid var(--border);">
-      <button class="btn-sm" style="background: #ef4444; color: #fff;" onclick="resetAllData()">⚠️ 모든 데이터 완전 초기화</button>
+    <div style="margin-top: 6px; padding-top: 14px; border-top: 1px solid var(--border);">
+      <button class="btn-sm" style="background: #ef4444; color: #fff; width: 100%;" onclick="resetAllData()">⚠️ 데이터 완전 초기화</button>
     </div>
   </div>
 </div>
 
 <!-- ==================== MODALS ==================== -->
 
-<!-- MODAL: 12 DUNGEONS SELECT & 1-CLICK TACTICAL DASHBOARD -->
+<!-- MODAL: 12 DUNGEONS SELECT -->
 <div class="modal-overlay" id="modalDungeonSelect">
-  <div class="modal-box" style="max-width: 680px;">
+  <div class="modal-box">
     <h3>🗺️ 12단계 던전 공략소</h3>
     <p style="font-size: 0.82rem; color: var(--text-muted);">
-      원하는 던전을 선택한 후 전략(전력 돌파 or 신중한 파밍)을 선택하면 불필요한 반복 클릭 없이 1클릭으로 공략 결과를 확인합니다.
+      원하는 던전과 전술을 누르면 1클릭으로 탐험과 보스 토벌을 진행합니다.
     </p>
     <div class="item-list" id="dungeonSelectList"></div>
     <button class="btn-close" onclick="closeModal('modalDungeonSelect')">닫기</button>
   </div>
 </div>
 
-<!-- MODAL: GUILD QUEST BOARD (EXPANDED 6 ACTIVE QUESTS + STAT GROWTH) -->
+<!-- MODAL: GUILD QUEST BOARD -->
 <div class="modal-overlay" id="modalQuestBoard">
-  <div class="modal-box" style="max-width: 650px;">
-    <div style="display: flex; justify-content: space-between; align-items: center;">
-      <h3>📜 길드 의뢰 게시판 (시즌 6건 공시)</h3>
-      <span style="font-size: 0.78rem; color: var(--primary);">완수 시 골드·명성 + 스탯 영구 성장!</span>
-    </div>
+  <div class="modal-box">
+    <h3>📜 길드 의뢰 게시판 (시즌 6건)</h3>
     <p style="font-size: 0.82rem; color: var(--text-muted);">
-      다양한 난이도의 의뢰가 상시 배치됩니다. 1턴에 1개의 의뢰를 수주할 수 있으며 수련을 대신할 만큼 강력한 성장을 제공합니다.
+      완수 시 골드·명성과 함께 <b>스탯이 영구 성장</b>합니다.
     </p>
     <div class="item-list" id="questBoardList"></div>
     <button class="btn-close" onclick="closeModal('modalQuestBoard')">닫기</button>
@@ -817,7 +867,7 @@
   <div class="modal-box">
     <h3>🏋️ 스탯 집중 수련</h3>
     <p style="font-size: 0.82rem; color: var(--text-muted);">
-      1분기 동안 육체를 한계까지 단련합니다. 체력 20이 소모됩니다. 마법사는 INT 수련 시 1.5배 보너스를 받습니다.
+      1분기 동안 육체를 한계까지 단련합니다. 체력 20이 소모됩니다.
     </p>
     <div class="item-list">
       <div class="item-row">
@@ -829,22 +879,22 @@
       </div>
       <div class="item-row">
         <div class="item-row-info">
-          <div class="item-row-title">✨ 고대 마도서 명상 및 마나 정제</div>
-          <div class="item-row-desc">마력(INT) +3~6 (마법사 클래스는 추가 보너스!)</div>
+          <div class="item-row-title">✨ 고대 마도서 명상</div>
+          <div class="item-row-desc">마력(INT) +3~6 (마법사는 1.5배 보너스!)</div>
         </div>
         <button class="btn-sm" onclick="trainStat('int')">마력 수련</button>
       </div>
       <div class="item-row">
         <div class="item-row-info">
-          <div class="item-row-title">🏃 고난도 장애물 주파 및 반사신경 훈련</div>
+          <div class="item-row-title">🏃 고난도 장애물 주파</div>
           <div class="item-row-desc">민첩(DEX) +3~6 (체력 -20)</div>
         </div>
         <button class="btn-sm" onclick="trainStat('dex')">민첩 수련</button>
       </div>
       <div class="item-row">
         <div class="item-row-info">
-          <div class="item-row-title">🛡️ 방패 방호술 및 맷집 극대화 훈련</div>
-          <div class="item-row-desc">방어(DEF) +3~6, 최대 HP +15 영구 증가 (체력 -20)</div>
+          <div class="item-row-title">🛡️ 방패술 및 맷집 단련</div>
+          <div class="item-row-desc">방어(DEF) +3~6, 최대 HP +15 영구 증가</div>
         </div>
         <button class="btn-sm" onclick="trainStat('def')">방어 수련</button>
       </div>
@@ -853,24 +903,23 @@
   </div>
 </div>
 
-<!-- MODAL: FORGE & 20-STAGE UPGRADE (BALANCED CURVE, NO BREAKAGE) -->
+<!-- MODAL: FORGE -->
 <div class="modal-overlay" id="modalForge">
-  <div class="modal-box" style="max-width: 620px;">
+  <div class="modal-box">
     <div style="display: flex; justify-content: space-between; align-items: center;">
       <h3>🔨 대장간 제련소 (최대 +20강)</h3>
       <div style="display: flex; gap: 6px;">
-        <button class="btn-sm" id="btnForgeTabUpgrade" onclick="switchForgeSubTab('upgrade')">장비 강화</button>
-        <button class="btn-sm" id="btnForgeTabShop" style="background: #334155; color: #fff;" onclick="switchForgeSubTab('shop')">직업 장비 구매</button>
+        <button class="btn-sm" id="btnForgeTabUpgrade" style="padding: 6px 12px; min-height: 36px;" onclick="switchForgeSubTab('upgrade')">강화</button>
+        <button class="btn-sm" id="btnForgeTabShop" style="padding: 6px 12px; min-height: 36px; background: #334155; color: #fff;" onclick="switchForgeSubTab('shop')">상점</button>
       </div>
     </div>
 
-    <!-- SubTab: Upgrade -->
-    <div id="forgeSubUpgrade" style="display: flex; flex-direction: column; gap: 14px;">
+    <!-- Upgrade SubTab -->
+    <div id="forgeSubUpgrade" style="display: flex; flex-direction: column; gap: 12px;">
       <div class="forge-display">
-        <div style="font-size: 0.8rem; color: var(--text-muted);">강화 대상 선택</div>
-        <div style="display: flex; gap: 8px;">
-          <button class="btn-sm" id="btnTargetWpn" onclick="selectForgeTarget('weapon')">무기</button>
-          <button class="btn-sm" id="btnTargetArm" style="background:#334155; color:#fff;" onclick="selectForgeTarget('armor')">방어구</button>
+        <div style="display: flex; gap: 8px; width: 100%;">
+          <button class="btn-sm" id="btnTargetWpn" style="flex:1;" onclick="selectForgeTarget('weapon')">무기 강화</button>
+          <button class="btn-sm" id="btnTargetArm" style="flex:1; background:#334155; color:#fff;" onclick="selectForgeTarget('armor')">방어구 강화</button>
         </div>
 
         <div class="forge-item-title" id="forgeItemName">훈련용 대검 (+0)</div>
@@ -878,27 +927,26 @@
 
         <div class="forge-rate-box">
           <div>성공 확률: <b id="forgeRateSuccess" style="color: #10b981;">100%</b></div>
-          <div>실패 시: <b id="forgeRateFailPenalty" style="color: #60a5fa;">등급 유지 (안전)</b></div>
+          <div>실패 시: <b id="forgeRateFailPenalty" style="color: #60a5fa;">유지 (안전)</b></div>
           <div>비용: <b id="forgeCost" style="color: var(--gold);">50 G</b></div>
         </div>
 
-        <div style="font-size: 0.78rem; color: #cbd5e1; background: #0c1424; padding: 10px; border-radius: 8px; width: 100%; text-align: left; line-height: 1.5; border: 1px solid #1e293b;">
-          🛡️ <b>v3.0 강화 안전 규칙</b>:<br>
-          • <b>+1~14강</b>: 실패해도 등급 하락 없음 (100% 유지, 안전 도전 구간)<br>
-          • <b>+15~20강</b>: 실패 시에만 1~2단계 하락 (<b>파손 및 파괴 완전 삭제!</b>)<br>
-          • 성공 확률이 완만하게 감소하여 납득할 수 있는 도전이 가능합니다.
+        <div style="font-size: 0.8rem; color: #cbd5e1; background: #0c1424; padding: 10px; border-radius: 8px; width: 100%; text-align: left; line-height: 1.45; border: 1px solid #1e293b;">
+          🛡️ <b>안전 강화 규칙</b>:<br>
+          • <b>+1~14강</b>: 실패해도 등급 하락 없음 (100% 유지)<br>
+          • <b>+15~20강</b>: 실패 시에만 1~2단계 하락 (<b>파손 없음</b>)
         </div>
 
-        <button class="btn-sm" id="btnDoForge" style="padding: 14px 28px; font-size: 1.05rem; background: linear-gradient(135deg, #f59e0b, #d97706);" onclick="attemptForge()">
+        <button class="btn-sm" id="btnDoForge" style="width: 100%; padding: 14px; font-size: 1.05rem; background: linear-gradient(135deg, #f59e0b, #d97706);" onclick="attemptForge()">
           🔥 망치질하기 (강화 시도)
         </button>
       </div>
     </div>
 
-    <!-- SubTab: Exclusive Shop -->
+    <!-- Shop SubTab -->
     <div id="forgeSubShop" style="display: none; flex-direction: column; gap: 10px;">
-      <p style="font-size: 0.8rem; color: var(--text-muted);">
-        현재 클래스 <b id="shopClassNotice" style="color: #60a5fa;">[전사]</b> 전용 고유 무기 및 방어구 목록입니다.
+      <p style="font-size: 0.82rem; color: var(--text-muted);">
+        현재 클래스 <b id="shopClassNotice" style="color: #60a5fa;">[전사]</b> 전용 장비 목록입니다.
       </p>
       <div class="item-list" id="classShopList"></div>
     </div>
@@ -909,32 +957,32 @@
 
 <!-- MODAL: PROMOTION DUEL -->
 <div class="modal-overlay" id="modalPromotion">
-  <div class="modal-box" style="max-width: 620px;">
-    <h3>⚔️ 길드 승급 심사 : 1:1 진검 대련</h3>
+  <div class="modal-box">
+    <h3>⚔️ 길드 승급 심사 : 1:1 대련</h3>
     <div class="duel-arena">
       <div class="duel-combatants">
         <div class="combatant-card">
-          <div style="font-weight: 700; color: #fff;" id="duelMyName">카엘 (도전자)</div>
-          <div style="font-size: 0.8rem; color: #94a3b8;">체력: <b id="duelMyHp">120</b> / <span id="duelMyMaxHp">120</span></div>
+          <div style="font-weight: 800; font-size: 0.88rem; color: #fff;" id="duelMyName">카엘 (도전자)</div>
+          <div style="font-size: 0.8rem; color: #94a3b8;">HP: <b id="duelMyHp">120</b>/<span id="duelMyMaxHp">120</span></div>
           <div class="gauge-wrap"><div class="gauge-bar hp-bar" id="duelMyHpBar" style="width: 100%;"></div></div>
         </div>
 
-        <div class="combatant-card" style="border: 1px solid #ef444444;">
-          <div style="font-weight: 700; color: #f87171;" id="duelBossName">E급 수석 심사관 바르톨</div>
-          <div style="font-size: 0.8rem; color: #94a3b8;">체력: <b id="duelBossHp">180</b> / <span id="duelBossMaxHp">180</span></div>
+        <div class="combatant-card" style="border: 1px solid #ef444455;">
+          <div style="font-weight: 800; font-size: 0.88rem; color: #f87171;" id="duelBossName">E급 심사관 바르톨</div>
+          <div style="font-size: 0.8rem; color: #94a3b8;">HP: <b id="duelBossHp">180</b>/<span id="duelBossMaxHp">180</span></div>
           <div class="gauge-wrap"><div class="gauge-bar hp-bar" id="duelBossHpBar" style="width: 100%; background: #ef4444;"></div></div>
         </div>
       </div>
 
       <div class="combat-log" id="duelLog">
-        <div>[심사관] "자, 자세를 잡게나! 자격이 있는지 직접 확인하겠네!"</div>
+        <div>[심사관] "자세를 잡게나! 자격이 있는지 확인하겠네!"</div>
       </div>
 
       <div class="combat-btns" id="duelActionBtns">
         <button class="btn-sm" onclick="duelTurn('attack')">⚔️ 일반 공격</button>
         <button class="btn-sm" id="btnDuelSkill" style="background: #3b82f6; color:#fff;" onclick="duelTurn('skill')">✨ 직업 고유기</button>
-        <button class="btn-sm" style="background: #059669; color:#fff;" onclick="duelTurn('guard')">🛡️ 철벽 방어 (피해 70% 경감)</button>
-        <button class="btn-sm" id="btnDuelPotion" style="background: #e11d48; color:#fff;" onclick="duelTurn('potion')">🧪 비장의 영약 (+50 HP / 1회)</button>
+        <button class="btn-sm" style="background: #059669; color:#fff;" onclick="duelTurn('guard')">🛡️ 철벽 방어</button>
+        <button class="btn-sm" id="btnDuelPotion" style="background: #e11d48; color:#fff;" onclick="duelTurn('potion')">🧪 영약 (+50 HP)</button>
       </div>
     </div>
     <button class="btn-close" id="btnDuelClose" onclick="closeModal('modalPromotion')">기권 / 닫기</button>
@@ -945,63 +993,59 @@
 <div class="modal-overlay" id="modalNewChar">
   <div class="modal-box">
     <h3>✨ 새로운 모험가 등록</h3>
-    <p style="font-size: 0.85rem; color: var(--text-muted);">각 클래스는 고유의 패시브, 전용 장비군, 특화 스탯이 완전히 다릅니다.</p>
+    <p style="font-size: 0.85rem; color: var(--text-muted);">직업별 패시브와 전용 장비가 다릅니다.</p>
     
     <div style="display: flex; gap: 8px;">
-      <input type="text" id="inCharName" placeholder="모험가 이름" style="flex: 1; padding: 10px; background: #0c121e; border: 1px solid var(--border); border-radius: 8px; color: #fff;">
+      <input type="text" id="inCharName" placeholder="모험가 이름" style="flex: 1; padding: 12px; background: #070a10; border: 1px solid var(--border); border-radius: 8px; color: #fff; font-size: 1rem;">
       <button class="btn-sm" onclick="randomizeName()">주사위 🎲</button>
     </div>
 
-    <div style="display: flex; flex-direction: column; gap: 8px;">
-      <label style="font-size: 0.82rem; color: var(--text-muted); font-weight: 700;">직업(클래스) 선택:</label>
-      
-      <div style="display: flex; flex-direction: column; gap: 8px;">
-        <label style="background: #0c121e; border: 1px solid var(--border); padding: 10px; border-radius: 8px; cursor: pointer; display: flex; gap: 10px; align-items: flex-start;">
-          <input type="radio" name="charClassRadio" value="warrior" checked style="margin-top: 4px;">
-          <div>
-            <div style="font-weight: 700; color: #f87171;">⚔️ 전사 (Warrior)</div>
-            <div style="font-size: 0.78rem; color: var(--text-muted);">높은 체력과 근력 특화. [패시브: 받는 피해 20% 감소, 던전 보스 치명타율 +20%]. 전용 대검·판금갑옷 착용.</div>
-          </div>
-        </label>
+    <div style="display: flex; flex-direction: column; gap: 8px; max-height: 280px; overflow-y: auto;">
+      <label style="background: #070a10; border: 1px solid var(--border); padding: 12px; border-radius: 8px; cursor: pointer; display: flex; gap: 10px;">
+        <input type="radio" name="charClassRadio" value="warrior" checked style="margin-top: 3px;">
+        <div>
+          <div style="font-weight: 800; color: #f87171;">⚔️ 전사 (Warrior)</div>
+          <div style="font-size: 0.8rem; color: var(--text-muted);">받는 피해 20% 감소, 보스 치명타 +20%. 전용 대검·판금갑옷.</div>
+        </div>
+      </label>
 
-        <label style="background: #0c121e; border: 1px solid var(--border); padding: 10px; border-radius: 8px; cursor: pointer; display: flex; gap: 10px; align-items: flex-start;">
-          <input type="radio" name="charClassRadio" value="mage" style="margin-top: 4px;">
-          <div>
-            <div style="font-weight: 700; color: #60a5fa;">✨ 마법사 (Mage)</div>
-            <div style="font-size: 0.78rem; color: var(--text-muted);">압도적 마력 폭발. [패시브: 수련 시 INT 1.5배, 전투 시 30% 확률 광역 마법]. 전용 지팡이·로브 착용.</div>
-          </div>
-        </label>
+      <label style="background: #070a10; border: 1px solid var(--border); padding: 12px; border-radius: 8px; cursor: pointer; display: flex; gap: 10px;">
+        <input type="radio" name="charClassRadio" value="mage" style="margin-top: 3px;">
+        <div>
+          <div style="font-weight: 800; color: #60a5fa;">✨ 마법사 (Mage)</div>
+          <div style="font-size: 0.8rem; color: var(--text-muted);">INT 수련 1.5배, 전투 시 30% 광역 마법. 전용 지팡이·로브.</div>
+        </div>
+      </label>
 
-        <label style="background: #0c121e; border: 1px solid var(--border); padding: 10px; border-radius: 8px; cursor: pointer; display: flex; gap: 10px; align-items: flex-start;">
-          <input type="radio" name="charClassRadio" value="rogue" style="margin-top: 4px;">
-          <div>
-            <div style="font-weight: 700; color: #34d399;">🗡️ 도적 (Rogue)</div>
-            <div style="font-size: 0.78rem; color: var(--text-muted);">민첩과 행운의 지배자. [패시브: 회피율 30%, 골드/전리품 +35%, 패배 시 무피해 도주]. 전용 단검·은신복 착용.</div>
-          </div>
-        </label>
+      <label style="background: #070a10; border: 1px solid var(--border); padding: 12px; border-radius: 8px; cursor: pointer; display: flex; gap: 10px;">
+        <input type="radio" name="charClassRadio" value="rogue" style="margin-top: 3px;">
+        <div>
+          <div style="font-weight: 800; color: #34d399;">🗡️ 도적 (Rogue)</div>
+          <div style="font-size: 0.8rem; color: var(--text-muted);">전투 회피 30%, 보상 골드 +35%, 패배 시 도주. 전용 단검·은신복.</div>
+        </div>
+      </label>
 
-        <label style="background: #0c121e; border: 1px solid var(--border); padding: 10px; border-radius: 8px; cursor: pointer; display: flex; gap: 10px; align-items: flex-start;">
-          <input type="radio" name="charClassRadio" value="paladin" style="margin-top: 4px;">
-          <div>
-            <div style="font-weight: 700; color: #fbbf24;">🛡️ 성기사 (Paladin)</div>
-            <div style="font-size: 0.78rem; color: var(--text-muted);">불멸의 유지력. [패시브: 턴 종료 시 HP +15 자가 회복, 언데드 추가 피해 100%, 1회 부활]. 전용 메이스·성갑 착용.</div>
-          </div>
-        </label>
-      </div>
+      <label style="background: #070a10; border: 1px solid var(--border); padding: 12px; border-radius: 8px; cursor: pointer; display: flex; gap: 10px;">
+        <input type="radio" name="charClassRadio" value="paladin" style="margin-top: 3px;">
+        <div>
+          <div style="font-weight: 800; color: #fbbf24;">🛡️ 성기사 (Paladin)</div>
+          <div style="font-size: 0.8rem; color: var(--text-muted);">턴 종료 시 HP +15 자가 회복, 언데드 피해 100%, 1회 부활.</div>
+        </div>
+      </label>
     </div>
 
-    <button class="btn-sm" style="padding: 14px; font-size: 1rem;" onclick="startNewCareerFromModal()">모험 시작하기 (15세 봄)</button>
+    <button class="btn-sm" style="padding: 14px; font-size: 1rem; width: 100%;" onclick="startNewCareerFromModal()">모험 시작 (15세 봄)</button>
     <button class="btn-close" onclick="closeModal('modalNewChar')">취소</button>
   </div>
 </div>
 
-<!-- MODAL: RETIREMENT SUMMARY (PROMINENT NEW HERO BUTTON DISPLAYED HERE!) -->
+<!-- MODAL: RETIREMENT SUMMARY -->
 <div class="modal-overlay" id="modalSummary">
-  <div class="modal-box" style="max-width: 580px;">
+  <div class="modal-box">
     <h3 style="color: var(--primary);">📜 모험가 커리어 정산서</h3>
     <div id="summaryContent" class="modal-content"></div>
-    <div style="display: flex; gap: 8px; margin-top: 6px;">
-      <button class="btn-sm" style="flex: 1; padding: 14px; font-size: 1rem; background: linear-gradient(135deg, #10b981, #059669); color:#fff;" onclick="closeSummaryAndStartNew()">
+    <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 6px;">
+      <button class="btn-sm" style="padding: 14px; font-size: 1rem; background: linear-gradient(135deg, #10b981, #059669); color:#fff; width: 100%;" onclick="closeSummaryAndStartNew()">
         ✨ 새로운 모험가 키우기 (새 시작)
       </button>
       <button class="btn-close" onclick="closeSummaryAndGoHall()">명예의 전당 보기</button>
@@ -1083,56 +1127,54 @@ const CLASS_CONFIG = {
   warrior: {
     name: '전사 (Warrior)',
     passive: '강철의 의지',
-    passiveDesc: '받는 피해 20% 감소, 던전 보스에게 치명타율 +20%',
+    passiveDesc: '받는 피해 20% 감소, 던전 보스 치명타 +20%',
     baseHp: 120, baseStr: 18, baseInt: 6, baseDex: 10, baseDef: 14,
     wpnName: '훈련용 대검', armName: '가죽 덧댄 갑옷'
   },
   mage: {
     name: '마법사 (Mage)',
     passive: '마나 폭주',
-    passiveDesc: '수련 시 INT 1.5배, 전투 시 30% 확률 광역 마법 발동',
+    passiveDesc: 'INT 수련 1.5배, 전투 시 30% 광역 마법 발동',
     baseHp: 85, baseStr: 6, baseInt: 20, baseDex: 10, baseDef: 8,
     wpnName: '견습 마법봉', armName: '수습 사제복'
   },
   rogue: {
     name: '도적 (Rogue)',
     passive: '그림자 걸음 & 약탈',
-    passiveDesc: '전투 회피율 30%, 골드/전리품 +35%, 패배 시 도주',
+    passiveDesc: '전투 회피 30%, 골드/전리품 +35%, 패배 시 도주',
     baseHp: 95, baseStr: 10, baseInt: 8, baseDex: 20, baseDef: 9,
     wpnName: '훈련용 단검', armName: '가죽 은신 조끼'
   },
   paladin: {
     name: '성기사 (Paladin)',
     passive: '신의 은총',
-    passiveDesc: '매 턴 종료 시 HP +15 자가 회복, 언데드 추가 피해 100%, 1회 부활',
+    passiveDesc: '턴 종료 시 HP +15 자가 회복, 언데드 피해 100%, 1회 부활',
     baseHp: 115, baseStr: 13, baseInt: 12, baseDex: 8, baseDef: 18,
     wpnName: '은빛 메이스', armName: '축복받은 사슬 갑옷'
   }
 };
 
-// 12 Tiered Dungeons
 const DUNGEONS_12 = [
   { id: 1, name: '슬라임 웅덩이', reqCp: 35, boss: '킹 슬라임', hpCost: 15, gold: [40, 70], fame: 6, drop: '슬라임 젤리 코어' },
   { id: 2, name: '고블린 야영지', reqCp: 70, boss: '고블린 주술사', hpCost: 20, gold: [70, 130], fame: 12, drop: '주술사의 뼈 피리' },
   { id: 3, name: '도적단 비밀 요새', reqCp: 120, boss: '도적 두목 칼날손', hpCost: 25, gold: [130, 220], fame: 20, drop: '도적단의 금화 자루' },
   { id: 4, name: '음습한 독거미 굴', reqCp: 180, boss: '맹독 거미 여왕', hpCost: 30, gold: [200, 340], fame: 30, drop: '거미 여왕의 독주머니' },
   { id: 5, name: '버려진 폐광산', reqCp: 260, boss: '폭주한 채광 골렘', hpCost: 35, gold: [280, 480], fame: 45, drop: '미스릴 원석' },
-  { id: 6, name: '망자의 지하 묘지', reqCp: 380, boss: '데스 나이트', hpCost: 40, gold: [400, 680], fame: 65, drop: '망자의 차가운 숨결' },
-  { id: 7, name: '저주받은 늑대인간 숲', reqCp: 520, boss: '블러드 울프 로드', hpCost: 45, gold: [550, 950], fame: 90, drop: '핏빛 늑대의 송곳니' },
-  { id: 8, name: '오크 대요새 첨탑', reqCp: 700, boss: '강철의 오크 워로드', hpCost: 50, gold: [750, 1300], fame: 130, drop: '전쟁 군주의 깃발' },
-  { id: 9, name: '혹한의 골렘 설산', reqCp: 950, boss: '서리 거인 프로스트', hpCost: 60, gold: [1100, 1900], fame: 180, drop: '영구 동토의 심장' },
+  { id: 6, name: '망자의 지하 묘지', reqCp: 380, boss: '데스 나이트', hpCost: 40, gold: [400, 680], fame: 65, drop: '망자의 숨결' },
+  { id: 7, name: '저주받은 늑대인간 숲', reqCp: 520, boss: '블러드 울프 로드', hpCost: 45, gold: [550, 950], fame: 90, drop: '늑대의 송곳니' },
+  { id: 8, name: '오크 대요새 첨탑', reqCp: 700, boss: '강철 오크 워로드', hpCost: 50, gold: [750, 1300], fame: 130, drop: '전쟁 군주의 깃발' },
+  { id: 9, name: '혹한의 골렘 설산', reqCp: 950, boss: '서리 거인 프로스트', hpCost: 60, gold: [1100, 1900], fame: 180, drop: '동토의 심장' },
   { id: 10, name: '흑염룡의 활화산 둥지', reqCp: 1300, boss: '흑염룡 이그니스', hpCost: 70, gold: [1600, 2800], fame: 250, drop: '용의 심장 수정' },
   { id: 11, name: '고대 티탄의 심연 유적', reqCp: 1750, boss: '티탄의 거신상', hpCost: 80, gold: [2400, 4200], fame: 360, drop: '고대 티탄의 핵' },
   { id: 12, name: '혼돈의 마왕성 심연', reqCp: 2300, boss: '혼돈의 마왕 벨리알 (최종보스)', hpCost: 95, gold: [5000, 10000], fame: 600, drop: '종언의 묵시록' }
 ];
 
-// Exclusive Shop Items per Class
 const CLASS_SHOP_ITEMS = {
   warrior: [
     { id: 'w1', type: 'weapon', name: '강철 츠바이헨더', stat: 15, cost: 250, desc: '근력 +15' },
     { id: 'w2', type: 'weapon', name: '미스릴 클레이모어', stat: 35, cost: 800, desc: '근력 +35' },
     { id: 'w3', type: 'weapon', name: '용살자 바스타드소드', stat: 75, cost: 2200, desc: '근력 +75, 체력 +30' },
-    { id: 'w4', type: 'weapon', name: '파멸의 처형검 (종결)', stat: 140, cost: 6000, desc: '근력 +140, 보스 즉사율' },
+    { id: 'w4', type: 'weapon', name: '파멸의 처형검 (종결)', stat: 140, cost: 6000, desc: '근력 +140' },
     { id: 'a1', type: 'armor', name: '강철 판금 갑옷', stat: 18, cost: 250, desc: '방어 +18, HP +25' },
     { id: 'a2', type: 'armor', name: '티탄 사슬 중갑', stat: 40, cost: 800, desc: '방어 +40, HP +60' },
     { id: 'a3', type: 'armor', name: '드래곤 스케일 아머', stat: 85, cost: 2400, desc: '방어 +85, HP +140' }
@@ -1144,7 +1186,7 @@ const CLASS_SHOP_ITEMS = {
     { id: 'm4', type: 'weapon', name: '세계수의 아티팩트 완드', stat: 150, cost: 6000, desc: '마력 +150' },
     { id: 'ma1', type: 'armor', name: '실크 마도 로브', stat: 12, cost: 250, desc: '방어 +12, INT +5' },
     { id: 'ma2', type: 'armor', name: '대현자의 마도포', stat: 30, cost: 800, desc: '방어 +30, INT +15' },
-    { id: 'ma3', type: 'armor', name: '영원한 성좌의 천상의 로브', stat: 70, cost: 2400, desc: '방어 +70, INT +35' }
+    { id: 'ma3', type: 'armor', name: '천상의 로브', stat: 70, cost: 2400, desc: '방어 +70, INT +35' }
   ],
   rogue: [
     { id: 'r1', type: 'weapon', name: '그림자 비수', stat: 16, cost: 250, desc: '민첩 +16' },
@@ -1166,31 +1208,27 @@ const CLASS_SHOP_ITEMS = {
   ]
 };
 
-// Expanded Quest Pool (Includes Direct Stat Growth Rewards!)
 const QUEST_MASTER_POOL = [
-  { id: 'q1', title: '청정 약초 채집 및 호수 정화', minRank: 'F', reqStat: 'dex', reqVal: 8, hpCost: 12, gold: 90, fame: 8, statReward: { stat: 'dex', val: 1 }, desc: '길드 주변 약초 군락지 수색. [민첩 +1 성장]' },
-  { id: 'q2', title: '골목 치안 순찰 및 훈련 지원', minRank: 'F', reqStat: 'str', reqVal: 10, hpCost: 15, gold: 110, fame: 10, statReward: { stat: 'str', val: 1 }, desc: '마을 치안을 유지하며 체력 단련. [근력 +1 성장]' },
-  { id: 'q3', title: '길드 도서관 고문서 필사', minRank: 'F', reqStat: 'int', reqVal: 8, hpCost: 10, gold: 100, fame: 10, statReward: { stat: 'int', val: 1 }, desc: '고대 마법 서적을 정리하며 지식 축적. [마력 +1 성장]' },
-  { id: 'q4', title: '상단 수송 마차 호위', minRank: 'E', reqStat: 'str', reqVal: 16, hpCost: 18, gold: 200, fame: 18, statReward: { stat: 'str', val: 2 }, desc: '도적 출몰 가도를 지나는 상단 호위. [근력 +2 성장]' },
-  { id: 'q5', title: '광산 폭주 슬라임 방파제 구축', minRank: 'E', reqStat: 'def', reqVal: 15, hpCost: 20, gold: 220, fame: 20, statReward: { stat: 'def', val: 2 }, desc: '방패로 거센 점액질 파도를 저지. [방어 +2 성장]' },
-  { id: 'q6', title: '약초원 희귀 약초 감별 조사', minRank: 'E', reqStat: 'int', reqVal: 16, hpCost: 14, gold: 210, fame: 22, statReward: { stat: 'int', val: 2 }, desc: '독초와 영약을 분류하여 학술원에 납품. [마력 +2 성장]' },
-  { id: 'q7', title: '귀족 영애 비밀 호위 임무', minRank: 'D', reqStat: 'dex', reqVal: 24, hpCost: 22, gold: 420, fame: 35, statReward: { stat: 'dex', val: 2 }, desc: '암살자의 표적이 된 귀족을 안전하게 귀환. [민첩 +2 성장]' },
-  { id: 'q8', title: '고대 석판 암호 해독 및 결계 보강', minRank: 'D', reqStat: 'int', reqVal: 22, hpCost: 18, gold: 400, fame: 40, statReward: { stat: 'int', val: 2 }, desc: '유적에서 발굴된 주문서를 해석. [마력 +2 성장]' },
-  { id: 'q9', title: '지하 수로 흉포한 랫맨 소탕', minRank: 'D', reqStat: 'str', reqVal: 24, hpCost: 24, gold: 450, fame: 38, statReward: { stat: 'str', val: 2 }, desc: '도시 아래 번식한 쥐인간 무리 진압. [근력 +2 성장]' },
-  { id: 'q10', title: '위험 수배범 체포 및 현상금 수령', minRank: 'C', reqStat: 'str', reqVal: 36, hpCost: 30, gold: 750, fame: 70, statReward: { stat: 'str', val: 3 }, desc: '악명 높은 현상수배범과의 진검승부. [근력 +3 성장]' },
-  { id: 'q11', title: '고위 마법 결계 보수 의식', minRank: 'C', reqStat: 'int', reqVal: 35, hpCost: 22, gold: 720, fame: 75, statReward: { stat: 'int', val: 3 }, desc: '무너져가는 결계에 고농도 마나를 주입. [마력 +3 성장]' },
-  { id: 'q12', title: '국경 지대 분쟁 수비 용병 참전', minRank: 'B', reqStat: 'def', reqVal: 48, hpCost: 38, gold: 1350, fame: 130, statReward: { stat: 'def', val: 3 }, desc: '치열한 전선에서 성벽 진영을 사수. [방어 +3 성장]' },
-  { id: 'q13', title: '비밀 결사 암살단 본거지 급습', minRank: 'B', reqStat: 'dex', reqVal: 50, hpCost: 35, gold: 1400, fame: 140, statReward: { stat: 'dex', val: 3 }, desc: '어둠에 숨은 암살 길드를 궤멸. [민첩 +3 성장]' },
-  { id: 'q14', title: '대마수 토벌 연합군 선봉 돌격대', minRank: 'A', reqStat: 'str', reqVal: 68, hpCost: 45, gold: 2600, fame: 280, statReward: { stat: 'str', val: 4 }, desc: '왕국을 위협하는 대형 마수의 숨통을 끊음. [근력 +4 성장]' },
-  { id: 'q15', title: '신화적 고대 드래곤 비늘 수확', minRank: 'S', reqStat: 'def', reqVal: 85, hpCost: 55, gold: 4500, fame: 450, statReward: { stat: 'def', val: 5 }, desc: '잠든 드래곤의 서식지에서 최고급 자재 채취. [방어 +5 성장]' }
+  { id: 'q1', title: '청정 약초 채집 및 호수 정화', minRank: 'F', reqStat: 'dex', reqVal: 8, hpCost: 12, gold: 90, fame: 8, statReward: { stat: 'dex', val: 1 }, desc: '약초 군락지 수색. [민첩 +1]' },
+  { id: 'q2', title: '골목 치안 순찰 및 훈련 지원', minRank: 'F', reqStat: 'str', reqVal: 10, hpCost: 15, gold: 110, fame: 10, statReward: { stat: 'str', val: 1 }, desc: '마을 치안을 유지하며 체력 단련. [근력 +1]' },
+  { id: 'q3', title: '길드 도서관 고문서 필사', minRank: 'F', reqStat: 'int', reqVal: 8, hpCost: 10, gold: 100, fame: 10, statReward: { stat: 'int', val: 1 }, desc: '마법 서적 정리 및 지식 축적. [마력 +1]' },
+  { id: 'q4', title: '상단 수송 마차 호위', minRank: 'E', reqStat: 'str', reqVal: 16, hpCost: 18, gold: 200, fame: 18, statReward: { stat: 'str', val: 2 }, desc: '가도를 지나는 상단 호위. [근력 +2]' },
+  { id: 'q5', title: '광산 폭주 슬라임 방파제 구축', minRank: 'E', reqStat: 'def', reqVal: 15, hpCost: 20, gold: 220, fame: 20, statReward: { stat: 'def', val: 2 }, desc: '방패로 거센 점액질 파도 저지. [방어 +2]' },
+  { id: 'q6', title: '약초원 희귀 약초 감별 조사', minRank: 'E', reqStat: 'int', reqVal: 16, hpCost: 14, gold: 210, fame: 22, statReward: { stat: 'int', val: 2 }, desc: '독초와 영약을 분류하여 납품. [마력 +2]' },
+  { id: 'q7', title: '귀족 영애 비밀 호위 임무', minRank: 'D', reqStat: 'dex', reqVal: 24, hpCost: 22, gold: 420, fame: 35, statReward: { stat: 'dex', val: 2 }, desc: '암살자의 표적이 된 귀족 보호. [민첩 +2]' },
+  { id: 'q8', title: '고대 석판 암호 해독 및 결계 보강', minRank: 'D', reqStat: 'int', reqVal: 22, hpCost: 18, gold: 400, fame: 40, statReward: { stat: 'int', val: 2 }, desc: '유적에서 발굴된 주문서 해석. [마력 +2]' },
+  { id: 'q9', title: '지하 수로 랫맨 무리 소탕', minRank: 'D', reqStat: 'str', reqVal: 24, hpCost: 24, gold: 450, fame: 38, statReward: { stat: 'str', val: 2 }, desc: '도시 아래 쥐인간 무리 진압. [근력 +2]' },
+  { id: 'q10', title: '위험 수배범 체포 및 현상금 수령', minRank: 'C', reqStat: 'str', reqVal: 36, hpCost: 30, gold: 750, fame: 70, statReward: { stat: 'str', val: 3 }, desc: '현상수배범과의 진검승부. [근력 +3]' },
+  { id: 'q11', title: '고위 마법 결계 보수 의식', minRank: 'C', reqStat: 'int', reqVal: 35, hpCost: 22, gold: 720, fame: 75, statReward: { stat: 'int', val: 3 }, desc: '결계에 고농도 마나 주입. [마력 +3]' },
+  { id: 'q12', title: '국경 지대 분쟁 수비 용병 참전', minRank: 'B', reqStat: 'def', reqVal: 48, hpCost: 38, gold: 1350, fame: 130, statReward: { stat: 'def', val: 3 }, desc: '치열한 전선에서 진영 사수. [방어 +3]' },
+  { id: 'q13', title: '비밀 결사 암살단 본거지 급습', minRank: 'B', reqStat: 'dex', reqVal: 50, hpCost: 35, gold: 1400, fame: 140, statReward: { stat: 'dex', val: 3 }, desc: '어둠에 숨은 암살 길드 궤멸. [민첩 +3]' },
+  { id: 'q14', title: '대마수 토벌 연합군 선봉 돌격대', minRank: 'A', reqStat: 'str', reqVal: 68, hpCost: 45, gold: 2600, fame: 280, statReward: { stat: 'str', val: 4 }, desc: '대형 마수 토벌 선봉. [근력 +4]' },
+  { id: 'q15', title: '신화적 드래곤 비늘 수확', minRank: 'S', reqStat: 'def', reqVal: 85, hpCost: 55, gold: 4500, fame: 450, statReward: { stat: 'def', val: 5 }, desc: '드래곤 서식지에서 최고급 자재 채취. [방어 +5]' }
 ];
 
-// 20-Stage Smooth Success Rate Table
-// 0->1 : 100%, 14->15 : 40% (No failure penalty before 15)
-// 15->16 : 35%, ..., 19->20 : 15% (Failure: drops 1~2 levels, NEVER breaks)
 const FORGE_RATES = [
-  100, 100, 100, 95, 90, 85, 80, 75, 70, 65, 60, 55, 50, 45, 40, // 0~14 -> 1~15
-  35, 30, 25, 20, 15 // 15~19 -> 16~20
+  100, 100, 100, 95, 90, 85, 80, 75, 70, 65, 60, 55, 50, 45, 40,
+  35, 30, 25, 20, 15
 ];
 
 /* ==================== STATE ==================== */
@@ -1235,7 +1273,6 @@ function calculateCP() {
     statScore = state.def * 1.6 + state.str * 1.2 + state.int * 0.9 + state.dex * 0.5;
   }
 
-  // Equipment scaling with +20 stages
   const wpnBonus = state.weapon.power + (state.weapon.plus * (3.5 + state.weapon.plus * 0.4));
   const armBonus = state.armor.power + (state.armor.plus * (3.5 + state.armor.plus * 0.4));
   const hpBonus = state.maxHp * 0.2;
@@ -1280,12 +1317,12 @@ function updateUI() {
   document.getElementById('uiDef').textContent = state.def;
 
   const getPrefix = (plus) => {
-    if (plus >= 20) return '👑 [신화 MAX] ';
+    if (plus >= 20) return '👑 [신화] ';
     if (plus >= 18) return '⚡ [전설] ';
     if (plus >= 15) return '🔥 [불멸] ';
-    if (plus >= 12) return '✨ [찬란한] ';
-    if (plus >= 8) return '💎 [빛나는] ';
-    if (plus >= 4) return '⚔️ [예리한] ';
+    if (plus >= 12) return '✨ [찬란] ';
+    if (plus >= 8) return '💎 [빛남] ';
+    if (plus >= 4) return '⚔️ [예리] ';
     return '';
   };
 
@@ -1296,7 +1333,7 @@ function updateUI() {
   document.getElementById('uiAge').textContent = state.age;
   document.getElementById('uiSeason').textContent = SEASONS[state.seasonIdx];
   const year = Math.floor((state.turnCount - 1) / 4) + 1;
-  document.getElementById('uiCareerTurn').textContent = `(활동 ${year}년차 / 총 ${state.turnCount}분기)`;
+  document.getElementById('uiCareerTurn').textContent = `(${year}년차)`;
 
   document.getElementById('uiGold').textContent = state.gold.toLocaleString();
   document.getElementById('uiFame').textContent = state.fame.toLocaleString();
@@ -1304,7 +1341,7 @@ function updateUI() {
   const nextRankIdx = RANKS.indexOf(state.rank) + 1;
   if (nextRankIdx < RANKS.length) {
     document.getElementById('txtExamBtn').textContent = `${RANKS[nextRankIdx]}급 결투 심사`;
-    document.getElementById('txtExamDesc').textContent = '심사관과의 1:1 대련';
+    document.getElementById('txtExamDesc').textContent = '1:1 실시간 대련';
   } else {
     document.getElementById('txtExamBtn').textContent = '최고 등급 달성';
     document.getElementById('txtExamDesc').textContent = '대륙 최고의 영웅';
@@ -1363,7 +1400,6 @@ function advanceSeason() {
 }
 
 function refreshSeasonalQuests() {
-  // Always provide 6 diverse quests active every season
   const rankIdx = RANKS.indexOf(state.rank);
   const eligible = QUEST_MASTER_POOL.filter(q => RANKS.indexOf(q.minRank) <= rankIdx + 1);
   const shuffled = [...eligible].sort(() => 0.5 - Math.random());
@@ -1382,21 +1418,21 @@ function openDungeonSelectModal() {
     row.className = 'item-row';
     const isHard = myCp < d.reqCp;
     const diffColor = isHard ? '#ef4444' : (myCp > d.reqCp * 1.4 ? '#10b981' : '#f59e0b');
-    const diffText = isHard ? '위험 (전멸 주의)' : (myCp > d.reqCp * 1.4 ? '안전함' : '치열한 접전');
+    const diffText = isHard ? '위험' : (myCp > d.reqCp * 1.4 ? '안전' : '적정');
 
     row.innerHTML = `
       <div class="item-row-info">
         <div class="item-row-title">
           <span>${d.id}구역. ${d.name}</span>
-          <span style="font-size: 0.75rem; color: ${diffColor};">[권장 CP ${d.reqCp} / ${diffText}]</span>
+          <span style="font-size: 0.78rem; color: ${diffColor};">[CP ${d.reqCp} / ${diffText}]</span>
         </div>
         <div class="item-row-desc">
           보스: <b>${d.boss}</b> | 보상: ${d.gold[0]}~${d.gold[1]}G | 체력 소모: 약 ${d.hpCost}
         </div>
       </div>
-      <div style="display: flex; gap: 6px;">
-        <button class="btn-sm" style="background:#2563eb; color:#fff;" onclick="executeDungeonOneClick(${d.id}, 'rush')" title="보스까지 1클릭 전력 돌파">⚔️ 전력 공략</button>
-        <button class="btn-sm" style="background:#059669; color:#fff;" onclick="executeDungeonOneClick(${d.id}, 'safe')" title="체력을 아끼며 보물 우선 파밍">🛡️ 안전 파밍</button>
+      <div class="btn-group" style="display: flex; gap: 6px;">
+        <button class="btn-sm" style="background:#2563eb; color:#fff;" onclick="executeDungeonOneClick(${d.id}, 'rush')">⚔️ 전력 공략</button>
+        <button class="btn-sm" style="background:#059669; color:#fff;" onclick="executeDungeonOneClick(${d.id}, 'safe')">🛡️ 안전 파밍</button>
       </div>
     `;
     list.appendChild(row);
@@ -1418,7 +1454,6 @@ function executeDungeonOneClick(dungeonId, mode) {
   const myCp = calculateCP();
   let baseHpLoss = d.hpCost;
 
-  // Class traits
   if (state.charClass === 'warrior') baseHpLoss = Math.round(baseHpLoss * 0.8);
   if (mode === 'safe') baseHpLoss = Math.round(baseHpLoss * 0.65);
 
@@ -1456,14 +1491,12 @@ function executeDungeonOneClick(dungeonId, mode) {
 
     addLog(`👑 [${d.name}] 토벌 성공! 보스 <b>${d.boss}</b> 격파! (+${goldEarned}G, 명성 +${fameEarned}, HP -${baseHpLoss})${dropLog}`, 'dungeon');
 
-    // Demon King Ending
     if (d.id === 12) {
       alert('축하합니다!! 대륙을 위협하던 혼돈의 마왕 벨리알을 쓰러뜨리고 전설의 영웅이 되었습니다!');
       retireHero('대륙의 구원자 (마왕 토벌 진엔딩)');
       return;
     }
   } else {
-    // Loss
     playSound('fail');
     if (state.charClass === 'rogue') {
       state.hp = Math.max(5, state.hp - Math.round(baseHpLoss * 0.5));
@@ -1478,7 +1511,7 @@ function executeDungeonOneClick(dungeonId, mode) {
   advanceSeason();
 }
 
-/* ==================== GUILD QUEST BOARD (GROWTH PATHWAY) ==================== */
+/* ==================== GUILD QUEST BOARD ==================== */
 function openQuestBoardModal() {
   playSound('click');
   const list = document.getElementById('questBoardList');
@@ -1498,14 +1531,14 @@ function openQuestBoardModal() {
       <div class="item-row-info">
         <div class="item-row-title">
           <span>${q.title}</span>
-          <span style="font-size:0.75rem; color:${hasStat ? '#10b981' : '#ef4444'};">[요구 ${statNames[q.reqStat]} ${q.reqVal} / 현재 ${state[q.reqStat]}]</span>
+          <span style="font-size:0.75rem; color:${hasStat ? '#10b981' : '#ef4444'};">[요구 ${statNames[q.reqStat]} ${q.reqVal}]</span>
         </div>
         <div class="item-row-desc">
           ${q.desc}<br>
-          💰 보수: <b>${q.gold}G</b> | 🎖️ 명성: +${q.fame} | 💥 체력 소모: ${q.hpCost} | <b>✨ 보너스: ${statNames[q.statReward.stat]} +${q.statReward.val}</b>
+          💰 보수: <b>${q.gold}G</b> | 🎖️ 명성: +${q.fame} | 💥 HP -${q.hpCost} | <b>✨ ${statNames[q.statReward.stat]} +${q.statReward.val}</b>
         </div>
       </div>
-      <button class="btn-sm" onclick="executeQuest(${idx})">수주 및 수행</button>
+      <button class="btn-sm" onclick="executeQuest(${idx})">수주 및 완수</button>
     `;
     list.appendChild(row);
   });
@@ -1532,17 +1565,16 @@ function executeQuest(idx) {
     let finalGold = q.gold;
     if (state.charClass === 'rogue') finalGold = Math.round(finalGold * 1.35);
 
-    // Give stat growth reward!
     state[q.statReward.stat] += q.statReward.val;
     const statNames = { str: '근력', int: '마력', dex: '민첩', def: '방어' };
 
     state.gold += finalGold;
     state.fame += q.fame;
-    addLog(`📜 의뢰 [${q.title}] 완수! (+${finalGold}G, 명성 +${q.fame}, <b>${statNames[q.statReward.stat]} +${q.statReward.val}</b> 영구 성장!)`, 'reward');
+    addLog(`📜 의뢰 [${q.title}] 완수! (+${finalGold}G, 명성 +${q.fame}, <b>${statNames[q.statReward.stat]} +${q.statReward.val}</b> 성장!)`, 'reward');
   } else {
     playSound('fail');
     state.fame = Math.max(0, state.fame - 5);
-    addLog(`⚠️ 의뢰 [${q.title}] 도중 돌발 상황으로 실패했습니다. 길드 신용도 하락 (명성 -5, HP -${q.hpCost})`, 'danger');
+    addLog(`⚠️ 의뢰 [${q.title}] 도중 실패했습니다. (명성 -5, HP -${q.hpCost})`, 'danger');
   }
 
   advanceSeason();
@@ -1581,12 +1613,12 @@ function takeRestAction() {
   playSound('click');
   const cost = Math.min(250, Math.max(30, Math.round(state.maxHp * 0.35)));
   if (state.gold < cost && state.gold > 0) {
-    alert(`골드가 부족합니다! (치료 및 숙박비: ${cost}G)`);
+    alert(`골드가 부족합니다! (비용: ${cost}G)`);
     return;
   }
   state.gold = Math.max(0, state.gold - cost);
   state.hp = state.maxHp;
-  addLog(`🏨 온천 여관에서 푹 쉬어 체력을 100% 회복했습니다. (-${cost}G, HP 완전 회복)`, 'reward');
+  addLog(`🏨 온천 여관에서 푹 쉬어 체력을 100% 회복했습니다. (-${cost}G, HP 회복)`, 'reward');
   advanceSeason();
 }
 
@@ -1620,7 +1652,7 @@ function selectForgeTarget(type) {
 
   const item = state[type];
   document.getElementById('forgeItemName').textContent = `${item.name} (+${item.plus})`;
-  document.getElementById('forgeItemStat').textContent = `현재 기본 수치: ${item.power} | 강화 추가치: +${Math.round(item.plus * 3.5)}`;
+  document.getElementById('forgeItemStat').textContent = `기본 수치: ${item.power} | 강화 추가: +${Math.round(item.plus * 3.5)}`;
 
   const curPlus = item.plus;
   let successRate = curPlus < 20 ? FORGE_RATES[curPlus] : 0;
@@ -1672,11 +1704,9 @@ function attemptForge() {
     } else {
       playSound('fail');
       if (curPlus < 15) {
-        // Safe bracket (1~14)
-        addLog(`대장간 강화 실패... 다행히 안전 구간이므로 등급이 유지되었습니다 (+${item.plus})`, 'forge');
+        addLog(`대장간 강화 실패... 안전 구간이므로 등급이 유지되었습니다 (+${item.plus})`, 'forge');
         alert(`강화 실패! 등급이 안전하게 유지되었습니다 (+${item.plus})`);
       } else {
-        // High bracket (15~20): drops 1 or 2 levels, NO breakage!
         const dropAmount = Math.random() < 0.65 ? 1 : 2;
         item.plus = Math.max(14, item.plus - dropAmount);
         addLog(`대장간 강화 실패 충격으로 장비가 -${dropAmount}강 하락했습니다 (+${item.plus})`, 'danger');
@@ -1700,7 +1730,7 @@ function renderClassShop() {
     row.className = 'item-row';
     row.innerHTML = `
       <div class="item-row-info">
-        <div class="item-row-title">${it.name} <span style="color:var(--gold); font-size:0.8rem;">(${it.cost.toLocaleString()}G)</span></div>
+        <div class="item-row-title">${it.name} <span style="color:var(--gold); font-size:0.82rem;">(${it.cost.toLocaleString()}G)</span></div>
         <div class="item-row-desc">${it.desc}</div>
       </div>
       <button class="btn-sm" onclick="buyClassItem('${it.id}')">구매 장착</button>
@@ -1777,17 +1807,17 @@ function openPromotionModal() {
   };
 
   duelUsedPotion = false;
-  document.getElementById('duelMyName').textContent = `${state.name} (${state.rank}급 도전자)`;
+  document.getElementById('duelMyName').textContent = `${state.name} (${state.rank}급)`;
   document.getElementById('duelMyMaxHp').textContent = state.maxHp;
   document.getElementById('duelMyHp').textContent = state.hp;
   document.getElementById('duelMyHpBar').style.width = Math.round((state.hp / state.maxHp) * 100) + '%';
 
-  document.getElementById('duelBossName').textContent = `${duelBoss.name} [${nextRank}급 심사관]`;
+  document.getElementById('duelBossName').textContent = `${duelBoss.name} [${nextRank}급]`;
   document.getElementById('duelBossMaxHp').textContent = duelBoss.maxHp;
   document.getElementById('duelBossHp').textContent = duelBoss.hp;
   document.getElementById('duelBossHpBar').style.width = '100%';
 
-  document.getElementById('duelLog').innerHTML = `<div>[${duelBoss.name}] "모험가 길드의 엄격한 기준을 통과할 수 있는지 증명해 보게나!"</div>`;
+  document.getElementById('duelLog').innerHTML = `<div>[${duelBoss.name}] "모험가 길드의 엄격한 기준을 통과해 보게나!"</div>`;
   document.getElementById('duelActionBtns').style.display = 'grid';
 
   const skillNames = { warrior: '광폭 베기', mage: '메테오 스트라이크', rogue: '급소 암살검', paladin: '홀리 스마이트 & 힐' };
@@ -1810,48 +1840,48 @@ function duelTurn(action) {
     let skillDmg = Math.round(playerDmg * 1.8);
     if (state.charClass === 'paladin') {
       state.hp = Math.min(state.maxHp, state.hp + 30);
-      log.innerHTML += `<div style="color:#fbbf24;">✨ 신성한 스마이트 작렬! (${skillDmg} 피해, 체력 +30 회복)</div>`;
+      log.innerHTML += `<div style="color:#fbbf24;">✨ 신성한 스마이트 작렬! (${skillDmg} 피해, HP +30 회복)</div>`;
     } else {
-      log.innerHTML += `<div style="color:#60a5fa;">💥 고유 필살기 적중! 심사관에게 <b>${skillDmg}</b>의 막대한 피해!</div>`;
+      log.innerHTML += `<div style="color:#60a5fa;">💥 고유 필살기 적중! 심사관에게 <b>${skillDmg}</b> 막대한 피해!</div>`;
     }
     duelBoss.hp = Math.max(0, duelBoss.hp - skillDmg);
   } else if (action === 'guard') {
     guardActive = true;
-    log.innerHTML += `<div style="color:#10b981;">🛡️ 방어 태세를 취했습니다. 적의 다음 피해를 70% 흡수합니다.</div>`;
+    log.innerHTML += `<div style="color:#10b981;">🛡️ 철벽 방어! 다음 피해를 70% 흡수합니다.</div>`;
   } else if (action === 'potion') {
     if (duelUsedPotion) {
-      alert('비장의 영약은 결투 중 1회만 사용할 수 있습니다!');
+      alert('비장의 영약은 1회만 사용할 수 있습니다!');
       return;
     }
     duelUsedPotion = true;
     state.hp = Math.min(state.maxHp, state.hp + 50);
-    log.innerHTML += `<div style="color:#f43f5e;">🧪 비장의 영약을 복용하여 HP를 50 회복했습니다!</div>`;
+    log.innerHTML += `<div style="color:#f43f5e;">🧪 영약을 복용하여 HP를 50 회복했습니다!</div>`;
   }
 
   if (duelBoss.hp <= 0) {
     playSound('victory');
-    log.innerHTML += `<div style="color:#f59e0b; font-weight:800;">🎉 심사관을 쓰러뜨렸습니다! 승급 심사 합격!</div>`;
+    log.innerHTML += `<div style="color:#f59e0b; font-weight:800;">🎉 심사관 격파! 승급 심사 합격!</div>`;
     document.getElementById('duelActionBtns').style.display = 'none';
     state.rank = duelBoss.rank;
     state.fame += 50;
     state.gold += 300;
-    addLog(`🏆 1:1 진검 대련 끝에 승리하여 <b>[${duelBoss.rank}급 모험가]</b>로 공식 승급했습니다! (+300G, 명성 +50)`, 'rank');
+    addLog(`🏆 1:1 진검 대련 끝에 <b>[${duelBoss.rank}급 모험가]</b>로 공식 승급했습니다! (+300G, 명성 +50)`, 'rank');
     updateUI();
     setTimeout(() => {
       alert(`🎉 축하합니다! ${duelBoss.rank}급 모험가 승급에 성공하셨습니다!`);
       closeModal('modalPromotion');
       advanceSeason();
-    }, 900);
+    }, 800);
     return;
   }
 
   let bossDmg = duelBoss.atk;
   if (guardActive) bossDmg = Math.round(bossDmg * 0.3);
   if (state.charClass === 'rogue' && Math.random() < 0.3) {
-    log.innerHTML += `<div style="color:#34d399;">💨 도적의 그림자 걸음으로 심사관의 맹공을 완벽히 회피했습니다!</div>`;
+    log.innerHTML += `<div style="color:#34d399;">💨 도적의 그림자 걸음으로 공격을 완벽히 회피했습니다!</div>`;
   } else {
     state.hp = Math.max(0, state.hp - bossDmg);
-    log.innerHTML += `<div style="color:#ef4444;">💥 [${duelBoss.name}]의 일격! 당신은 <b>${bossDmg}</b> 피해를 입었습니다!</div>`;
+    log.innerHTML += `<div style="color:#ef4444;">💥 [${duelBoss.name}]의 일격! <b>${bossDmg}</b> 피해를 입었습니다!</div>`;
   }
 
   if (state.hp <= 0) {
@@ -1859,13 +1889,13 @@ function duelTurn(action) {
     log.innerHTML += `<div style="color:#ef4444; font-weight:800;">💀 심사관의 일격을 버티지 못하고 패배했습니다...</div>`;
     document.getElementById('duelActionBtns').style.display = 'none';
     state.hp = 10;
-    addLog(`승급 심사에서 심사관에게 패배하여 부상을 입었습니다. (HP 10 잔여)`, 'danger');
+    addLog(`승급 심사에서 패배하여 부상을 입었습니다. (HP 10 잔여)`, 'danger');
     updateUI();
     setTimeout(() => {
       alert('승급 심사에서 탈락했습니다. 조금 더 성장한 뒤 다시 도전하세요.');
       closeModal('modalPromotion');
       advanceSeason();
-    }, 900);
+    }, 800);
     return;
   }
 
@@ -1927,7 +1957,7 @@ function retireHero(reason) {
 function showRetirementSummary(rec) {
   const content = document.getElementById('summaryContent');
   content.innerHTML = `
-    <div style="background: #0c121e; padding: 18px; border-radius: 12px; border: 1px solid var(--border); display: flex; flex-direction: column; gap: 8px;">
+    <div style="background: #090e17; padding: 16px; border-radius: 12px; border: 1px solid var(--border); display: flex; flex-direction: column; gap: 8px;">
       <div style="font-size: 1.2rem; font-weight: 800; color: #fff;">
         ${rec.name} <span class="badge-rank rank-${rec.finalRank}">${rec.finalRank}급</span>
       </div>
@@ -1936,13 +1966,13 @@ function showRetirementSummary(rec) {
       </div>
       <hr style="border: 0; border-top: 1px solid var(--border); margin: 6px 0;">
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 0.85rem;">
-        <div>최종 종합 전투력: <b style="color:#60a5fa;">${rec.cp}</b></div>
-        <div>최종 길드 명성: <b style="color:#38bdf8;">${rec.fame}</b></div>
-        <div>축적한 총 자산: <b style="color:#facc15;">${rec.gold.toLocaleString()} G</b></div>
-        <div>처치한 보스 수: <b style="color:#f43f5e;">${rec.bosses}마리</b></div>
+        <div>최종 전투력: <b style="color:#60a5fa;">${rec.cp}</b></div>
+        <div>길드 명성: <b style="color:#38bdf8;">${rec.fame}</b></div>
+        <div>축적 자산: <b style="color:#facc15;">${rec.gold.toLocaleString()} G</b></div>
+        <div>처치 보스: <b style="color:#f43f5e;">${rec.bosses}마리</b></div>
       </div>
-      <div style="margin-top: 10px; background: #131d2e; padding: 12px; border-radius: 8px; font-size: 0.85rem;">
-        <span style="color: var(--primary); font-weight: 700;">🏛️ 은퇴 후의 삶:</span><br>
+      <div style="margin-top: 8px; background: #111a2e; padding: 12px; border-radius: 8px; font-size: 0.85rem;">
+        <span style="color: var(--primary); font-weight: 800;">🏛️ 은퇴 후의 삶:</span><br>
         "${rec.job}"
       </div>
       <div style="margin-top: 4px; text-align: right; font-size: 1.35rem; font-weight: 900; color: #f59e0b;">
@@ -2008,7 +2038,7 @@ function startNewCareerFromModal() {
   closeModal('modalNewChar');
   clearLogs();
   refreshSeasonalQuests();
-  addLog(`⚔️ 15세의 봄, [${c.name}] <b>${state.name}</b>이(가) 길드에 첫 발을 내딛었습니다!`, 'event');
+  addLog(`⚔️ 15세의 봄, [${c.name}] <b>${state.name}</b>이(가) 길드에 입단했습니다!`, 'event');
   switchTab('play');
   updateUI();
   playSound('victory');
@@ -2043,15 +2073,15 @@ function renderHallOfFame() {
   hallOfFame.forEach((rec, idx) => {
     const tr = document.createElement('tr');
     tr.innerHTML = `
-      <td style="font-weight: 700; color: ${idx===0?'#f59e0b':(idx===1?'#cbd5e1':(idx===2?'#b45309':'var(--text-muted)'))};">#${idx + 1}</td>
+      <td style="font-weight: 800; color: ${idx===0?'#f59e0b':(idx===1?'#cbd5e1':(idx===2?'#b45309':'var(--text-muted)'))};">#${idx + 1}</td>
       <td><b>${rec.name}</b></td>
       <td style="font-size: 0.8rem; color: #60a5fa;">${rec.charClass}</td>
       <td><span class="badge-rank rank-${rec.finalRank}" style="font-size:0.75rem; padding: 2px 6px;">${rec.finalRank}</span></td>
-      <td>${rec.finalAge}세 (${rec.turns}분기)</td>
-      <td style="font-weight: 700; color: #60a5fa;">${rec.cp}</td>
+      <td>${rec.finalAge}세</td>
+      <td style="font-weight: 800; color: #60a5fa;">${rec.cp}</td>
       <td>${rec.fame}</td>
       <td>${rec.bosses}</td>
-      <td style="font-size: 0.8rem; color: var(--text-muted); max-width: 170px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">${rec.job}</td>
+      <td style="font-size: 0.8rem; color: var(--text-muted); max-width: 140px; text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">${rec.job}</td>
       <td style="font-weight: 900; color: #facc15;">${rec.score.toLocaleString()}</td>
     `;
     tbody.appendChild(tr);
