@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>견습에서 전설까지 : 나만의 모험가 키우기 (Mobile Optimized)</title>
+<title>견습에서 전설까지 : 나만의 모험가 키우기</title>
 <style>
   :root {
     --bg-main: #0a0d14;
@@ -38,7 +38,7 @@
     flex-direction: column;
     align-items: center;
     padding: 12px;
-    padding-bottom: 32px;
+    padding-bottom: max(24px, env(safe-area-inset-bottom));
   }
 
   .container {
@@ -100,7 +100,6 @@
     cursor: pointer;
     transition: all 0.15s ease;
   }
-
   .tab-btn:active { transform: scale(0.96); }
   .tab-btn.active {
     background: var(--primary);
@@ -132,7 +131,7 @@
   }
 
   @media (max-width: 768px) {
-    body { padding: 8px; padding-bottom: 24px; }
+    body { padding: 8px; padding-bottom: max(20px, env(safe-area-inset-bottom)); }
     .container { gap: 10px; }
     header {
       flex-direction: column;
@@ -324,7 +323,7 @@
   .gold-val { color: var(--gold); }
   .fame-val { color: #38bdf8; }
 
-  /* Actions Grid: Large Mobile-friendly Buttons */
+  /* Actions Grid */
   .actions-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -354,14 +353,9 @@
     text-align: center;
     box-shadow: 0 2px 6px rgba(0,0,0,0.25);
   }
-
   .act-btn .icon { font-size: 1.4rem; }
   .act-btn .desc { font-size: 0.72rem; color: var(--text-muted); font-weight: 500; line-height: 1.2; }
-
-  .act-btn:active {
-    transform: scale(0.97);
-    filter: brightness(1.15);
-  }
+  .act-btn:active { transform: scale(0.97); filter: brightness(1.15); }
 
   .act-btn.primary-act {
     background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
@@ -405,27 +399,28 @@
     background: #111827;
     border-left: 4px solid #374151;
   }
-
   .log-entry.dungeon { border-left-color: #3b82f6; }
   .log-entry.reward { border-left-color: #10b981; }
   .log-entry.danger { border-left-color: #ef4444; background: #1c1114; }
   .log-entry.event { border-left-color: #f59e0b; background: #1a1711; }
   .log-entry.rank { border-left-color: #a855f7; background: #191424; }
   .log-entry.forge { border-left-color: #f97316; background: #1f1610; }
-
   .log-season { color: var(--text-muted); font-size: 0.75rem; margin-right: 4px; }
 
-  /* Modals (Responsive Bottom-sheet style on Mobile) */
+  /* ==================== RELIABLE MODALS & BOTTOM SHEET ==================== */
   .modal-overlay {
     display: none;
     position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.82);
-    backdrop-filter: blur(4px);
-    z-index: 100;
+    top: 0; left: 0; right: 0; bottom: 0;
+    width: 100vw; height: 100vh;
+    background: rgba(0,0,0,0.85);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    z-index: 999;
     justify-content: center;
     align-items: center;
-    padding: 12px;
+    padding: 16px;
+    cursor: pointer; /* clicking backdrop closes */
   }
 
   .modal-box {
@@ -434,30 +429,116 @@
     border-radius: 16px;
     width: 100%;
     max-width: 620px;
-    max-height: 90vh;
-    padding: 20px;
+    max-height: 85vh;
     display: flex;
     flex-direction: column;
-    gap: 14px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.8);
     overflow: hidden;
+    cursor: default; /* prevent overlay click triggering inside */
+    animation: popIn 0.2s ease-out;
   }
 
-  @media (max-width: 600px) {
+  @keyframes popIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+  }
+
+  .sheet-handle {
+    display: none;
+  }
+
+  /* Mobile Bottom-Sheet Behavior */
+  @media (max-width: 640px) {
     .modal-overlay {
       align-items: flex-end;
       padding: 0;
     }
     .modal-box {
+      max-width: 100vw;
+      width: 100vw;
       border-bottom-left-radius: 0;
       border-bottom-right-radius: 0;
-      max-height: 88vh;
-      padding: 16px;
+      border-top-left-radius: 20px;
+      border-top-right-radius: 20px;
+      max-height: 86vh;
+      animation: slideUpSheet 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .sheet-handle {
+      display: block;
+      width: 44px;
+      height: 5px;
+      background: #475569;
+      border-radius: 3px;
+      margin: 10px auto 4px auto;
+      flex-shrink: 0;
     }
   }
 
-  .modal-box h3 { font-size: 1.2rem; font-weight: 800; color: var(--text-main); display: flex; align-items: center; gap: 8px; }
-  .item-list { display: flex; flex-direction: column; gap: 8px; overflow-y: auto; -webkit-overflow-scrolling: touch; padding-right: 4px; }
+  @keyframes slideUpSheet {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+  }
+
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+
+  .modal-header h3 {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: var(--text-main);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .btn-close-icon {
+    background: #1e293b;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1.1rem;
+    font-weight: 800;
+    transition: all 0.15s ease;
+  }
+  .btn-close-icon:active { transform: scale(0.92); background: #334155; color: #fff; }
+
+  .modal-body {
+    padding: 16px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-height: 0;
+  }
+
+  .modal-footer {
+    padding: 12px 16px max(12px, env(safe-area-inset-bottom)) 16px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
+    background: #0f1624;
+  }
+
+  .item-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
   
   .item-row {
     background: #090e17;
@@ -516,6 +597,7 @@
     font-weight: 800;
     font-size: 0.95rem;
     text-align: center;
+    width: 100%;
   }
   .btn-close:active { background: #475569; }
 
@@ -573,7 +655,7 @@
   }
 
   .combat-log {
-    height: 110px;
+    height: 120px;
     background: #05070c;
     border-radius: 8px;
     padding: 10px;
@@ -623,7 +705,7 @@
 <div class="container">
   <header>
     <div class="logo-title">
-      <h1>⚔️ 견습에서 전설까지 <span style="font-size: 0.72rem; background: #f59e0b22; color: var(--primary); padding: 2px 7px; border-radius: 10px; border: 1px solid #f59e0b44;">v3.0 Mobile</span></h1>
+      <h1>⚔️ 견습에서 전설까지 <span style="font-size: 0.72rem; background: #f59e0b22; color: var(--primary); padding: 2px 7px; border-radius: 10px; border: 1px solid #f59e0b44;">v3.1 Final</span></h1>
       <p>15세 견습생부터 전설의 영웅까지 · 나만의 모험가 육성기</p>
     </div>
     <div class="header-actions">
@@ -836,215 +918,264 @@
   </div>
 </div>
 
-<!-- ==================== MODALS ==================== -->
+<!-- ==================== MODALS (WITH BOTTOM SHEET & ACCESSIBILITY) ==================== -->
 
 <!-- MODAL: 12 DUNGEONS SELECT -->
 <div class="modal-overlay" id="modalDungeonSelect">
   <div class="modal-box">
-    <h3>🗺️ 12단계 던전 공략소</h3>
-    <p style="font-size: 0.82rem; color: var(--text-muted);">
-      원하는 던전과 전술을 누르면 1클릭으로 탐험과 보스 토벌을 진행합니다.
-    </p>
-    <div class="item-list" id="dungeonSelectList"></div>
-    <button class="btn-close" onclick="closeModal('modalDungeonSelect')">닫기</button>
+    <div class="sheet-handle"></div>
+    <div class="modal-header">
+      <h3>🗺️ 12단계 던전 공략소</h3>
+      <button class="btn-close-icon" onclick="closeModal('modalDungeonSelect')">✕</button>
+    </div>
+    <div class="modal-body">
+      <p style="font-size: 0.84rem; color: var(--text-muted); line-height: 1.4;">
+        원하는 던전과 전술을 누르면 1클릭으로 탐험과 보스 토벌을 즉시 진행합니다.
+      </p>
+      <div class="item-list" id="dungeonSelectList"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-close" onclick="closeModal('modalDungeonSelect')">닫기</button>
+    </div>
   </div>
 </div>
 
 <!-- MODAL: GUILD QUEST BOARD -->
 <div class="modal-overlay" id="modalQuestBoard">
   <div class="modal-box">
-    <h3>📜 길드 의뢰 게시판 (시즌 6건)</h3>
-    <p style="font-size: 0.82rem; color: var(--text-muted);">
-      완수 시 골드·명성과 함께 <b>스탯이 영구 성장</b>합니다.
-    </p>
-    <div class="item-list" id="questBoardList"></div>
-    <button class="btn-close" onclick="closeModal('modalQuestBoard')">닫기</button>
+    <div class="sheet-handle"></div>
+    <div class="modal-header">
+      <h3>📜 길드 의뢰 게시판 (시즌 6건)</h3>
+      <button class="btn-close-icon" onclick="closeModal('modalQuestBoard')">✕</button>
+    </div>
+    <div class="modal-body">
+      <p style="font-size: 0.84rem; color: var(--text-muted); line-height: 1.4;">
+        의뢰 완수 시 골드·명성과 함께 <b>스탯이 영구 성장</b>합니다.
+      </p>
+      <div class="item-list" id="questBoardList"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-close" onclick="closeModal('modalQuestBoard')">닫기</button>
+    </div>
   </div>
 </div>
 
 <!-- MODAL: TRAINING -->
 <div class="modal-overlay" id="modalTraining">
   <div class="modal-box">
-    <h3>🏋️ 스탯 집중 수련</h3>
-    <p style="font-size: 0.82rem; color: var(--text-muted);">
-      1분기 동안 육체를 한계까지 단련합니다. 체력 20이 소모됩니다.
-    </p>
-    <div class="item-list">
-      <div class="item-row">
-        <div class="item-row-info">
-          <div class="item-row-title">⚔️ 웨이트 및 검술 특훈</div>
-          <div class="item-row-desc">근력(STR) +3~6 (체력 -20)</div>
+    <div class="sheet-handle"></div>
+    <div class="modal-header">
+      <h3>🏋️ 스탯 집중 수련</h3>
+      <button class="btn-close-icon" onclick="closeModal('modalTraining')">✕</button>
+    </div>
+    <div class="modal-body">
+      <p style="font-size: 0.84rem; color: var(--text-muted); line-height: 1.4;">
+        1분기 동안 육체를 한계까지 단련합니다. 체력 20이 소모됩니다.
+      </p>
+      <div class="item-list">
+        <div class="item-row">
+          <div class="item-row-info">
+            <div class="item-row-title">⚔️ 웨이트 및 검술 특훈</div>
+            <div class="item-row-desc">근력(STR) +3~6 (체력 -20)</div>
+          </div>
+          <button class="btn-sm" onclick="trainStat('str')">근력 수련</button>
         </div>
-        <button class="btn-sm" onclick="trainStat('str')">근력 수련</button>
-      </div>
-      <div class="item-row">
-        <div class="item-row-info">
-          <div class="item-row-title">✨ 고대 마도서 명상</div>
-          <div class="item-row-desc">마력(INT) +3~6 (마법사는 1.5배 보너스!)</div>
+        <div class="item-row">
+          <div class="item-row-info">
+            <div class="item-row-title">✨ 고대 마도서 명상</div>
+            <div class="item-row-desc">마력(INT) +3~6 (마법사는 1.5배 보너스!)</div>
+          </div>
+          <button class="btn-sm" onclick="trainStat('int')">마력 수련</button>
         </div>
-        <button class="btn-sm" onclick="trainStat('int')">마력 수련</button>
-      </div>
-      <div class="item-row">
-        <div class="item-row-info">
-          <div class="item-row-title">🏃 고난도 장애물 주파</div>
-          <div class="item-row-desc">민첩(DEX) +3~6 (체력 -20)</div>
+        <div class="item-row">
+          <div class="item-row-info">
+            <div class="item-row-title">🏃 고난도 장애물 주파</div>
+            <div class="item-row-desc">민첩(DEX) +3~6 (체력 -20)</div>
+          </div>
+          <button class="btn-sm" onclick="trainStat('dex')">민첩 수련</button>
         </div>
-        <button class="btn-sm" onclick="trainStat('dex')">민첩 수련</button>
-      </div>
-      <div class="item-row">
-        <div class="item-row-info">
-          <div class="item-row-title">🛡️ 방패술 및 맷집 단련</div>
-          <div class="item-row-desc">방어(DEF) +3~6, 최대 HP +15 영구 증가</div>
+        <div class="item-row">
+          <div class="item-row-info">
+            <div class="item-row-title">🛡️ 방패술 및 맷집 단련</div>
+            <div class="item-row-desc">방어(DEF) +3~6, 최대 HP +15 영구 증가</div>
+          </div>
+          <button class="btn-sm" onclick="trainStat('def')">방어 수련</button>
         </div>
-        <button class="btn-sm" onclick="trainStat('def')">방어 수련</button>
       </div>
     </div>
-    <button class="btn-close" onclick="closeModal('modalTraining')">닫기</button>
+    <div class="modal-footer">
+      <button class="btn-close" onclick="closeModal('modalTraining')">닫기</button>
+    </div>
   </div>
 </div>
 
 <!-- MODAL: FORGE -->
 <div class="modal-overlay" id="modalForge">
   <div class="modal-box">
-    <div style="display: flex; justify-content: space-between; align-items: center;">
+    <div class="sheet-handle"></div>
+    <div class="modal-header">
       <h3>🔨 대장간 제련소 (최대 +20강)</h3>
-      <div style="display: flex; gap: 6px;">
-        <button class="btn-sm" id="btnForgeTabUpgrade" style="padding: 6px 12px; min-height: 36px;" onclick="switchForgeSubTab('upgrade')">강화</button>
-        <button class="btn-sm" id="btnForgeTabShop" style="padding: 6px 12px; min-height: 36px; background: #334155; color: #fff;" onclick="switchForgeSubTab('shop')">상점</button>
+      <div style="display: flex; gap: 6px; align-items: center;">
+        <button class="btn-sm" id="btnForgeTabUpgrade" style="padding: 6px 12px; min-height: 34px;" onclick="switchForgeSubTab('upgrade')">강화</button>
+        <button class="btn-sm" id="btnForgeTabShop" style="padding: 6px 12px; min-height: 34px; background: #334155; color: #fff;" onclick="switchForgeSubTab('shop')">상점</button>
+        <button class="btn-close-icon" onclick="closeModal('modalForge')">✕</button>
       </div>
     </div>
+    <div class="modal-body">
+      <!-- Upgrade SubTab -->
+      <div id="forgeSubUpgrade" style="display: flex; flex-direction: column; gap: 12px;">
+        <div class="forge-display">
+          <div style="display: flex; gap: 8px; width: 100%;">
+            <button class="btn-sm" id="btnTargetWpn" style="flex:1;" onclick="selectForgeTarget('weapon')">무기 강화</button>
+            <button class="btn-sm" id="btnTargetArm" style="flex:1; background:#334155; color:#fff;" onclick="selectForgeTarget('armor')">방어구 강화</button>
+          </div>
 
-    <!-- Upgrade SubTab -->
-    <div id="forgeSubUpgrade" style="display: flex; flex-direction: column; gap: 12px;">
-      <div class="forge-display">
-        <div style="display: flex; gap: 8px; width: 100%;">
-          <button class="btn-sm" id="btnTargetWpn" style="flex:1;" onclick="selectForgeTarget('weapon')">무기 강화</button>
-          <button class="btn-sm" id="btnTargetArm" style="flex:1; background:#334155; color:#fff;" onclick="selectForgeTarget('armor')">방어구 강화</button>
+          <div class="forge-item-title" id="forgeItemName">훈련용 대검 (+0)</div>
+          <div style="font-size: 0.88rem; color: #93c5fd;" id="forgeItemStat">+0강 스탯: 근력 +5</div>
+
+          <div class="forge-rate-box">
+            <div>성공 확률: <b id="forgeRateSuccess" style="color: #10b981;">100%</b></div>
+            <div>실패 시: <b id="forgeRateFailPenalty" style="color: #60a5fa;">유지 (안전)</b></div>
+            <div>비용: <b id="forgeCost" style="color: var(--gold);">50 G</b></div>
+          </div>
+
+          <div style="font-size: 0.8rem; color: #cbd5e1; background: #0c1424; padding: 10px; border-radius: 8px; width: 100%; text-align: left; line-height: 1.45; border: 1px solid #1e293b;">
+            🛡️ <b>안전 강화 규칙</b>:<br>
+            • <b>+1~14강</b>: 실패해도 등급 하락 없음 (100% 유지)<br>
+            • <b>+15~20강</b>: 실패 시에만 1~2단계 하락 (<b>파손 없음</b>)
+          </div>
+
+          <button class="btn-sm" id="btnDoForge" style="width: 100%; padding: 14px; font-size: 1.05rem; background: linear-gradient(135deg, #f59e0b, #d97706);" onclick="attemptForge()">
+            🔥 망치질하기 (강화 시도)
+          </button>
         </div>
+      </div>
 
-        <div class="forge-item-title" id="forgeItemName">훈련용 대검 (+0)</div>
-        <div style="font-size: 0.88rem; color: #93c5fd;" id="forgeItemStat">+0강 스탯: 근력 +5</div>
-
-        <div class="forge-rate-box">
-          <div>성공 확률: <b id="forgeRateSuccess" style="color: #10b981;">100%</b></div>
-          <div>실패 시: <b id="forgeRateFailPenalty" style="color: #60a5fa;">유지 (안전)</b></div>
-          <div>비용: <b id="forgeCost" style="color: var(--gold);">50 G</b></div>
-        </div>
-
-        <div style="font-size: 0.8rem; color: #cbd5e1; background: #0c1424; padding: 10px; border-radius: 8px; width: 100%; text-align: left; line-height: 1.45; border: 1px solid #1e293b;">
-          🛡️ <b>안전 강화 규칙</b>:<br>
-          • <b>+1~14강</b>: 실패해도 등급 하락 없음 (100% 유지)<br>
-          • <b>+15~20강</b>: 실패 시에만 1~2단계 하락 (<b>파손 없음</b>)
-        </div>
-
-        <button class="btn-sm" id="btnDoForge" style="width: 100%; padding: 14px; font-size: 1.05rem; background: linear-gradient(135deg, #f59e0b, #d97706);" onclick="attemptForge()">
-          🔥 망치질하기 (강화 시도)
-        </button>
+      <!-- Shop SubTab -->
+      <div id="forgeSubShop" style="display: none; flex-direction: column; gap: 10px;">
+        <p style="font-size: 0.82rem; color: var(--text-muted);">
+          현재 클래스 <b id="shopClassNotice" style="color: #60a5fa;">[전사]</b> 전용 장비 목록입니다.
+        </p>
+        <div class="item-list" id="classShopList"></div>
       </div>
     </div>
-
-    <!-- Shop SubTab -->
-    <div id="forgeSubShop" style="display: none; flex-direction: column; gap: 10px;">
-      <p style="font-size: 0.82rem; color: var(--text-muted);">
-        현재 클래스 <b id="shopClassNotice" style="color: #60a5fa;">[전사]</b> 전용 장비 목록입니다.
-      </p>
-      <div class="item-list" id="classShopList"></div>
+    <div class="modal-footer">
+      <button class="btn-close" onclick="closeModal('modalForge')">닫기</button>
     </div>
-
-    <button class="btn-close" onclick="closeModal('modalForge')">닫기</button>
   </div>
 </div>
 
 <!-- MODAL: PROMOTION DUEL -->
 <div class="modal-overlay" id="modalPromotion">
   <div class="modal-box">
-    <h3>⚔️ 길드 승급 심사 : 1:1 대련</h3>
-    <div class="duel-arena">
-      <div class="duel-combatants">
-        <div class="combatant-card">
-          <div style="font-weight: 800; font-size: 0.88rem; color: #fff;" id="duelMyName">카엘 (도전자)</div>
-          <div style="font-size: 0.8rem; color: #94a3b8;">HP: <b id="duelMyHp">120</b>/<span id="duelMyMaxHp">120</span></div>
-          <div class="gauge-wrap"><div class="gauge-bar hp-bar" id="duelMyHpBar" style="width: 100%;"></div></div>
+    <div class="sheet-handle"></div>
+    <div class="modal-header">
+      <h3>⚔️ 길드 승급 심사 : 1:1 대련</h3>
+      <button class="btn-close-icon" onclick="closeModal('modalPromotion')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="duel-arena">
+        <div class="duel-combatants">
+          <div class="combatant-card">
+            <div style="font-weight: 800; font-size: 0.88rem; color: #fff;" id="duelMyName">카엘 (도전자)</div>
+            <div style="font-size: 0.8rem; color: #94a3b8;">HP: <b id="duelMyHp">120</b>/<span id="duelMyMaxHp">120</span></div>
+            <div class="gauge-wrap"><div class="gauge-bar hp-bar" id="duelMyHpBar" style="width: 100%;"></div></div>
+          </div>
+
+          <div class="combatant-card" style="border: 1px solid #ef444455;">
+            <div style="font-weight: 800; font-size: 0.88rem; color: #f87171;" id="duelBossName">E급 심사관 바르톨</div>
+            <div style="font-size: 0.8rem; color: #94a3b8;">HP: <b id="duelBossHp">180</b>/<span id="duelBossMaxHp">180</span></div>
+            <div class="gauge-wrap"><div class="gauge-bar hp-bar" id="duelBossHpBar" style="width: 100%; background: #ef4444;"></div></div>
+          </div>
         </div>
 
-        <div class="combatant-card" style="border: 1px solid #ef444455;">
-          <div style="font-weight: 800; font-size: 0.88rem; color: #f87171;" id="duelBossName">E급 심사관 바르톨</div>
-          <div style="font-size: 0.8rem; color: #94a3b8;">HP: <b id="duelBossHp">180</b>/<span id="duelBossMaxHp">180</span></div>
-          <div class="gauge-wrap"><div class="gauge-bar hp-bar" id="duelBossHpBar" style="width: 100%; background: #ef4444;"></div></div>
+        <div class="combat-log" id="duelLog">
+          <div>[심사관] "자세를 잡게나! 자격이 있는지 확인하겠네!"</div>
         </div>
-      </div>
 
-      <div class="combat-log" id="duelLog">
-        <div>[심사관] "자세를 잡게나! 자격이 있는지 확인하겠네!"</div>
-      </div>
-
-      <div class="combat-btns" id="duelActionBtns">
-        <button class="btn-sm" onclick="duelTurn('attack')">⚔️ 일반 공격</button>
-        <button class="btn-sm" id="btnDuelSkill" style="background: #3b82f6; color:#fff;" onclick="duelTurn('skill')">✨ 직업 고유기</button>
-        <button class="btn-sm" style="background: #059669; color:#fff;" onclick="duelTurn('guard')">🛡️ 철벽 방어</button>
-        <button class="btn-sm" id="btnDuelPotion" style="background: #e11d48; color:#fff;" onclick="duelTurn('potion')">🧪 영약 (+50 HP)</button>
+        <div class="combat-btns" id="duelActionBtns">
+          <button class="btn-sm" onclick="duelTurn('attack')">⚔️ 일반 공격</button>
+          <button class="btn-sm" id="btnDuelSkill" style="background: #3b82f6; color:#fff;" onclick="duelTurn('skill')">✨ 직업 고유기</button>
+          <button class="btn-sm" style="background: #059669; color:#fff;" onclick="duelTurn('guard')">🛡️ 철벽 방어</button>
+          <button class="btn-sm" id="btnDuelPotion" style="background: #e11d48; color:#fff;" onclick="duelTurn('potion')">🧪 영약 (+50 HP)</button>
+        </div>
       </div>
     </div>
-    <button class="btn-close" id="btnDuelClose" onclick="closeModal('modalPromotion')">기권 / 닫기</button>
+    <div class="modal-footer">
+      <button class="btn-close" id="btnDuelClose" onclick="closeModal('modalPromotion')">기권 / 닫기</button>
+    </div>
   </div>
 </div>
 
 <!-- MODAL: NEW CHARACTER -->
 <div class="modal-overlay" id="modalNewChar">
   <div class="modal-box">
-    <h3>✨ 새로운 모험가 등록</h3>
-    <p style="font-size: 0.85rem; color: var(--text-muted);">직업별 패시브와 전용 장비가 다릅니다.</p>
-    
-    <div style="display: flex; gap: 8px;">
-      <input type="text" id="inCharName" placeholder="모험가 이름" style="flex: 1; padding: 12px; background: #070a10; border: 1px solid var(--border); border-radius: 8px; color: #fff; font-size: 1rem;">
-      <button class="btn-sm" onclick="randomizeName()">주사위 🎲</button>
+    <div class="sheet-handle"></div>
+    <div class="modal-header">
+      <h3>✨ 새로운 모험가 등록</h3>
+      <button class="btn-close-icon" onclick="closeModal('modalNewChar')">✕</button>
     </div>
+    <div class="modal-body">
+      <p style="font-size: 0.85rem; color: var(--text-muted);">직업별 패시브와 전용 장비가 다릅니다.</p>
+      
+      <div style="display: flex; gap: 8px;">
+        <input type="text" id="inCharName" placeholder="모험가 이름" style="flex: 1; padding: 12px; background: #070a10; border: 1px solid var(--border); border-radius: 8px; color: #fff; font-size: 1rem;">
+        <button class="btn-sm" onclick="randomizeName()">주사위 🎲</button>
+      </div>
 
-    <div style="display: flex; flex-direction: column; gap: 8px; max-height: 280px; overflow-y: auto;">
-      <label style="background: #070a10; border: 1px solid var(--border); padding: 12px; border-radius: 8px; cursor: pointer; display: flex; gap: 10px;">
-        <input type="radio" name="charClassRadio" value="warrior" checked style="margin-top: 3px;">
-        <div>
-          <div style="font-weight: 800; color: #f87171;">⚔️ 전사 (Warrior)</div>
-          <div style="font-size: 0.8rem; color: var(--text-muted);">받는 피해 20% 감소, 보스 치명타 +20%. 전용 대검·판금갑옷.</div>
-        </div>
-      </label>
+      <div style="display: flex; flex-direction: column; gap: 8px;">
+        <label style="background: #070a10; border: 1px solid var(--border); padding: 12px; border-radius: 8px; cursor: pointer; display: flex; gap: 10px;">
+          <input type="radio" name="charClassRadio" value="warrior" checked style="margin-top: 3px;">
+          <div>
+            <div style="font-weight: 800; color: #f87171;">⚔️ 전사 (Warrior)</div>
+            <div style="font-size: 0.8rem; color: var(--text-muted);">받는 피해 20% 감소, 보스 치명타 +20%. 전용 대검·판금갑옷.</div>
+          </div>
+        </label>
 
-      <label style="background: #070a10; border: 1px solid var(--border); padding: 12px; border-radius: 8px; cursor: pointer; display: flex; gap: 10px;">
-        <input type="radio" name="charClassRadio" value="mage" style="margin-top: 3px;">
-        <div>
-          <div style="font-weight: 800; color: #60a5fa;">✨ 마법사 (Mage)</div>
-          <div style="font-size: 0.8rem; color: var(--text-muted);">INT 수련 1.5배, 전투 시 30% 광역 마법. 전용 지팡이·로브.</div>
-        </div>
-      </label>
+        <label style="background: #070a10; border: 1px solid var(--border); padding: 12px; border-radius: 8px; cursor: pointer; display: flex; gap: 10px;">
+          <input type="radio" name="charClassRadio" value="mage" style="margin-top: 3px;">
+          <div>
+            <div style="font-weight: 800; color: #60a5fa;">✨ 마법사 (Mage)</div>
+            <div style="font-size: 0.8rem; color: var(--text-muted);">INT 수련 1.5배, 전투 시 30% 광역 마법. 전용 지팡이·로브.</div>
+          </div>
+        </label>
 
-      <label style="background: #070a10; border: 1px solid var(--border); padding: 12px; border-radius: 8px; cursor: pointer; display: flex; gap: 10px;">
-        <input type="radio" name="charClassRadio" value="rogue" style="margin-top: 3px;">
-        <div>
-          <div style="font-weight: 800; color: #34d399;">🗡️ 도적 (Rogue)</div>
-          <div style="font-size: 0.8rem; color: var(--text-muted);">전투 회피 30%, 보상 골드 +35%, 패배 시 도주. 전용 단검·은신복.</div>
-        </div>
-      </label>
+        <label style="background: #070a10; border: 1px solid var(--border); padding: 12px; border-radius: 8px; cursor: pointer; display: flex; gap: 10px;">
+          <input type="radio" name="charClassRadio" value="rogue" style="margin-top: 3px;">
+          <div>
+            <div style="font-weight: 800; color: #34d399;">🗡️ 도적 (Rogue)</div>
+            <div style="font-size: 0.8rem; color: var(--text-muted);">전투 회피 30%, 보상 골드 +35%, 패배 시 도주. 전용 단검·은신복.</div>
+          </div>
+        </label>
 
-      <label style="background: #070a10; border: 1px solid var(--border); padding: 12px; border-radius: 8px; cursor: pointer; display: flex; gap: 10px;">
-        <input type="radio" name="charClassRadio" value="paladin" style="margin-top: 3px;">
-        <div>
-          <div style="font-weight: 800; color: #fbbf24;">🛡️ 성기사 (Paladin)</div>
-          <div style="font-size: 0.8rem; color: var(--text-muted);">턴 종료 시 HP +15 자가 회복, 언데드 피해 100%, 1회 부활.</div>
-        </div>
-      </label>
+        <label style="background: #070a10; border: 1px solid var(--border); padding: 12px; border-radius: 8px; cursor: pointer; display: flex; gap: 10px;">
+          <input type="radio" name="charClassRadio" value="paladin" style="margin-top: 3px;">
+          <div>
+            <div style="font-weight: 800; color: #fbbf24;">🛡️ 성기사 (Paladin)</div>
+            <div style="font-size: 0.8rem; color: var(--text-muted);">턴 종료 시 HP +15 자가 회복, 언데드 피해 100%, 1회 부활.</div>
+          </div>
+        </label>
+      </div>
     </div>
-
-    <button class="btn-sm" style="padding: 14px; font-size: 1rem; width: 100%;" onclick="startNewCareerFromModal()">모험 시작 (15세 봄)</button>
-    <button class="btn-close" onclick="closeModal('modalNewChar')">취소</button>
+    <div class="modal-footer" style="flex-direction: column;">
+      <button class="btn-sm" style="padding: 14px; font-size: 1rem; width: 100%;" onclick="startNewCareerFromModal()">모험 시작 (15세 봄)</button>
+      <button class="btn-close" onclick="closeModal('modalNewChar')">취소</button>
+    </div>
   </div>
 </div>
 
 <!-- MODAL: RETIREMENT SUMMARY -->
 <div class="modal-overlay" id="modalSummary">
   <div class="modal-box">
-    <h3 style="color: var(--primary);">📜 모험가 커리어 정산서</h3>
-    <div id="summaryContent" class="modal-content"></div>
-    <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 6px;">
+    <div class="sheet-handle"></div>
+    <div class="modal-header">
+      <h3 style="color: var(--primary);">📜 모험가 커리어 정산서</h3>
+      <button class="btn-close-icon" onclick="closeModal('modalSummary')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div id="summaryContent" class="modal-content"></div>
+    </div>
+    <div class="modal-footer" style="flex-direction: column;">
       <button class="btn-sm" style="padding: 14px; font-size: 1rem; background: linear-gradient(135deg, #10b981, #059669); color:#fff; width: 100%;" onclick="closeSummaryAndStartNew()">
         ✨ 새로운 모험가 키우기 (새 시작)
       </button>
@@ -1059,8 +1190,17 @@ let audioCtx = null;
 let soundEnabled = true;
 
 function initAudio() {
-  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  if (!audioCtx) {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+  if (audioCtx && audioCtx.state === 'suspended') {
+    audioCtx.resume();
+  }
 }
+
+// Mobile audio unlock listeners
+document.addEventListener('touchstart', initAudio, { once: true, passive: true });
+document.addEventListener('click', initAudio, { once: true, passive: true });
 
 function playSound(type) {
   if (!soundEnabled) return;
@@ -1993,6 +2133,34 @@ function closeSummaryAndGoHall() {
   switchTab('hall');
 }
 
+/* ==================== MODAL HELPERS (OVERLAY TAP & SCROLL LOCK) ==================== */
+function openModal(id) {
+  const el = document.getElementById(id);
+  if (el) {
+    el.style.display = 'flex';
+    document.body.style.overflow = 'hidden'; // lock background scrolling
+  }
+}
+
+function closeModal(id) {
+  const el = document.getElementById(id);
+  if (el) {
+    el.style.display = 'none';
+    // Check if any other modal is still open
+    const openModals = document.querySelectorAll('.modal-overlay[style*="display: flex"]');
+    if (openModals.length === 0) {
+      document.body.style.overflow = ''; // unlock
+    }
+  }
+}
+
+// Global click-to-dismiss overlay backdrop listener
+document.addEventListener('click', (e) => {
+  if (e.target.classList && e.target.classList.contains('modal-overlay')) {
+    closeModal(e.target.id);
+  }
+});
+
 /* ==================== NEW GAME MODAL ==================== */
 function openNewGameModal() {
   playSound('click');
@@ -2045,9 +2213,6 @@ function startNewCareerFromModal() {
 }
 
 /* ==================== TABS & STORAGE ==================== */
-function openModal(id) { document.getElementById(id).style.display = 'flex'; }
-function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-
 function switchTab(tab) {
   playSound('click');
   document.getElementById('viewPlay').style.display = tab === 'play' ? 'grid' : 'none';
@@ -2104,7 +2269,7 @@ function loadGameFromLocalStorage() {
 }
 
 function exportSaveData() {
-  const data = { version: '3.0', state: state, hallOfFame: hallOfFame };
+  const data = { version: '3.1', state: state, hallOfFame: hallOfFame };
   const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
