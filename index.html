@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>견습에서 전설까지 : 나만의 모험가 키우기</title>
+<title>견습에서 전설까지 v3.2 : 나만의 모험가 키우기</title>
 <style>
   :root {
     --bg-main: #0a0d14;
@@ -405,6 +405,7 @@
   .log-entry.event { border-left-color: #f59e0b; background: #1a1711; }
   .log-entry.rank { border-left-color: #a855f7; background: #191424; }
   .log-entry.forge { border-left-color: #f97316; background: #1f1610; }
+  .log-entry.crit { border-left-color: #eab308; background: #261f0c; }
   .log-season { color: var(--text-muted); font-size: 0.75rem; margin-right: 4px; }
 
   /* ==================== RELIABLE MODALS & BOTTOM SHEET ==================== */
@@ -420,7 +421,7 @@
     justify-content: center;
     align-items: center;
     padding: 16px;
-    cursor: pointer; /* clicking backdrop closes */
+    cursor: pointer;
   }
 
   .modal-box {
@@ -428,13 +429,13 @@
     border: 1px solid var(--border);
     border-radius: 16px;
     width: 100%;
-    max-width: 620px;
-    max-height: 85vh;
+    max-width: 640px;
+    max-height: 86vh;
     display: flex;
     flex-direction: column;
     box-shadow: 0 12px 40px rgba(0,0,0,0.8);
     overflow: hidden;
-    cursor: default; /* prevent overlay click triggering inside */
+    cursor: default;
     animation: popIn 0.2s ease-out;
   }
 
@@ -460,7 +461,7 @@
       border-bottom-right-radius: 0;
       border-top-left-radius: 20px;
       border-top-right-radius: 20px;
-      max-height: 86vh;
+      max-height: 88vh;
       animation: slideUpSheet 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     }
     .sheet-handle {
@@ -601,7 +602,7 @@
   }
   .btn-close:active { background: #475569; }
 
-  /* Forge UI */
+  /* Forge UI & Rapid Dopamine Toast */
   .forge-display {
     background: #070a10;
     border: 2px dashed #f59e0b55;
@@ -611,7 +612,8 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
+    position: relative;
   }
 
   .forge-item-title { font-size: 1.25rem; font-weight: 900; }
@@ -619,14 +621,31 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 10px;
-    font-size: 0.88rem;
+    gap: 8px;
+    font-size: 0.86rem;
     background: #111a2e;
-    padding: 8px 16px;
+    padding: 8px 14px;
     border-radius: 12px;
     border: 1px solid #1e2e47;
     width: 100%;
   }
+
+  /* Rapid Feedback Mini Popup directly above forge button */
+  .forge-toast {
+    display: none;
+    width: 100%;
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-size: 0.92rem;
+    font-weight: 900;
+    text-align: center;
+    animation: popIn 0.15s ease-out;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.5);
+  }
+  .forge-toast.crit { background: linear-gradient(135deg, #854d0e, #ca8a04); color: #fef08a; border: 1px solid #facc15; }
+  .forge-toast.success { background: #064e3b; color: #a7f3d0; border: 1px solid #10b981; }
+  .forge-toast.fail { background: #1e293b; color: #94a3b8; border: 1px solid #334155; }
+  .forge-toast.downgrade { background: #7f1d1d; color: #fca5a5; border: 1px solid #ef4444; }
 
   /* Duel Arena UI */
   .duel-arena {
@@ -705,7 +724,7 @@
 <div class="container">
   <header>
     <div class="logo-title">
-      <h1>⚔️ 견습에서 전설까지 <span style="font-size: 0.72rem; background: #f59e0b22; color: var(--primary); padding: 2px 7px; border-radius: 10px; border: 1px solid #f59e0b44;">v3.1 Final</span></h1>
+      <h1>⚔️ 견습에서 전설까지 <span style="font-size: 0.72rem; background: #f59e0b22; color: var(--primary); padding: 2px 7px; border-radius: 10px; border: 1px solid #f59e0b44;">v3.2</span></h1>
       <p>15세 견습생부터 전설의 영웅까지 · 나만의 모험가 육성기</p>
     </div>
     <div class="header-actions">
@@ -801,7 +820,7 @@
           <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 600; margin-left: 6px;" id="uiCareerTurn">(1년차)</span>
         </div>
         <div class="gold-fame">
-          <div>💰 <span class="gold-val" id="uiGold">150</span> G</div>
+          <div>💰 <span class="gold-val" id="uiGold">300</span> G</div>
           <div>🎖️ <span class="fame-val" id="uiFame">10</span></div>
         </div>
       </div>
@@ -811,13 +830,13 @@
         <button class="act-btn primary-act" onclick="openDungeonSelectModal()">
           <span class="icon">🗺️</span>
           <span>12단계 던전</span>
-          <span class="desc">1클릭 파밍·토벌</span>
+          <span class="desc">골드 대량 파밍·토벌</span>
         </button>
 
         <button class="act-btn" onclick="openQuestBoardModal()">
           <span class="icon">📜</span>
           <span>길드 의뢰 (6건)</span>
-          <span class="desc">스탯 영구 성장</span>
+          <span class="desc">고액 보수 & 스탯 성장</span>
         </button>
 
         <button class="act-btn" onclick="openTrainingModal()">
@@ -835,13 +854,13 @@
         <button class="act-btn forge-act" onclick="openForgeModal()">
           <span class="icon">🔨</span>
           <span>대장간 강화 (+20)</span>
-          <span class="desc">장비 강화 & 상점</span>
+          <span class="desc">3% 대성공 · 5강 보너스</span>
         </button>
 
         <button class="act-btn boss-act" id="btnExam" onclick="openPromotionModal()">
           <span class="icon">⚔️</span>
           <span id="txtExamBtn">승급 결투 심사</span>
-          <span class="desc" id="txtExamDesc">1:1 실시간 대련</span>
+          <span class="desc" id="txtExamDesc">스킬 3회 한정 대련</span>
         </button>
 
         <button class="act-btn retire-act" id="btnRetire" onclick="confirmRetirement()">
@@ -918,7 +937,7 @@
   </div>
 </div>
 
-<!-- ==================== MODALS (WITH BOTTOM SHEET & ACCESSIBILITY) ==================== -->
+<!-- ==================== MODALS ==================== -->
 
 <!-- MODAL: 12 DUNGEONS SELECT -->
 <div class="modal-overlay" id="modalDungeonSelect">
@@ -950,7 +969,7 @@
     </div>
     <div class="modal-body">
       <p style="font-size: 0.84rem; color: var(--text-muted); line-height: 1.4;">
-        의뢰 완수 시 골드·명성과 함께 <b>스탯이 영구 성장</b>합니다.
+        의뢰 완수 시 풍성한 골드와 함께 <b>스탯이 영구 성장</b>합니다.
       </p>
       <div class="item-list" id="questBoardList"></div>
     </div>
@@ -1009,7 +1028,7 @@
   </div>
 </div>
 
-<!-- MODAL: FORGE -->
+<!-- MODAL: FORGE (RAPID DOPAMINE UPGRADE) -->
 <div class="modal-overlay" id="modalForge">
   <div class="modal-box">
     <div class="sheet-handle"></div>
@@ -1017,17 +1036,17 @@
       <h3>🔨 대장간 제련소 (최대 +20강)</h3>
       <div style="display: flex; gap: 6px; align-items: center;">
         <button class="btn-sm" id="btnForgeTabUpgrade" style="padding: 6px 12px; min-height: 34px;" onclick="switchForgeSubTab('upgrade')">강화</button>
-        <button class="btn-sm" id="btnForgeTabShop" style="padding: 6px 12px; min-height: 34px; background: #334155; color: #fff;" onclick="switchForgeSubTab('shop')">상점</button>
+        <button class="btn-sm" id="btnForgeTabShop" style="padding: 6px 12px; min-height: 34px; background: #334155; color: #fff;" onclick="switchForgeSubTab('shop')">상점 (다양한 장비)</button>
         <button class="btn-close-icon" onclick="closeModal('modalForge')">✕</button>
       </div>
     </div>
     <div class="modal-body">
       <!-- Upgrade SubTab -->
-      <div id="forgeSubUpgrade" style="display: flex; flex-direction: column; gap: 12px;">
+      <div id="forgeSubUpgrade" style="display: flex; flex-direction: column; gap: 10px;">
         <div class="forge-display">
           <div style="display: flex; gap: 8px; width: 100%;">
-            <button class="btn-sm" id="btnTargetWpn" style="flex:1;" onclick="selectForgeTarget('weapon')">무기 강화</button>
-            <button class="btn-sm" id="btnTargetArm" style="flex:1; background:#334155; color:#fff;" onclick="selectForgeTarget('armor')">방어구 강화</button>
+            <button class="btn-sm" id="btnTargetWpn" style="flex:1;" onclick="selectForgeTarget('weapon')">무기 제련</button>
+            <button class="btn-sm" id="btnTargetArm" style="flex:1; background:#334155; color:#fff;" onclick="selectForgeTarget('armor')">방어구 제련</button>
           </div>
 
           <div class="forge-item-title" id="forgeItemName">훈련용 대검 (+0)</div>
@@ -1035,15 +1054,21 @@
 
           <div class="forge-rate-box">
             <div>성공 확률: <b id="forgeRateSuccess" style="color: #10b981;">100%</b></div>
+            <div>대성공(+2강): <b style="color: #facc15;">3%</b></div>
             <div>실패 시: <b id="forgeRateFailPenalty" style="color: #60a5fa;">유지 (안전)</b></div>
             <div>비용: <b id="forgeCost" style="color: var(--gold);">50 G</b></div>
           </div>
 
-          <div style="font-size: 0.8rem; color: #cbd5e1; background: #0c1424; padding: 10px; border-radius: 8px; width: 100%; text-align: left; line-height: 1.45; border: 1px solid #1e293b;">
-            🛡️ <b>안전 강화 규칙</b>:<br>
-            • <b>+1~14강</b>: 실패해도 등급 하락 없음 (100% 유지)<br>
-            • <b>+15~20강</b>: 실패 시에만 1~2단계 하락 (<b>파손 없음</b>)
+          <div style="font-size: 0.78rem; color: #cbd5e1; background: #0c1424; padding: 8px 10px; border-radius: 8px; width: 100%; text-align: left; line-height: 1.45; border: 1px solid #1e293b;">
+            🔥 <b>v3.2 대장간 핵심 규칙</b>:<br>
+            • <b>모든 구간 3% 확률로 2단계 대성공(+2강)</b> 발동!<br>
+            • <b>5강마다(+5, +10, +15, +20) 대폭적인 성능 폭증</b> 보너스 부여!<br>
+            • <b>+1~14강</b>: 실패 시 100% 등급 유지 (하락 없음)<br>
+            • <b>+15~20강</b>: 실패 시 <b>1강만 하락</b> (파손 없음)
           </div>
+
+          <!-- Mini Popup Toast directly above forge button (Instant Feedback!) -->
+          <div id="forgeResultToast" class="forge-toast"></div>
 
           <button class="btn-sm" id="btnDoForge" style="width: 100%; padding: 14px; font-size: 1.05rem; background: linear-gradient(135deg, #f59e0b, #d97706);" onclick="attemptForge()">
             🔥 망치질하기 (강화 시도)
@@ -1051,10 +1076,10 @@
         </div>
       </div>
 
-      <!-- Shop SubTab -->
+      <!-- Shop SubTab (Expanded Equipment!) -->
       <div id="forgeSubShop" style="display: none; flex-direction: column; gap: 10px;">
         <p style="font-size: 0.82rem; color: var(--text-muted);">
-          현재 클래스 <b id="shopClassNotice" style="color: #60a5fa;">[전사]</b> 전용 장비 목록입니다.
+          현재 클래스 <b id="shopClassNotice" style="color: #60a5fa;">[전사]</b> 전용 티어별 무기 및 방어구입니다.
         </p>
         <div class="item-list" id="classShopList"></div>
       </div>
@@ -1095,7 +1120,7 @@
 
         <div class="combat-btns" id="duelActionBtns">
           <button class="btn-sm" onclick="duelTurn('attack')">⚔️ 일반 공격</button>
-          <button class="btn-sm" id="btnDuelSkill" style="background: #3b82f6; color:#fff;" onclick="duelTurn('skill')">✨ 직업 고유기</button>
+          <button class="btn-sm" id="btnDuelSkill" style="background: #3b82f6; color:#fff;" onclick="duelTurn('skill')">✨ 고유기 (3/3)</button>
           <button class="btn-sm" style="background: #059669; color:#fff;" onclick="duelTurn('guard')">🛡️ 철벽 방어</button>
           <button class="btn-sm" id="btnDuelPotion" style="background: #e11d48; color:#fff;" onclick="duelTurn('potion')">🧪 영약 (+50 HP)</button>
         </div>
@@ -1123,7 +1148,7 @@
         <button class="btn-sm" onclick="randomizeName()">주사위 🎲</button>
       </div>
 
-      <div style="display: flex; flex-direction: column; gap: 8px;">
+      <div style="display: flex; flex-direction: column; gap: 8px; max-height: 280px; overflow-y: auto;">
         <label style="background: #070a10; border: 1px solid var(--border); padding: 12px; border-radius: 8px; cursor: pointer; display: flex; gap: 10px;">
           <input type="radio" name="charClassRadio" value="warrior" checked style="margin-top: 3px;">
           <div>
@@ -1198,7 +1223,6 @@ function initAudio() {
   }
 }
 
-// Mobile audio unlock listeners
 document.addEventListener('touchstart', initAudio, { once: true, passive: true });
 document.addEventListener('click', initAudio, { once: true, passive: true });
 
@@ -1222,8 +1246,8 @@ function playSound(type) {
       osc.start(now); osc.stop(now + 0.05);
     } else if (type === 'hammer') {
       osc.type = 'square';
-      osc.frequency.setValueAtTime(240, now);
-      osc.frequency.exponentialRampToValueAtTime(90, now + 0.08);
+      osc.frequency.setValueAtTime(260, now);
+      osc.frequency.exponentialRampToValueAtTime(80, now + 0.08);
       gain.gain.setValueAtTime(0.25, now);
       gain.gain.linearRampToValueAtTime(0.01, now + 0.08);
       osc.start(now); osc.stop(now + 0.08);
@@ -1236,13 +1260,22 @@ function playSound(type) {
       gain.gain.setValueAtTime(0.2, now);
       gain.gain.linearRampToValueAtTime(0.01, now + 0.45);
       osc.start(now); osc.stop(now + 0.45);
+    } else if (type === 'crit') {
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(783.99, now);
+      osc.frequency.setValueAtTime(1046.50, now + 0.08);
+      osc.frequency.setValueAtTime(1318.51, now + 0.16);
+      osc.frequency.setValueAtTime(1567.98, now + 0.24);
+      gain.gain.setValueAtTime(0.3, now);
+      gain.gain.linearRampToValueAtTime(0.01, now + 0.55);
+      osc.start(now); osc.stop(now + 0.55);
     } else if (type === 'fail') {
       osc.type = 'sawtooth';
       osc.frequency.setValueAtTime(260, now);
-      osc.frequency.linearRampToValueAtTime(130, now + 0.2);
+      osc.frequency.linearRampToValueAtTime(130, now + 0.18);
       gain.gain.setValueAtTime(0.2, now);
-      gain.gain.linearRampToValueAtTime(0.01, now + 0.2);
-      osc.start(now); osc.stop(now + 0.2);
+      gain.gain.linearRampToValueAtTime(0.01, now + 0.18);
+      osc.start(now); osc.stop(now + 0.18);
     } else if (type === 'hit') {
       osc.type = 'triangle';
       osc.frequency.setValueAtTime(160, now);
@@ -1294,76 +1327,99 @@ const CLASS_CONFIG = {
   }
 };
 
+// 12 Dungeons (Rebalanced: Significantly More Gold!)
 const DUNGEONS_12 = [
-  { id: 1, name: '슬라임 웅덩이', reqCp: 35, boss: '킹 슬라임', hpCost: 15, gold: [40, 70], fame: 6, drop: '슬라임 젤리 코어' },
-  { id: 2, name: '고블린 야영지', reqCp: 70, boss: '고블린 주술사', hpCost: 20, gold: [70, 130], fame: 12, drop: '주술사의 뼈 피리' },
-  { id: 3, name: '도적단 비밀 요새', reqCp: 120, boss: '도적 두목 칼날손', hpCost: 25, gold: [130, 220], fame: 20, drop: '도적단의 금화 자루' },
-  { id: 4, name: '음습한 독거미 굴', reqCp: 180, boss: '맹독 거미 여왕', hpCost: 30, gold: [200, 340], fame: 30, drop: '거미 여왕의 독주머니' },
-  { id: 5, name: '버려진 폐광산', reqCp: 260, boss: '폭주한 채광 골렘', hpCost: 35, gold: [280, 480], fame: 45, drop: '미스릴 원석' },
-  { id: 6, name: '망자의 지하 묘지', reqCp: 380, boss: '데스 나이트', hpCost: 40, gold: [400, 680], fame: 65, drop: '망자의 숨결' },
-  { id: 7, name: '저주받은 늑대인간 숲', reqCp: 520, boss: '블러드 울프 로드', hpCost: 45, gold: [550, 950], fame: 90, drop: '늑대의 송곳니' },
-  { id: 8, name: '오크 대요새 첨탑', reqCp: 700, boss: '강철 오크 워로드', hpCost: 50, gold: [750, 1300], fame: 130, drop: '전쟁 군주의 깃발' },
-  { id: 9, name: '혹한의 골렘 설산', reqCp: 950, boss: '서리 거인 프로스트', hpCost: 60, gold: [1100, 1900], fame: 180, drop: '동토의 심장' },
-  { id: 10, name: '흑염룡의 활화산 둥지', reqCp: 1300, boss: '흑염룡 이그니스', hpCost: 70, gold: [1600, 2800], fame: 250, drop: '용의 심장 수정' },
-  { id: 11, name: '고대 티탄의 심연 유적', reqCp: 1750, boss: '티탄의 거신상', hpCost: 80, gold: [2400, 4200], fame: 360, drop: '고대 티탄의 핵' },
-  { id: 12, name: '혼돈의 마왕성 심연', reqCp: 2300, boss: '혼돈의 마왕 벨리알 (최종보스)', hpCost: 95, gold: [5000, 10000], fame: 600, drop: '종언의 묵시록' }
+  { id: 1, name: '슬라임 웅덩이', reqCp: 35, boss: '킹 슬라임', hpCost: 15, gold: [120, 220], fame: 5, drop: '슬라임 젤리 코어' },
+  { id: 2, name: '고블린 야영지', reqCp: 70, boss: '고블린 주술사', hpCost: 20, gold: [220, 380], fame: 8, drop: '주술사의 뼈 피리' },
+  { id: 3, name: '도적단 비밀 요새', reqCp: 120, boss: '도적 두목 칼날손', hpCost: 25, gold: [380, 650], fame: 14, drop: '도적단의 금화 자루' },
+  { id: 4, name: '음습한 독거미 굴', reqCp: 180, boss: '맹독 거미 여왕', hpCost: 30, gold: [600, 1000], fame: 20, drop: '거미 여왕의 독주머니' },
+  { id: 5, name: '버려진 폐광산', reqCp: 260, boss: '폭주한 채광 골렘', hpCost: 35, gold: [900, 1500], fame: 30, drop: '미스릴 원석' },
+  { id: 6, name: '망자의 지하 묘지', reqCp: 380, boss: '데스 나이트', hpCost: 40, gold: [1400, 2200], fame: 45, drop: '망자의 숨결' },
+  { id: 7, name: '저주받은 늑대인간 숲', reqCp: 520, boss: '블러드 울프 로드', hpCost: 45, gold: [2000, 3200], fame: 60, drop: '늑대의 송곳니' },
+  { id: 8, name: '오크 대요새 첨탑', reqCp: 700, boss: '강철 오크 워로드', hpCost: 50, gold: [2800, 4500], fame: 85, drop: '전쟁 군주의 깃발' },
+  { id: 9, name: '혹한의 골렘 설산', reqCp: 950, boss: '서리 거인 프로스트', hpCost: 60, gold: [4000, 6500], fame: 120, drop: '동토의 심장' },
+  { id: 10, name: '흑염룡의 활화산 둥지', reqCp: 1300, boss: '흑염룡 이그니스', hpCost: 70, gold: [6000, 9500], fame: 160, drop: '용의 심장 수정' },
+  { id: 11, name: '고대 티탄의 심연 유적', reqCp: 1750, boss: '티탄의 거신상', hpCost: 80, gold: [9000, 14000], fame: 220, drop: '고대 티탄의 핵' },
+  { id: 12, name: '혼돈의 마왕성 심연', reqCp: 2300, boss: '혼돈의 마왕 벨리알 (최종보스)', hpCost: 95, gold: [16000, 30000], fame: 350, drop: '종언의 묵시록' }
 ];
 
+// Expanded Equipment Catalog (6 Weapons & 6 Armors per class)
 const CLASS_SHOP_ITEMS = {
   warrior: [
     { id: 'w1', type: 'weapon', name: '강철 츠바이헨더', stat: 15, cost: 250, desc: '근력 +15' },
-    { id: 'w2', type: 'weapon', name: '미스릴 클레이모어', stat: 35, cost: 800, desc: '근력 +35' },
-    { id: 'w3', type: 'weapon', name: '용살자 바스타드소드', stat: 75, cost: 2200, desc: '근력 +75, 체력 +30' },
-    { id: 'w4', type: 'weapon', name: '파멸의 처형검 (종결)', stat: 140, cost: 6000, desc: '근력 +140' },
-    { id: 'a1', type: 'armor', name: '강철 판금 갑옷', stat: 18, cost: 250, desc: '방어 +18, HP +25' },
-    { id: 'a2', type: 'armor', name: '티탄 사슬 중갑', stat: 40, cost: 800, desc: '방어 +40, HP +60' },
-    { id: 'a3', type: 'armor', name: '드래곤 스케일 아머', stat: 85, cost: 2400, desc: '방어 +85, HP +140' }
+    { id: 'w2', type: 'weapon', name: '미스릴 클레이모어', stat: 35, cost: 750, desc: '근력 +35' },
+    { id: 'w3', type: 'weapon', name: '용살자 바스타드소드', stat: 65, cost: 1800, desc: '근력 +65, 체력 +20' },
+    { id: 'w4', type: 'weapon', name: '거인 학살자의 대도끼', stat: 105, cost: 3600, desc: '근력 +105' },
+    { id: 'w5', type: 'weapon', name: '심연의 마검 티르빙', stat: 150, cost: 6500, desc: '근력 +150' },
+    { id: 'w6', type: 'weapon', name: '파멸의 처형검 (종결)', stat: 210, cost: 12000, desc: '근력 +210, 보스 치명타' },
+    { id: 'a1', type: 'armor', name: '강철 판금 갑옷', stat: 16, cost: 250, desc: '방어 +16, HP +25' },
+    { id: 'a2', type: 'armor', name: '티탄 사슬 중갑', stat: 36, cost: 750, desc: '방어 +36, HP +60' },
+    { id: 'a3', type: 'armor', name: '드래곤 스케일 아머', stat: 70, cost: 1900, desc: '방어 +70, HP +120' },
+    { id: 'a4', type: 'armor', name: '심연의 흑철 갑주', stat: 110, cost: 3800, desc: '방어 +110, HP +200' },
+    { id: 'a5', type: 'armor', name: '발할라 발키리 중갑', stat: 155, cost: 6800, desc: '방어 +155, HP +300' },
+    { id: 'a6', type: 'armor', name: '불멸의 성채 갑옷 (종결)', stat: 220, cost: 13000, desc: '방어 +220, HP +450' }
   ],
   mage: [
-    { id: 'm1', type: 'weapon', name: '오크우드 스태프', stat: 18, cost: 250, desc: '마력 +18' },
-    { id: 'm2', type: 'weapon', name: '아케인 오브', stat: 40, cost: 800, desc: '마력 +40' },
-    { id: 'm3', type: 'weapon', name: '별빛의 영혼 지팡이', stat: 80, cost: 2200, desc: '마력 +80' },
-    { id: 'm4', type: 'weapon', name: '세계수의 아티팩트 완드', stat: 150, cost: 6000, desc: '마력 +150' },
+    { id: 'm1', type: 'weapon', name: '오크우드 스태프', stat: 16, cost: 250, desc: '마력 +16' },
+    { id: 'm2', type: 'weapon', name: '아케인 오브', stat: 38, cost: 750, desc: '마력 +38' },
+    { id: 'm3', type: 'weapon', name: '별빛의 영혼 지팡이', stat: 70, cost: 1800, desc: '마력 +70' },
+    { id: 'm4', type: 'weapon', name: '에테르 현자의 보주', stat: 110, cost: 3600, desc: '마력 +110' },
+    { id: 'm5', type: 'weapon', name: '대마도사의 파괴 지팡이', stat: 160, cost: 6500, desc: '마력 +160' },
+    { id: 'm6', type: 'weapon', name: '세계수의 아티팩트 완드 (종결)', stat: 220, cost: 12000, desc: '마력 +220' },
     { id: 'ma1', type: 'armor', name: '실크 마도 로브', stat: 12, cost: 250, desc: '방어 +12, INT +5' },
-    { id: 'ma2', type: 'armor', name: '대현자의 마도포', stat: 30, cost: 800, desc: '방어 +30, INT +15' },
-    { id: 'ma3', type: 'armor', name: '천상의 로브', stat: 70, cost: 2400, desc: '방어 +70, INT +35' }
+    { id: 'ma2', type: 'armor', name: '대현자의 마도포', stat: 30, cost: 750, desc: '방어 +30, INT +15' },
+    { id: 'ma3', type: 'armor', name: '아스트랄 에테르 예복', stat: 60, cost: 1900, desc: '방어 +60, INT +30' },
+    { id: 'ma4', type: 'armor', name: '성좌의 영원 로브', stat: 95, cost: 3800, desc: '방어 +95, INT +50' },
+    { id: 'ma5', type: 'armor', name: '태초의 마도 코트', stat: 140, cost: 6800, desc: '방어 +140, INT +75' },
+    { id: 'ma6', type: 'armor', name: '신의 마도 의복 (종결)', stat: 195, cost: 13000, desc: '방어 +195, INT +110' }
   ],
   rogue: [
     { id: 'r1', type: 'weapon', name: '그림자 비수', stat: 16, cost: 250, desc: '민첩 +16' },
-    { id: 'r2', type: 'weapon', name: '독니의 암살 단검', stat: 38, cost: 800, desc: '민첩 +38' },
-    { id: 'r3', type: 'weapon', name: '칠흑의 이중 쌍검', stat: 78, cost: 2200, desc: '민첩 +78' },
-    { id: 'r4', type: 'weapon', name: '그림자 군주의 아지노스', stat: 145, cost: 6000, desc: '민첩 +145' },
+    { id: 'r2', type: 'weapon', name: '독니의 암살 단검', stat: 38, cost: 750, desc: '민첩 +38' },
+    { id: 'r3', type: 'weapon', name: '칠흑의 이중 쌍검', stat: 70, cost: 1800, desc: '민첩 +70' },
+    { id: 'r4', type: 'weapon', name: '바람살의 암습 단도', stat: 110, cost: 3600, desc: '민첩 +110' },
+    { id: 'r5', type: 'weapon', name: '유령 절단기의 쌍검', stat: 155, cost: 6500, desc: '민첩 +155' },
+    { id: 'r6', type: 'weapon', name: '그림자 군주의 아지노스 (종결)', stat: 215, cost: 12000, desc: '민첩 +215' },
     { id: 'ra1', type: 'armor', name: '밤의 은신 가죽 갑옷', stat: 14, cost: 250, desc: '방어 +14, DEX +5' },
-    { id: 'ra2', type: 'armor', name: '팬텀 슈트', stat: 35, cost: 800, desc: '방어 +35, DEX +15' },
-    { id: 'ra3', type: 'armor', name: '그림자 군주의 망토', stat: 75, cost: 2400, desc: '방어 +75, DEX +35' }
+    { id: 'ra2', type: 'armor', name: '팬텀 슈트', stat: 32, cost: 750, desc: '방어 +32, DEX +15' },
+    { id: 'ra3', type: 'armor', name: '어둠 추적자의 가죽옷', stat: 65, cost: 1900, desc: '방어 +65, DEX +30' },
+    { id: 'ra4', type: 'armor', name: '환영의 은신 망토', stat: 100, cost: 3800, desc: '방어 +100, DEX +50' },
+    { id: 'ra5', type: 'armor', name: '칠흑 암살자의 슈트', stat: 145, cost: 6800, desc: '방어 +145, DEX +75' },
+    { id: 'ra6', type: 'armor', name: '그림자 군주의 망토 (종결)', stat: 200, cost: 13000, desc: '방어 +200, DEX +110' }
   ],
   paladin: [
     { id: 'p1', type: 'weapon', name: '정의의 전투망치', stat: 16, cost: 250, desc: '공격 +16, 방어 +5' },
-    { id: 'p2', type: 'weapon', name: '심판의 신성 철퇴', stat: 36, cost: 800, desc: '공격 +36, 방어 +15' },
-    { id: 'p3', type: 'weapon', name: '대천사의 여명검', stat: 76, cost: 2200, desc: '공격 +76, 방어 +30' },
-    { id: 'p4', type: 'weapon', name: '신성 군주의 선더해머', stat: 142, cost: 6000, desc: '공격 +142, 방어 +50' },
-    { id: 'pa1', type: 'armor', name: '기사단 축복 성갑', stat: 20, cost: 250, desc: '방어 +20, HP +35' },
-    { id: 'pa2', type: 'armor', name: '발키리의 은빛 갑주', stat: 45, cost: 800, desc: '방어 +45, HP +80' },
-    { id: 'pa3', type: 'armor', name: '불멸의 가디언 아머', stat: 95, cost: 2400, desc: '방어 +95, HP +180' }
+    { id: 'p2', type: 'weapon', name: '심판의 신성 철퇴', stat: 36, cost: 750, desc: '공격 +36, 방어 +15' },
+    { id: 'p3', type: 'weapon', name: '대천사의 여명검', stat: 68, cost: 1800, desc: '공격 +68, 방어 +25' },
+    { id: 'p4', type: 'weapon', name: '성스러운 백은 워해머', stat: 108, cost: 3600, desc: '공격 +108, 방어 +40' },
+    { id: 'p5', type: 'weapon', name: '빛의 성채 홀리소드', stat: 152, cost: 6500, desc: '공격 +152, 방어 +60' },
+    { id: 'p6', type: 'weapon', name: '신성 군주의 선더해머 (종결)', stat: 210, cost: 12000, desc: '공격 +210, 방어 +85' },
+    { id: 'pa1', type: 'armor', name: '기사단 축복 성갑', stat: 18, cost: 250, desc: '방어 +18, HP +35' },
+    { id: 'pa2', type: 'armor', name: '발키리의 은빛 갑주', stat: 40, cost: 750, desc: '방어 +40, HP +75' },
+    { id: 'pa3', type: 'armor', name: '태양의 수호 갑옷', stat: 75, cost: 1900, desc: '방어 +75, HP +140' },
+    { id: 'pa4', type: 'armor', name: '대천사의 성스러운 흉갑', stat: 115, cost: 3800, desc: '방어 +115, HP +230' },
+    { id: 'pa5', type: 'armor', name: '신의 영역 가디언 아머', stat: 160, cost: 6800, desc: '방어 +160, HP +340' },
+    { id: 'pa6', type: 'armor', name: '불멸의 성기사단 갑옷 (종결)', stat: 225, cost: 13000, desc: '방어 +225, HP +500' }
   ]
 };
 
+// Rebalanced Quests: High Gold Rewards, Moderate Fame
 const QUEST_MASTER_POOL = [
-  { id: 'q1', title: '청정 약초 채집 및 호수 정화', minRank: 'F', reqStat: 'dex', reqVal: 8, hpCost: 12, gold: 90, fame: 8, statReward: { stat: 'dex', val: 1 }, desc: '약초 군락지 수색. [민첩 +1]' },
-  { id: 'q2', title: '골목 치안 순찰 및 훈련 지원', minRank: 'F', reqStat: 'str', reqVal: 10, hpCost: 15, gold: 110, fame: 10, statReward: { stat: 'str', val: 1 }, desc: '마을 치안을 유지하며 체력 단련. [근력 +1]' },
-  { id: 'q3', title: '길드 도서관 고문서 필사', minRank: 'F', reqStat: 'int', reqVal: 8, hpCost: 10, gold: 100, fame: 10, statReward: { stat: 'int', val: 1 }, desc: '마법 서적 정리 및 지식 축적. [마력 +1]' },
-  { id: 'q4', title: '상단 수송 마차 호위', minRank: 'E', reqStat: 'str', reqVal: 16, hpCost: 18, gold: 200, fame: 18, statReward: { stat: 'str', val: 2 }, desc: '가도를 지나는 상단 호위. [근력 +2]' },
-  { id: 'q5', title: '광산 폭주 슬라임 방파제 구축', minRank: 'E', reqStat: 'def', reqVal: 15, hpCost: 20, gold: 220, fame: 20, statReward: { stat: 'def', val: 2 }, desc: '방패로 거센 점액질 파도 저지. [방어 +2]' },
-  { id: 'q6', title: '약초원 희귀 약초 감별 조사', minRank: 'E', reqStat: 'int', reqVal: 16, hpCost: 14, gold: 210, fame: 22, statReward: { stat: 'int', val: 2 }, desc: '독초와 영약을 분류하여 납품. [마력 +2]' },
-  { id: 'q7', title: '귀족 영애 비밀 호위 임무', minRank: 'D', reqStat: 'dex', reqVal: 24, hpCost: 22, gold: 420, fame: 35, statReward: { stat: 'dex', val: 2 }, desc: '암살자의 표적이 된 귀족 보호. [민첩 +2]' },
-  { id: 'q8', title: '고대 석판 암호 해독 및 결계 보강', minRank: 'D', reqStat: 'int', reqVal: 22, hpCost: 18, gold: 400, fame: 40, statReward: { stat: 'int', val: 2 }, desc: '유적에서 발굴된 주문서 해석. [마력 +2]' },
-  { id: 'q9', title: '지하 수로 랫맨 무리 소탕', minRank: 'D', reqStat: 'str', reqVal: 24, hpCost: 24, gold: 450, fame: 38, statReward: { stat: 'str', val: 2 }, desc: '도시 아래 쥐인간 무리 진압. [근력 +2]' },
-  { id: 'q10', title: '위험 수배범 체포 및 현상금 수령', minRank: 'C', reqStat: 'str', reqVal: 36, hpCost: 30, gold: 750, fame: 70, statReward: { stat: 'str', val: 3 }, desc: '현상수배범과의 진검승부. [근력 +3]' },
-  { id: 'q11', title: '고위 마법 결계 보수 의식', minRank: 'C', reqStat: 'int', reqVal: 35, hpCost: 22, gold: 720, fame: 75, statReward: { stat: 'int', val: 3 }, desc: '결계에 고농도 마나 주입. [마력 +3]' },
-  { id: 'q12', title: '국경 지대 분쟁 수비 용병 참전', minRank: 'B', reqStat: 'def', reqVal: 48, hpCost: 38, gold: 1350, fame: 130, statReward: { stat: 'def', val: 3 }, desc: '치열한 전선에서 진영 사수. [방어 +3]' },
-  { id: 'q13', title: '비밀 결사 암살단 본거지 급습', minRank: 'B', reqStat: 'dex', reqVal: 50, hpCost: 35, gold: 1400, fame: 140, statReward: { stat: 'dex', val: 3 }, desc: '어둠에 숨은 암살 길드 궤멸. [민첩 +3]' },
-  { id: 'q14', title: '대마수 토벌 연합군 선봉 돌격대', minRank: 'A', reqStat: 'str', reqVal: 68, hpCost: 45, gold: 2600, fame: 280, statReward: { stat: 'str', val: 4 }, desc: '대형 마수 토벌 선봉. [근력 +4]' },
-  { id: 'q15', title: '신화적 드래곤 비늘 수확', minRank: 'S', reqStat: 'def', reqVal: 85, hpCost: 55, gold: 4500, fame: 450, statReward: { stat: 'def', val: 5 }, desc: '드래곤 서식지에서 최고급 자재 채취. [방어 +5]' }
+  { id: 'q1', title: '청정 약초 채집 및 호수 정화', minRank: 'F', reqStat: 'dex', reqVal: 8, hpCost: 12, gold: 240, fame: 5, statReward: { stat: 'dex', val: 1 }, desc: '약초 군락지 수색. [민첩 +1]' },
+  { id: 'q2', title: '골목 치안 순찰 및 훈련 지원', minRank: 'F', reqStat: 'str', reqVal: 10, hpCost: 15, gold: 280, fame: 6, statReward: { stat: 'str', val: 1 }, desc: '마을 치안을 유지하며 체력 단련. [근력 +1]' },
+  { id: 'q3', title: '길드 도서관 고문서 필사', minRank: 'F', reqStat: 'int', reqVal: 8, hpCost: 10, gold: 260, fame: 6, statReward: { stat: 'int', val: 1 }, desc: '마법 서적 정리 및 지식 축적. [마력 +1]' },
+  { id: 'q4', title: '상단 수송 마차 호위', minRank: 'E', reqStat: 'str', reqVal: 16, hpCost: 18, gold: 550, fame: 10, statReward: { stat: 'str', val: 2 }, desc: '가도를 지나는 상단 호위. [근력 +2]' },
+  { id: 'q5', title: '광산 폭주 슬라임 방파제 구축', minRank: 'E', reqStat: 'def', reqVal: 15, hpCost: 20, gold: 600, fame: 12, statReward: { stat: 'def', val: 2 }, desc: '방패로 거센 점액질 파도 저지. [방어 +2]' },
+  { id: 'q6', title: '약초원 희귀 약초 감별 조사', minRank: 'E', reqStat: 'int', reqVal: 16, hpCost: 14, gold: 580, fame: 12, statReward: { stat: 'int', val: 2 }, desc: '독초와 영약을 분류하여 납품. [마력 +2]' },
+  { id: 'q7', title: '귀족 영애 비밀 호위 임무', minRank: 'D', reqStat: 'dex', reqVal: 24, hpCost: 22, gold: 1100, fame: 20, statReward: { stat: 'dex', val: 2 }, desc: '암살자의 표적이 된 귀족 보호. [민첩 +2]' },
+  { id: 'q8', title: '고대 석판 암호 해독 및 결계 보강', minRank: 'D', reqStat: 'int', reqVal: 22, hpCost: 18, gold: 1050, fame: 22, statReward: { stat: 'int', val: 2 }, desc: '유적에서 발굴된 주문서 해석. [마력 +2]' },
+  { id: 'q9', title: '지하 수로 랫맨 무리 소탕', minRank: 'D', reqStat: 'str', reqVal: 24, hpCost: 24, gold: 1200, fame: 22, statReward: { stat: 'str', val: 2 }, desc: '도시 아래 쥐인간 무리 진압. [근력 +2]' },
+  { id: 'q10', title: '위험 수배범 체포 및 현상금 수령', minRank: 'C', reqStat: 'str', reqVal: 36, hpCost: 30, gold: 2000, fame: 40, statReward: { stat: 'str', val: 3 }, desc: '현상수배범과의 진검승부. [근력 +3]' },
+  { id: 'q11', title: '고위 마법 결계 보수 의식', minRank: 'C', reqStat: 'int', reqVal: 35, hpCost: 22, gold: 1900, fame: 42, statReward: { stat: 'int', val: 3 }, desc: '결계에 고농도 마나 주입. [마력 +3]' },
+  { id: 'q12', title: '국경 지대 분쟁 수비 용병 참전', minRank: 'B', reqStat: 'def', reqVal: 48, hpCost: 38, gold: 3600, fame: 70, statReward: { stat: 'def', val: 3 }, desc: '치열한 전선에서 진영 사수. [방어 +3]' },
+  { id: 'q13', title: '비밀 결사 암살단 본거지 급습', minRank: 'B', reqStat: 'dex', reqVal: 50, hpCost: 35, gold: 3800, fame: 75, statReward: { stat: 'dex', val: 3 }, desc: '어둠에 숨은 암살 길드 궤멸. [민첩 +3]' },
+  { id: 'q14', title: '대마수 토벌 연합군 선봉 돌격대', minRank: 'A', reqStat: 'str', reqVal: 68, hpCost: 45, gold: 7000, fame: 150, statReward: { stat: 'str', val: 4 }, desc: '대형 마수 토벌 선봉. [근력 +4]' },
+  { id: 'q15', title: '신화적 드래곤 비늘 수확', minRank: 'S', reqStat: 'def', reqVal: 85, hpCost: 55, gold: 12000, fame: 260, statReward: { stat: 'def', val: 5 }, desc: '드래곤 서식지에서 최고급 자재 채취. [방어 +5]' }
 ];
 
 const FORGE_RATES = [
@@ -1388,7 +1444,7 @@ let state = {
   weapon: { name: '훈련용 대검', plus: 0, power: 8 },
   armor: { name: '가죽 덧댄 갑옷', plus: 0, power: 6 },
   artifact: { name: '용기의 부적', power: 3 },
-  gold: 150,
+  gold: 300,
   fame: 10,
   bossesDefeated: 0,
   paladinRevived: false,
@@ -1401,6 +1457,15 @@ let hallOfFame = [];
 let forgeTarget = 'weapon';
 
 /* ==================== COMBAT POWER & FORMULAS ==================== */
+function getMilestoneBonus(plus) {
+  let bonus = 0;
+  if (plus >= 5) bonus += 15;
+  if (plus >= 10) bonus += 35;
+  if (plus >= 15) bonus += 75;
+  if (plus >= 20) bonus += 150;
+  return bonus;
+}
+
 function calculateCP() {
   let statScore = 0;
   if (state.charClass === 'warrior') {
@@ -1413,8 +1478,9 @@ function calculateCP() {
     statScore = state.def * 1.6 + state.str * 1.2 + state.int * 0.9 + state.dex * 0.5;
   }
 
-  const wpnBonus = state.weapon.power + (state.weapon.plus * (3.5 + state.weapon.plus * 0.4));
-  const armBonus = state.armor.power + (state.armor.plus * (3.5 + state.armor.plus * 0.4));
+  // Equipment scaling with 5-level milestones!
+  const wpnBonus = state.weapon.power + (state.weapon.plus * 3.5) + getMilestoneBonus(state.weapon.plus);
+  const armBonus = state.armor.power + (state.armor.plus * 3.5) + getMilestoneBonus(state.armor.plus);
   const hpBonus = state.maxHp * 0.2;
 
   return Math.round(statScore + wpnBonus + armBonus + hpBonus);
@@ -1457,12 +1523,12 @@ function updateUI() {
   document.getElementById('uiDef').textContent = state.def;
 
   const getPrefix = (plus) => {
-    if (plus >= 20) return '👑 [신화] ';
+    if (plus >= 20) return '👑 [신화 MAX] ';
     if (plus >= 18) return '⚡ [전설] ';
     if (plus >= 15) return '🔥 [불멸] ';
-    if (plus >= 12) return '✨ [찬란] ';
-    if (plus >= 8) return '💎 [빛남] ';
-    if (plus >= 4) return '⚔️ [예리] ';
+    if (plus >= 10) return '✨ [찬란] ';
+    if (plus >= 5) return '💎 [빛남] ';
+    if (plus >= 1) return '⚔️ [예리] ';
     return '';
   };
 
@@ -1481,7 +1547,7 @@ function updateUI() {
   const nextRankIdx = RANKS.indexOf(state.rank) + 1;
   if (nextRankIdx < RANKS.length) {
     document.getElementById('txtExamBtn').textContent = `${RANKS[nextRankIdx]}급 결투 심사`;
-    document.getElementById('txtExamDesc').textContent = '1:1 실시간 대련';
+    document.getElementById('txtExamDesc').textContent = '스킬 3회 한정 대련';
   } else {
     document.getElementById('txtExamBtn').textContent = '최고 등급 달성';
     document.getElementById('txtExamDesc').textContent = '대륙 최고의 영웅';
@@ -1567,7 +1633,7 @@ function openDungeonSelectModal() {
           <span style="font-size: 0.78rem; color: ${diffColor};">[CP ${d.reqCp} / ${diffText}]</span>
         </div>
         <div class="item-row-desc">
-          보스: <b>${d.boss}</b> | 보상: ${d.gold[0]}~${d.gold[1]}G | 체력 소모: 약 ${d.hpCost}
+          보스: <b>${d.boss}</b> | 보상: 💰 <b>${d.gold[0]}~${d.gold[1]}G</b> | 체력 소모: 약 ${d.hpCost}
         </div>
       </div>
       <div class="btn-group" style="display: flex; gap: 6px;">
@@ -1624,9 +1690,9 @@ function executeDungeonOneClick(dungeonId, mode) {
 
     let dropLog = '';
     if (Math.random() < 0.4) {
-      const dropBonus = Math.round(goldEarned * 0.75);
+      const dropBonus = Math.round(goldEarned * 0.8);
       state.gold += dropBonus;
-      dropLog = ` 🎁 전리품 <b>[${d.drop}]</b> 매각 (+${dropBonus}G)!`;
+      dropLog = ` 🎁 전리품 <b>[${d.drop}]</b> 고가 매각 (+${dropBonus}G)!`;
     }
 
     addLog(`👑 [${d.name}] 토벌 성공! 보스 <b>${d.boss}</b> 격파! (+${goldEarned}G, 명성 +${fameEarned}, HP -${baseHpLoss})${dropLog}`, 'dungeon');
@@ -1675,7 +1741,7 @@ function openQuestBoardModal() {
         </div>
         <div class="item-row-desc">
           ${q.desc}<br>
-          💰 보수: <b>${q.gold}G</b> | 🎖️ 명성: +${q.fame} | 💥 HP -${q.hpCost} | <b>✨ ${statNames[q.statReward.stat]} +${q.statReward.val}</b>
+          💰 보수: <b style="color:#fbbf24;">${q.gold}G</b> | 🎖️ 명성: +${q.fame} | 💥 HP -${q.hpCost} | <b>✨ ${statNames[q.statReward.stat]} +${q.statReward.val}</b>
         </div>
       </div>
       <button class="btn-sm" onclick="executeQuest(${idx})">수주 및 완수</button>
@@ -1713,8 +1779,8 @@ function executeQuest(idx) {
     addLog(`📜 의뢰 [${q.title}] 완수! (+${finalGold}G, 명성 +${q.fame}, <b>${statNames[q.statReward.stat]} +${q.statReward.val}</b> 성장!)`, 'reward');
   } else {
     playSound('fail');
-    state.fame = Math.max(0, state.fame - 5);
-    addLog(`⚠️ 의뢰 [${q.title}] 도중 실패했습니다. (명성 -5, HP -${q.hpCost})`, 'danger');
+    state.fame = Math.max(0, state.fame - 3);
+    addLog(`⚠️ 의뢰 [${q.title}] 도중 실패했습니다. (명성 -3, HP -${q.hpCost})`, 'danger');
   }
 
   advanceSeason();
@@ -1751,7 +1817,7 @@ function trainStat(stat) {
 
 function takeRestAction() {
   playSound('click');
-  const cost = Math.min(250, Math.max(30, Math.round(state.maxHp * 0.35)));
+  const cost = Math.min(200, Math.max(30, Math.round(state.maxHp * 0.3)));
   if (state.gold < cost && state.gold > 0) {
     alert(`골드가 부족합니다! (비용: ${cost}G)`);
     return;
@@ -1762,12 +1828,13 @@ function takeRestAction() {
   advanceSeason();
 }
 
-/* ==================== FORGE & 20-STAGE UPGRADES ==================== */
+/* ==================== FORGE & 20-STAGE UPGRADES (v3.2 OVERHAUL) ==================== */
 function openForgeModal() {
   playSound('click');
   switchForgeSubTab('upgrade');
   selectForgeTarget(forgeTarget);
   renderClassShop();
+  document.getElementById('forgeResultToast').style.display = 'none';
   openModal('modalForge');
 }
 
@@ -1792,32 +1859,42 @@ function selectForgeTarget(type) {
 
   const item = state[type];
   document.getElementById('forgeItemName').textContent = `${item.name} (+${item.plus})`;
-  document.getElementById('forgeItemStat').textContent = `기본 수치: ${item.power} | 강화 추가: +${Math.round(item.plus * 3.5)}`;
+  
+  const mBonus = getMilestoneBonus(item.plus);
+  const mText = mBonus > 0 ? ` (🔥 5강 보너스 +${mBonus})` : '';
+  document.getElementById('forgeItemStat').textContent = `기본 수치: ${item.power} | 강화 추가: +${Math.round(item.plus * 3.5 + mBonus)}${mText}`;
 
   const curPlus = item.plus;
   let successRate = curPlus < 20 ? FORGE_RATES[curPlus] : 0;
   let failPenalty = '등급 유지 (안전)';
   if (curPlus >= 15) {
-    failPenalty = '⚠️ -1 또는 -2강 하락 (파손 없음)';
+    failPenalty = '⚠️ 1강 하락 (파손 없음)';
   }
 
-  let cost = Math.round(50 * Math.pow(1.22, curPlus));
+  let cost = Math.round(45 * Math.pow(1.21, curPlus));
   document.getElementById('forgeRateSuccess').textContent = curPlus >= 20 ? 'MAX' : (successRate + '%');
   document.getElementById('forgeRateFailPenalty').textContent = failPenalty;
   document.getElementById('forgeCost').textContent = curPlus >= 20 ? '최고단계' : (cost.toLocaleString() + ' G');
+}
+
+function showForgeToast(type, text) {
+  const toast = document.getElementById('forgeResultToast');
+  toast.className = `forge-toast ${type}`;
+  toast.innerHTML = text;
+  toast.style.display = 'block';
 }
 
 function attemptForge() {
   const item = state[forgeTarget];
   const curPlus = item.plus;
   if (curPlus >= 20) {
-    alert('이미 최고 한계치(+20강 MAX)에 도달한 신화급 장비입니다!');
+    showForgeToast('success', '👑 이미 최고 한계치(+20강 MAX)에 도달한 신화급 장비입니다!');
     return;
   }
 
-  let cost = Math.round(50 * Math.pow(1.22, curPlus));
+  let cost = Math.round(45 * Math.pow(1.21, curPlus));
   if (state.gold < cost) {
-    alert('강화에 필요한 골드가 부족합니다!');
+    showForgeToast('downgrade', '❌ 골드가 부족합니다! 던전이나 의뢰를 완수하고 오세요.');
     return;
   }
 
@@ -1827,36 +1904,51 @@ function attemptForge() {
   playSound('hammer');
   const btn = document.getElementById('btnDoForge');
   btn.disabled = true;
-  btn.textContent = '🔨 탕... 탕... 탕... 제련 중!';
+  btn.textContent = '🔨 제련 중...';
 
+  // 0.5 second rapid delay as requested!
   setTimeout(() => {
     btn.disabled = false;
     btn.textContent = '🔥 망치질하기 (강화 시도)';
 
-    const successRate = FORGE_RATES[curPlus];
-    const roll = Math.random() * 100;
+    // Check 3% 2-level Critical Great Success!
+    const isCrit = Math.random() < 0.03;
 
-    if (roll < successRate) {
-      item.plus++;
-      playSound('victory');
-      addLog(`🔥 대장간 강화 대성공! [${item.name}]이(가) <b>+${item.plus}강</b>에 도달했습니다!`, 'forge');
-      alert(`🎉 [강화 대성공!] +${item.plus}강 달성! (최대 20강)`);
+    if (isCrit) {
+      const oldPlus = item.plus;
+      item.plus = Math.min(20, item.plus + 2);
+      playSound('crit');
+      const leapText = `🌟 [대성공!! 3% 확률 발동] 2단계 폭풍 상승! (+${item.plus}강 달성!)`;
+      showForgeToast('crit', leapText);
+      addLog(`🌟 대장간 제련 중 경이로운 빛이 뿜어져 나와 [${item.name}]이(가) <b>2단계 대성공(+${item.plus}강)</b>을 달성했습니다!`, 'crit');
     } else {
-      playSound('fail');
-      if (curPlus < 15) {
-        addLog(`대장간 강화 실패... 안전 구간이므로 등급이 유지되었습니다 (+${item.plus})`, 'forge');
-        alert(`강화 실패! 등급이 안전하게 유지되었습니다 (+${item.plus})`);
+      const successRate = FORGE_RATES[curPlus];
+      const roll = Math.random() * 100;
+
+      if (roll < successRate) {
+        item.plus++;
+        playSound('victory');
+        const mBonus = getMilestoneBonus(item.plus);
+        const milestoneMsg = (item.plus % 5 === 0) ? ' [🔥 5강 달성 스탯 대폭 증가!]' : '';
+        showForgeToast('success', `🎉 강화 성공! +${item.plus}강 달성!${milestoneMsg}`);
+        addLog(`🔥 대장간 강화 성공! [${item.name}]이(가) <b>+${item.plus}강</b>에 도달했습니다!${milestoneMsg}`, 'forge');
       } else {
-        const dropAmount = Math.random() < 0.65 ? 1 : 2;
-        item.plus = Math.max(14, item.plus - dropAmount);
-        addLog(`대장간 강화 실패 충격으로 장비가 -${dropAmount}강 하락했습니다 (+${item.plus})`, 'danger');
-        alert(`강화 실패! -${dropAmount}강 하락했습니다 (+${item.plus})`);
+        playSound('fail');
+        if (curPlus < 15) {
+          showForgeToast('fail', `🛡️ 강화 실패... 안전 구간이므로 등급이 유지되었습니다 (+${item.plus}강)`);
+          addLog(`대장간 강화 실패... 안전 구간이므로 등급이 유지되었습니다 (+${item.plus})`, 'forge');
+        } else {
+          // Exactly 1-level downgrade from 15+
+          item.plus = Math.max(14, item.plus - 1);
+          showForgeToast('downgrade', `⚠️ 강화 실패 충격으로 1강 하락했습니다 (+${item.plus}강)`);
+          addLog(`대장간 강화 실패 충격으로 장비가 1강 하락했습니다 (+${item.plus})`, 'danger');
+        }
       }
     }
 
     selectForgeTarget(forgeTarget);
     updateUI();
-  }, 600);
+  }, 500); // 0.5s delay!
 }
 
 function renderClassShop() {
@@ -1904,9 +1996,10 @@ function buyClassItem(itemId) {
   alert(`명품 장비 [${it.name}]을 장착했습니다!`);
 }
 
-/* ==================== REAL-TIME PROMOTION DUEL ==================== */
+/* ==================== REAL-TIME PROMOTION DUEL (3 SKILL USES LIMIT) ==================== */
 let duelBoss = { name: '', maxHp: 100, hp: 100, atk: 20, rank: 'E' };
 let duelUsedPotion = false;
+let duelSkillUsesLeft = 3; // EXACTLY 3 USES LIMIT
 
 function openPromotionModal() {
   playSound('click');
@@ -1947,6 +2040,8 @@ function openPromotionModal() {
   };
 
   duelUsedPotion = false;
+  duelSkillUsesLeft = 3; // Reset to 3 uses
+
   document.getElementById('duelMyName').textContent = `${state.name} (${state.rank}급)`;
   document.getElementById('duelMyMaxHp').textContent = state.maxHp;
   document.getElementById('duelMyHp').textContent = state.hp;
@@ -1961,7 +2056,9 @@ function openPromotionModal() {
   document.getElementById('duelActionBtns').style.display = 'grid';
 
   const skillNames = { warrior: '광폭 베기', mage: '메테오 스트라이크', rogue: '급소 암살검', paladin: '홀리 스마이트 & 힐' };
-  document.getElementById('btnDuelSkill').textContent = '✨ ' + skillNames[state.charClass];
+  const btnSkill = document.getElementById('btnDuelSkill');
+  btnSkill.textContent = `✨ ${skillNames[state.charClass]} (3/3)`;
+  btnSkill.disabled = false;
 
   openModal('modalPromotion');
 }
@@ -1977,12 +2074,26 @@ function duelTurn(action) {
     duelBoss.hp = Math.max(0, duelBoss.hp - playerDmg);
     log.innerHTML += `<div>🗡️ 당신의 공격! 심사관에게 <b>${playerDmg}</b> 피해를 입혔습니다.</div>`;
   } else if (action === 'skill') {
+    if (duelSkillUsesLeft <= 0) {
+      alert('직업 고유기는 결투 중 3회까지만 사용할 수 있습니다!');
+      return;
+    }
+    duelSkillUsesLeft--;
+
+    const skillNames = { warrior: '광폭 베기', mage: '메테오 스트라이크', rogue: '급소 암살검', paladin: '홀리 스마이트 & 힐' };
+    const btnSkill = document.getElementById('btnDuelSkill');
+    btnSkill.textContent = `✨ ${skillNames[state.charClass]} (${duelSkillUsesLeft}/3)`;
+    if (duelSkillUsesLeft === 0) {
+      btnSkill.disabled = true;
+      btnSkill.textContent = `✨ ${skillNames[state.charClass]} (소진됨)`;
+    }
+
     let skillDmg = Math.round(playerDmg * 1.8);
     if (state.charClass === 'paladin') {
       state.hp = Math.min(state.maxHp, state.hp + 30);
-      log.innerHTML += `<div style="color:#fbbf24;">✨ 신성한 스마이트 작렬! (${skillDmg} 피해, HP +30 회복)</div>`;
+      log.innerHTML += `<div style="color:#fbbf24;">✨ 신성한 스마이트 작렬! (${skillDmg} 피해, HP +30 회복) [남은 스킬: ${duelSkillUsesLeft}회]</div>`;
     } else {
-      log.innerHTML += `<div style="color:#60a5fa;">💥 고유 필살기 적중! 심사관에게 <b>${skillDmg}</b> 막대한 피해!</div>`;
+      log.innerHTML += `<div style="color:#60a5fa;">💥 고유 필살기 적중! 심사관에게 <b>${skillDmg}</b> 막대한 피해! [남은 스킬: ${duelSkillUsesLeft}회]</div>`;
     }
     duelBoss.hp = Math.max(0, duelBoss.hp - skillDmg);
   } else if (action === 'guard') {
@@ -2004,8 +2115,8 @@ function duelTurn(action) {
     document.getElementById('duelActionBtns').style.display = 'none';
     state.rank = duelBoss.rank;
     state.fame += 50;
-    state.gold += 300;
-    addLog(`🏆 1:1 진검 대련 끝에 <b>[${duelBoss.rank}급 모험가]</b>로 공식 승급했습니다! (+300G, 명성 +50)`, 'rank');
+    state.gold += 800; // Increased reward!
+    addLog(`🏆 1:1 진검 대련 끝에 <b>[${duelBoss.rank}급 모험가]</b>로 공식 승급했습니다! (+800G, 명성 +50)`, 'rank');
     updateUI();
     setTimeout(() => {
       alert(`🎉 축하합니다! ${duelBoss.rank}급 모험가 승급에 성공하셨습니다!`);
@@ -2064,7 +2175,7 @@ function retireHero(reason) {
     futureJob = '왕립 모험가 길드 총사령관 및 대륙의 수호신';
   } else if (state.rank === 'S' || state.rank === 'A') {
     futureJob = '왕도 왕립 아카데미의 최고 명예 석좌교수';
-  } else if (state.gold >= 4000) {
+  } else if (state.gold >= 8000) {
     futureJob = '대륙 전역의 대상단을 총괄하는 대재벌 상단주';
   } else if (state.int >= 60) {
     futureJob = '상아탑의 전설적인 원로 대현자';
@@ -2133,12 +2244,12 @@ function closeSummaryAndGoHall() {
   switchTab('hall');
 }
 
-/* ==================== MODAL HELPERS (OVERLAY TAP & SCROLL LOCK) ==================== */
+/* ==================== MODAL HELPERS ==================== */
 function openModal(id) {
   const el = document.getElementById(id);
   if (el) {
     el.style.display = 'flex';
-    document.body.style.overflow = 'hidden'; // lock background scrolling
+    document.body.style.overflow = 'hidden';
   }
 }
 
@@ -2146,15 +2257,13 @@ function closeModal(id) {
   const el = document.getElementById(id);
   if (el) {
     el.style.display = 'none';
-    // Check if any other modal is still open
     const openModals = document.querySelectorAll('.modal-overlay[style*="display: flex"]');
     if (openModals.length === 0) {
-      document.body.style.overflow = ''; // unlock
+      document.body.style.overflow = '';
     }
   }
 }
 
-// Global click-to-dismiss overlay backdrop listener
 document.addEventListener('click', (e) => {
   if (e.target.classList && e.target.classList.contains('modal-overlay')) {
     closeModal(e.target.id);
@@ -2194,7 +2303,7 @@ function startNewCareerFromModal() {
     weapon: { name: c.wpnName, plus: 0, power: 8 },
     armor: { name: c.armName, plus: 0, power: 6 },
     artifact: { name: '용기의 부적', power: 3 },
-    gold: 150,
+    gold: 300,
     fame: 10,
     bossesDefeated: 0,
     paladinRevived: false,
@@ -2269,7 +2378,7 @@ function loadGameFromLocalStorage() {
 }
 
 function exportSaveData() {
-  const data = { version: '3.1', state: state, hallOfFame: hallOfFame };
+  const data = { version: '3.2', state: state, hallOfFame: hallOfFame };
   const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
