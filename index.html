@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>견습에서 전설까지 v3.3 : 나만의 모험가 키우기</title>
+<title>견습에서 전설까지 v3.4 : 나만의 모험가 키우기</title>
 <style>
   :root {
     --bg-main: #0a0d14;
@@ -250,6 +250,20 @@
     align-items: center;
   }
 
+  /* Primary Combat Stat Banner (Class-Specific!) */
+  .primary-atk-banner {
+    background: #091222;
+    border: 1px solid #1e3a8a;
+    border-radius: 10px;
+    padding: 10px 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .primary-atk-label { font-size: 0.85rem; font-weight: 800; color: #93c5fd; display: flex; align-items: center; gap: 6px; }
+  .primary-atk-value { font-size: 1.25rem; font-weight: 900; color: #facc15; }
+
+  /* 4 Base Attributes */
   .stats-matrix {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -264,10 +278,12 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 4px 6px;
+    padding: 5px 8px;
+    background: #111a2e;
+    border-radius: 6px;
   }
-  .stat-label { font-size: 0.82rem; color: var(--text-muted); font-weight: 700; }
-  .stat-value { font-size: 1.05rem; font-weight: 900; color: #ffffff; }
+  .stat-label { font-size: 0.8rem; color: var(--text-muted); font-weight: 700; }
+  .stat-value { font-size: 1.02rem; font-weight: 900; color: #ffffff; }
 
   .equipment-box {
     background: #090e17;
@@ -722,7 +738,7 @@
 <div class="container">
   <header>
     <div class="logo-title">
-      <h1>⚔️ 견습에서 전설까지 <span style="font-size: 0.72rem; background: #f59e0b22; color: var(--primary); padding: 2px 7px; border-radius: 10px; border: 1px solid #f59e0b44;">v3.3</span></h1>
+      <h1>⚔️ 견습에서 전설까지 <span style="font-size: 0.72rem; background: #f59e0b22; color: var(--primary); padding: 2px 7px; border-radius: 10px; border: 1px solid #f59e0b44;">v3.4</span></h1>
       <p>15세 견습생부터 전설의 영웅까지 · 나만의 모험가 육성기</p>
     </div>
     <div class="header-actions">
@@ -751,7 +767,7 @@
       <!-- Class Passive Badge -->
       <div class="passive-badge" id="uiPassive">
         <div class="passive-title">고유 특성: 강철의 의지</div>
-        <div id="uiPassiveDesc" style="color: #cbd5e1;">받는 피해 20% 감소, 던전 보스 치명타 +20% | <b>[신의 기적] 체력 고갈 시 20% 확률로 생환</b></div>
+        <div id="uiPassiveDesc" style="color: #cbd5e1;">받는 피해 20% 감소, 던전 보스 치명타 +20% | <b>[신의 기적] 체력 0 도달 시 20% 생환</b></div>
       </div>
 
       <div>
@@ -775,10 +791,17 @@
         </div>
       </div>
 
+      <!-- Primary Class Combat Rating (Class Specific!) -->
+      <div class="primary-atk-banner" id="uiPrimaryAtkBanner">
+        <div class="primary-atk-label" id="uiPrimaryAtkLabel">⚔️ 물리 공격력</div>
+        <div class="primary-atk-value" id="uiPrimaryAtkValue">26</div>
+      </div>
+
+      <!-- 4 Pure Base Attributes -->
       <div class="stats-matrix">
         <div class="stat-item">
-          <span class="stat-label">⚔️ 공격 (STR)</span>
-          <span class="stat-value" id="uiStr">26</span>
+          <span class="stat-label">⚔️ 근력 (STR)</span>
+          <span class="stat-value" id="uiStr">18</span>
         </div>
         <div class="stat-item">
           <span class="stat-label">✨ 마력 (INT)</span>
@@ -987,34 +1010,34 @@
     </div>
     <div class="modal-body">
       <p style="font-size: 0.84rem; color: var(--text-muted); line-height: 1.4;">
-        1분기 동안 육체를 한계까지 단련합니다. 체력 20이 소모됩니다.
+        1분기 동안 기초 신체 능력치를 집중 단련합니다. 체력 20이 소모됩니다.
       </p>
       <div class="item-list">
         <div class="item-row">
           <div class="item-row-info">
-            <div class="item-row-title">⚔️ 웨이트 및 검술 특훈</div>
-            <div class="item-row-desc">근력(STR) +3~6 (체력 -20)</div>
+            <div class="item-row-title">⚔️ 웨이트 트레이닝 (완력 단련)</div>
+            <div class="item-row-desc">근육량과 순수 완력 강화: <b>근력(STR) +3~6</b> (체력 -20)</div>
           </div>
           <button class="btn-sm" onclick="trainStat('str')">근력 수련</button>
         </div>
         <div class="item-row">
           <div class="item-row-info">
-            <div class="item-row-title">✨ 고대 마도서 명상</div>
-            <div class="item-row-desc">마력(INT) +3~6 (마법사는 1.5배 보너스!)</div>
+            <div class="item-row-title">✨ 고대 마도서 명상 (마나 정제)</div>
+            <div class="item-row-desc">정신력과 마나 친화력 강화: <b>마력(INT) +3~6</b> (마법사는 1.5배 보너스!)</div>
           </div>
           <button class="btn-sm" onclick="trainStat('int')">마력 수련</button>
         </div>
         <div class="item-row">
           <div class="item-row-info">
-            <div class="item-row-title">🏃 고난도 장애물 주파</div>
-            <div class="item-row-desc">민첩(DEX) +3~6 (체력 -20)</div>
+            <div class="item-row-title">🏃 고난도 장애물 주파 (민첩 단련)</div>
+            <div class="item-row-desc">반사신경과 속도 강화: <b>민첩(DEX) +3~6</b> (체력 -20)</div>
           </div>
           <button class="btn-sm" onclick="trainStat('dex')">민첩 수련</button>
         </div>
         <div class="item-row">
           <div class="item-row-info">
-            <div class="item-row-title">🛡️ 방패술 및 맷집 단련</div>
-            <div class="item-row-desc">방어(DEF) +3~6, 최대 HP +15 영구 증가</div>
+            <div class="item-row-title">🛡️ 방패술 및 맷집 단련 (내구도 강화)</div>
+            <div class="item-row-desc">신체 내구도 강화: <b>방어(DEF) +3~6</b>, 최대 HP +15 영구 증가</div>
           </div>
           <button class="btn-sm" onclick="trainStat('def')">방어 수련</button>
         </div>
@@ -1026,7 +1049,7 @@
   </div>
 </div>
 
-<!-- MODAL: FORGE & SHOP (SEPARATE WEAPON & ARMOR TABS + LIVE GOLD) -->
+<!-- MODAL: FORGE & SHOP -->
 <div class="modal-overlay" id="modalForge">
   <div class="modal-box">
     <div class="sheet-handle"></div>
@@ -1055,7 +1078,7 @@
           </div>
 
           <div class="forge-item-title" id="forgeItemName">훈련용 대검 (+0)</div>
-          <div style="font-size: 0.88rem; color: #93c5fd;" id="forgeItemStat">+0강 스탯: 공격 +5</div>
+          <div style="font-size: 0.88rem; color: #93c5fd;" id="forgeItemStat">+0강 스탯</div>
 
           <div class="forge-rate-box">
             <div>성공 확률: <b id="forgeRateSuccess" style="color: #10b981;">100%</b></div>
@@ -1065,9 +1088,9 @@
           </div>
 
           <div style="font-size: 0.78rem; color: #cbd5e1; background: #0c1424; padding: 8px 10px; border-radius: 8px; width: 100%; text-align: left; line-height: 1.45; border: 1px solid #1e293b;">
-            🔥 <b>v3.3 대장간 핵심 규칙</b>:<br>
+            🔥 <b>v3.4 대장간 핵심 규칙</b>:<br>
             • <b>모든 구간 3% 확률로 2단계 대성공(+2강)</b> 발동!<br>
-            • <b>5강마다(+5, 10, 15, 20) 스탯 폭증 보너스</b>가 메인 화면에 즉시 반영!<br>
+            • <b>5강마다(+5, 10, 15, 20) 스탯 폭증 보너스</b>가 직업 주력 전투력에 즉시 반영!<br>
             • <b>+1~14강</b>: 실패 시 등급 유지 | <b>+15~20강</b>: 실패 시 <b>1강만 하락</b>
           </div>
 
@@ -1082,8 +1105,8 @@
 
       <!-- Weapon Shop SubTab -->
       <div id="forgeSubWeapon" style="display: none; flex-direction: column; gap: 8px;">
-        <div style="font-size: 0.82rem; color: var(--text-muted);">
-          현재 직업 전용 무기 목록입니다. 구매 시 공격력이 즉시 적용됩니다.
+        <div style="font-size: 0.82rem; color: var(--text-muted);" id="weaponShopDesc">
+          직업 전용 무기 목록입니다. 구매 시 주력 전투 능력치가 즉시 상승합니다.
         </div>
         <div class="item-list" id="weaponShopList"></div>
       </div>
@@ -1091,7 +1114,7 @@
       <!-- Armor Shop SubTab -->
       <div id="forgeSubArmor" style="display: none; flex-direction: column; gap: 8px;">
         <div style="font-size: 0.82rem; color: var(--text-muted);">
-          현재 직업 전용 방어구 목록입니다. 구매 시 방어력과 최대 생명력이 즉시 적용됩니다.
+          직업 전용 방어구 목록입니다. 구매 시 방어력과 생명력이 즉시 상승합니다.
         </div>
         <div class="item-list" id="armorShopList"></div>
       </div>
@@ -1131,7 +1154,7 @@
         </div>
 
         <div class="combat-btns" id="duelActionBtns">
-          <button class="btn-sm" onclick="duelTurn('attack')">⚔️ 일반 공격</button>
+          <button class="btn-sm" id="btnDuelAttack" onclick="duelTurn('attack')">⚔️ 일반 공격</button>
           <button class="btn-sm" id="btnDuelSkill" style="background: #3b82f6; color:#fff;" onclick="duelTurn('skill')">✨ 고유기 (3/3)</button>
           <button class="btn-sm" style="background: #059669; color:#fff;" onclick="duelTurn('guard')">🛡️ 철벽 방어</button>
           <button class="btn-sm" id="btnDuelPotion" style="background: #e11d48; color:#fff;" onclick="duelTurn('potion')">🧪 영약 (+50 HP)</button>
@@ -1153,7 +1176,7 @@
       <button class="btn-close-icon" onclick="closeModal('modalNewChar')">✕</button>
     </div>
     <div class="modal-body">
-      <p style="font-size: 0.85rem; color: var(--text-muted);">직업별 패시브와 전용 장비가 다릅니다.</p>
+      <p style="font-size: 0.85rem; color: var(--text-muted);">직업별 주력 전투 지표와 전용 장비가 다릅니다.</p>
       
       <div style="display: flex; gap: 8px;">
         <input type="text" id="inCharName" placeholder="모험가 이름" style="flex: 1; padding: 12px; background: #070a10; border: 1px solid var(--border); border-radius: 8px; color: #fff; font-size: 1rem;">
@@ -1165,15 +1188,15 @@
           <input type="radio" name="charClassRadio" value="warrior" checked style="margin-top: 3px;">
           <div>
             <div style="font-weight: 800; color: #f87171;">⚔️ 전사 (Warrior)</div>
-            <div style="font-size: 0.8rem; color: var(--text-muted);">받는 피해 20% 감소, 보스 치명타 +20%. 전용 대검·판금갑옷.</div>
+            <div style="font-size: 0.8rem; color: var(--text-muted);">주력: <b>물리 공격력 (근력 기반)</b>. 받는 피해 20% 감소, 대검·판금갑옷.</div>
           </div>
         </label>
 
         <label style="background: #070a10; border: 1px solid var(--border); padding: 12px; border-radius: 8px; cursor: pointer; display: flex; gap: 10px;">
           <input type="radio" name="charClassRadio" value="mage" style="margin-top: 3px;">
           <div>
-            <div style="font-weight: 800; color: #60a5fa;">✨ 마법사 (Mage)</div>
-            <div style="font-size: 0.8rem; color: var(--text-muted);">INT 수련 1.5배, 전투 시 30% 광역 마법. 전용 지팡이·로브.</div>
+            <div style="font-weight: 800; color: #60a5fa;">🔮 마법사 (Mage)</div>
+            <div style="font-size: 0.8rem; color: var(--text-muted);">주력: <b>마법 주문력 (마력 기반)</b>. INT 수련 1.5배, 지팡이·마도로브.</div>
           </div>
         </label>
 
@@ -1181,7 +1204,7 @@
           <input type="radio" name="charClassRadio" value="rogue" style="margin-top: 3px;">
           <div>
             <div style="font-weight: 800; color: #34d399;">🗡️ 도적 (Rogue)</div>
-            <div style="font-size: 0.8rem; color: var(--text-muted);">전투 회피 30%, 보상 골드 +35%, 패배 시 도주. 전용 단검·은신복.</div>
+            <div style="font-size: 0.8rem; color: var(--text-muted);">주력: <b>치명 공격력 (민첩 기반)</b>. 회피 30%, 골드 +35%, 단검·은신복.</div>
           </div>
         </label>
 
@@ -1189,7 +1212,7 @@
           <input type="radio" name="charClassRadio" value="paladin" style="margin-top: 3px;">
           <div>
             <div style="font-weight: 800; color: #fbbf24;">🛡️ 성기사 (Paladin)</div>
-            <div style="font-size: 0.8rem; color: var(--text-muted);">턴 종료 시 HP +15 자가 회복, 언데드 피해 100%, 1회 부활.</div>
+            <div style="font-size: 0.8rem; color: var(--text-muted);">주력: <b>신성 공격력 (신성/근력 기반)</b>. 턴 종료 시 HP +15 자가 회복, 메이스·성갑.</div>
           </div>
         </label>
       </div>
@@ -1201,7 +1224,7 @@
   </div>
 </div>
 
-<!-- MODAL: RETIREMENT SUMMARY (HALL OF FAME ENTRY) -->
+<!-- MODAL: RETIREMENT SUMMARY -->
 <div class="modal-overlay" id="modalSummary">
   <div class="modal-box">
     <div class="sheet-handle"></div>
@@ -1311,6 +1334,8 @@ const RANKS = ['F', 'E', 'D', 'C', 'B', 'A', 'S', 'LEGEND'];
 const CLASS_CONFIG = {
   warrior: {
     name: '전사 (Warrior)',
+    primaryName: '⚔️ 물리 공격력',
+    primaryDesc: '근력 + 대검 공격력',
     passive: '강철의 의지',
     passiveDesc: '받는 피해 20% 감소, 던전 보스 치명타 +20% | [신의 기적] 체력 0 도달 시 20% 생환',
     baseHp: 120, baseStr: 18, baseInt: 6, baseDex: 10, baseDef: 14,
@@ -1318,6 +1343,8 @@ const CLASS_CONFIG = {
   },
   mage: {
     name: '마법사 (Mage)',
+    primaryName: '🔮 마법 주문력',
+    primaryDesc: '마력 + 지팡이 주문력',
     passive: '마나 폭주',
     passiveDesc: 'INT 수련 1.5배, 전투 시 30% 광역 마법 발동 | [신의 기적] 체력 0 도달 시 20% 생환',
     baseHp: 85, baseStr: 6, baseInt: 20, baseDex: 10, baseDef: 8,
@@ -1325,6 +1352,8 @@ const CLASS_CONFIG = {
   },
   rogue: {
     name: '도적 (Rogue)',
+    primaryName: '🗡️ 치명 공격력',
+    primaryDesc: '민첩 + 단검 공격력',
     passive: '그림자 걸음 & 약탈',
     passiveDesc: '전투 회피 30%, 골드/전리품 +35%, 패배 시 도주 | [신의 기적] 체력 0 도달 시 20% 생환',
     baseHp: 95, baseStr: 10, baseInt: 8, baseDex: 20, baseDef: 9,
@@ -1332,6 +1361,8 @@ const CLASS_CONFIG = {
   },
   paladin: {
     name: '성기사 (Paladin)',
+    primaryName: '✨ 신성 공격력',
+    primaryDesc: '신성/근력 + 성검/메이스',
     passive: '신의 은총',
     passiveDesc: '턴 종료 시 HP +15 자가 회복, 언데드 피해 100%, 1회 부활 | [신의 기적] 체력 0 도달 시 20% 생환',
     baseHp: 115, baseStr: 13, baseInt: 12, baseDex: 8, baseDef: 18,
@@ -1354,39 +1385,39 @@ const DUNGEONS_12 = [
   { id: 12, name: '혼돈의 마왕성 심연', reqCp: 2300, boss: '혼돈의 마왕 벨리알 (최종보스)', hpCost: 95, gold: [16000, 30000], fame: 350, drop: '종언의 묵시록' }
 ];
 
-// Separated Weapons & Armors per Class (6 tiers each)
+// Class-specific weapon stats (Mage uses INT, Warrior uses STR, Rogue uses DEX, Paladin uses Holy/STR)
 const CLASS_WEAPONS = {
   warrior: [
-    { id: 'w1', name: '강철 츠바이헨더', stat: 15, cost: 250, desc: '공격 +15' },
-    { id: 'w2', name: '미스릴 클레이모어', stat: 35, cost: 750, desc: '공격 +35' },
-    { id: 'w3', name: '용살자 바스타드소드', stat: 65, cost: 1800, desc: '공격 +65' },
-    { id: 'w4', name: '거인 학살자의 대도끼', stat: 105, cost: 3600, desc: '공격 +105' },
-    { id: 'w5', name: '심연의 마검 티르빙', stat: 150, cost: 6500, desc: '공격 +150' },
-    { id: 'w6', name: '파멸의 처형검 (종결)', stat: 210, cost: 12000, desc: '공격 +210, 보스 치명타' }
+    { id: 'w1', name: '강철 츠바이헨더', stat: 15, cost: 250, desc: '물리 공격력 +15' },
+    { id: 'w2', name: '미스릴 클레이모어', stat: 35, cost: 750, desc: '물리 공격력 +35' },
+    { id: 'w3', name: '용살자 바스타드소드', stat: 65, cost: 1800, desc: '물리 공격력 +65' },
+    { id: 'w4', name: '거인 학살자의 대도끼', stat: 105, cost: 3600, desc: '물리 공격력 +105' },
+    { id: 'w5', name: '심연의 마검 티르빙', stat: 150, cost: 6500, desc: '물리 공격력 +150' },
+    { id: 'w6', name: '파멸의 처형검 (종결)', stat: 210, cost: 12000, desc: '물리 공격력 +210' }
   ],
   mage: [
-    { id: 'm1', name: '오크우드 스태프', stat: 16, cost: 250, desc: '마력 +16' },
-    { id: 'm2', name: '아케인 오브', stat: 38, cost: 750, desc: '마력 +38' },
-    { id: 'm3', name: '별빛의 영혼 지팡이', stat: 70, cost: 1800, desc: '마력 +70' },
-    { id: 'm4', name: '에테르 현자의 보주', stat: 110, cost: 3600, desc: '마력 +110' },
-    { id: 'm5', name: '대마도사의 파괴 지팡이', stat: 160, cost: 6500, desc: '마력 +160' },
-    { id: 'm6', name: '세계수의 아티팩트 완드 (종결)', stat: 220, cost: 12000, desc: '마력 +220' }
+    { id: 'm1', name: '오크우드 스태프', stat: 16, cost: 250, desc: '마법 주문력 +16' },
+    { id: 'm2', name: '아케인 오브', stat: 38, cost: 750, desc: '마법 주문력 +38' },
+    { id: 'm3', name: '별빛의 영혼 지팡이', stat: 70, cost: 1800, desc: '마법 주문력 +70' },
+    { id: 'm4', name: '에테르 현자의 보주', stat: 110, cost: 3600, desc: '마법 주문력 +110' },
+    { id: 'm5', name: '대마도사의 파괴 지팡이', stat: 160, cost: 6500, desc: '마법 주문력 +160' },
+    { id: 'm6', name: '세계수의 아티팩트 완드 (종결)', stat: 220, cost: 12000, desc: '마법 주문력 +220' }
   ],
   rogue: [
-    { id: 'r1', name: '그림자 비수', stat: 16, cost: 250, desc: '민첩 +16' },
-    { id: 'r2', name: '독니의 암살 단검', stat: 38, cost: 750, desc: '민첩 +38' },
-    { id: 'r3', name: '칠흑의 이중 쌍검', stat: 70, cost: 1800, desc: '민첩 +70' },
-    { id: 'r4', name: '바람살의 암습 단도', stat: 110, cost: 3600, desc: '민첩 +110' },
-    { id: 'r5', name: '유령 절단기의 쌍검', stat: 155, cost: 6500, desc: '민첩 +155' },
-    { id: 'r6', name: '그림자 군주의 아지노스 (종결)', stat: 215, cost: 12000, desc: '민첩 +215' }
+    { id: 'r1', name: '그림자 비수', stat: 16, cost: 250, desc: '치명 공격력 +16' },
+    { id: 'r2', name: '독니의 암살 단검', stat: 38, cost: 750, desc: '치명 공격력 +38' },
+    { id: 'r3', name: '칠흑의 이중 쌍검', stat: 70, cost: 1800, desc: '치명 공격력 +70' },
+    { id: 'r4', name: '바람살의 암습 단도', stat: 110, cost: 3600, desc: '치명 공격력 +110' },
+    { id: 'r5', name: '유령 절단기의 쌍검', stat: 155, cost: 6500, desc: '치명 공격력 +155' },
+    { id: 'r6', name: '그림자 군주의 아지노스 (종결)', stat: 215, cost: 12000, desc: '치명 공격력 +215' }
   ],
   paladin: [
-    { id: 'p1', name: '정의의 전투망치', stat: 16, cost: 250, desc: '공격 +16, 방어 +5' },
-    { id: 'p2', name: '심판의 신성 철퇴', stat: 36, cost: 750, desc: '공격 +36, 방어 +15' },
-    { id: 'p3', name: '대천사의 여명검', stat: 68, cost: 1800, desc: '공격 +68, 방어 +25' },
-    { id: 'p4', name: '성스러운 백은 워해머', stat: 108, cost: 3600, desc: '공격 +108, 방어 +40' },
-    { id: 'p5', name: '빛의 성채 홀리소드', stat: 152, cost: 6500, desc: '공격 +152, 방어 +60' },
-    { id: 'p6', name: '신성 군주의 선더해머 (종결)', stat: 210, cost: 12000, desc: '공격 +210, 방어 +85' }
+    { id: 'p1', name: '정의의 전투망치', stat: 16, cost: 250, desc: '신성 공격력 +16' },
+    { id: 'p2', name: '심판의 신성 철퇴', stat: 36, cost: 750, desc: '신성 공격력 +36' },
+    { id: 'p3', name: '대천사의 여명검', stat: 68, cost: 1800, desc: '신성 공격력 +68' },
+    { id: 'p4', name: '성스러운 백은 워해머', stat: 108, cost: 3600, desc: '신성 공격력 +108' },
+    { id: 'p5', name: '빛의 성채 홀리소드', stat: 152, cost: 6500, desc: '신성 공격력 +152' },
+    { id: 'p6', name: '신성 군주의 선더해머 (종결)', stat: 210, cost: 12000, desc: '신성 공격력 +210' }
   ]
 };
 
@@ -1427,7 +1458,7 @@ const CLASS_ARMORS = {
 
 const QUEST_MASTER_POOL = [
   { id: 'q1', title: '청정 약초 채집 및 호수 정화', minRank: 'F', reqStat: 'dex', reqVal: 8, hpCost: 12, gold: 240, fame: 5, statReward: { stat: 'dex', val: 1 }, desc: '약초 군락지 수색. [민첩 +1]' },
-  { id: 'q2', title: '골목 치안 순찰 및 훈련 지원', minRank: 'F', reqStat: 'str', reqVal: 10, hpCost: 15, gold: 280, fame: 6, statReward: { stat: 'str', val: 1 }, desc: '마을 치안 유지 및 체력 단련. [근력 +1]' },
+  { id: 'q2', title: '골목 치안 순찰 및 훈련 지원', minRank: 'F', reqStat: 'str', reqVal: 10, hpCost: 15, gold: 280, fame: 6, statReward: { stat: 'str', val: 1 }, desc: '마을 치안 유지 및 완력 단련. [근력 +1]' },
   { id: 'q3', title: '길드 도서관 고문서 필사', minRank: 'F', reqStat: 'int', reqVal: 8, hpCost: 10, gold: 260, fame: 6, statReward: { stat: 'int', val: 1 }, desc: '마법 서적 정리 및 지식 축적. [마력 +1]' },
   { id: 'q4', title: '상단 수송 마차 호위', minRank: 'E', reqStat: 'str', reqVal: 16, hpCost: 18, gold: 550, fame: 10, statReward: { stat: 'str', val: 2 }, desc: '가도를 지나는 상단 호위. [근력 +2]' },
   { id: 'q5', title: '광산 폭주 슬라임 방파제 구축', minRank: 'E', reqStat: 'def', reqVal: 15, hpCost: 20, gold: 600, fame: 12, statReward: { stat: 'def', val: 2 }, desc: '방패로 거센 점액질 파도 저지. [방어 +2]' },
@@ -1478,7 +1509,7 @@ let state = {
 let hallOfFame = [];
 let forgeTarget = 'weapon';
 
-/* ==================== COMBAT POWER & FORMULAS ==================== */
+/* ==================== COMBAT POWER & DERIVED STATS ==================== */
 function getMilestoneBonus(plus) {
   let bonus = 0;
   if (plus >= 5) bonus += 15;
@@ -1488,26 +1519,32 @@ function getMilestoneBonus(plus) {
   return bonus;
 }
 
-function calculateCP() {
+// Calculate the Class-specific Primary Combat Power
+function getPrimaryCombatPower() {
   const wpnBonus = state.weapon.power + (state.weapon.plus * 3.5) + getMilestoneBonus(state.weapon.plus);
-  const armBonus = state.armor.power + (state.armor.plus * 3.5) + getMilestoneBonus(state.armor.plus);
-
-  const effectiveStr = state.str + wpnBonus;
-  const effectiveDef = state.def + armBonus;
-
-  let statScore = 0;
   if (state.charClass === 'warrior') {
-    statScore = effectiveStr * 1.6 + effectiveDef * 1.3 + state.dex * 0.9 + state.int * 0.4;
+    // Physical Attack: STR + weapon
+    return Math.round(state.str * 1.5 + wpnBonus);
   } else if (state.charClass === 'mage') {
-    statScore = (state.int + wpnBonus) * 1.8 + state.dex * 1.0 + effectiveDef * 0.8 + state.str * 0.3;
+    // Magic Spell Power: INT + staff/orb
+    return Math.round(state.int * 1.6 + wpnBonus);
   } else if (state.charClass === 'rogue') {
-    statScore = (state.dex + wpnBonus) * 1.7 + state.str * 1.1 + effectiveDef * 0.8 + state.int * 0.4;
+    // Critical Agile Attack: DEX + dagger
+    return Math.round(state.dex * 1.5 + wpnBonus);
   } else if (state.charClass === 'paladin') {
-    statScore = effectiveDef * 1.6 + effectiveStr * 1.2 + state.int * 0.9 + state.dex * 0.5;
+    // Holy Power: Def + Str + Mace
+    return Math.round(state.str * 0.9 + state.int * 0.8 + wpnBonus);
   }
+  return Math.round(state.str + wpnBonus);
+}
 
-  const hpBonus = state.maxHp * 0.2;
-  return Math.round(statScore + hpBonus);
+function calculateCP() {
+  const primaryPower = getPrimaryCombatPower();
+  const armBonus = state.armor.power + (state.armor.plus * 3.5) + getMilestoneBonus(state.armor.plus);
+  const effectiveDef = state.def + armBonus;
+  const hpBonus = state.maxHp * 0.25;
+
+  return Math.round(primaryPower * 1.8 + effectiveDef * 1.2 + state.dex * 0.5 + hpBonus);
 }
 
 function getTierDescription(cp) {
@@ -1523,14 +1560,12 @@ function getTierDescription(cp) {
 
 /* ==================== UI UPDATE ==================== */
 function updateUI() {
-  // Sync Max HP with armor bonus
   const armorHp = state.armor.hpBonus || 0;
   state.maxHp = state.baseMaxHp + armorHp;
   if (state.hp > state.maxHp) state.hp = state.maxHp;
 
-  const wpnBonus = state.weapon.power + (state.weapon.plus * 3.5) + getMilestoneBonus(state.weapon.plus);
-  const armBonus = state.armor.power + (state.armor.plus * 3.5) + getMilestoneBonus(state.armor.plus);
   const cp = calculateCP();
+  const primaryAtk = getPrimaryCombatPower();
   const c = CLASS_CONFIG[state.charClass];
 
   document.getElementById('uiName').textContent = state.name;
@@ -1548,10 +1583,16 @@ function updateUI() {
   document.getElementById('uiCp').textContent = cp;
   document.getElementById('uiTierEstimate').textContent = getTierDescription(cp);
 
-  // Directly reflect effective stats including weapons & armors!
-  document.getElementById('uiStr').innerHTML = `${Math.round(state.str + wpnBonus)} <span style="font-size:0.75rem; color:#93c5fd; font-weight:normal;">(${state.str}+${Math.round(wpnBonus)})</span>`;
+  // Class Primary Combat Rating Display (IMMERSION FIX!)
+  document.getElementById('uiPrimaryAtkLabel').textContent = c.primaryName;
+  document.getElementById('uiPrimaryAtkValue').textContent = primaryAtk;
+
+  // 4 Pure Base Attributes (Universal, not labeled as Attack!)
+  document.getElementById('uiStr').textContent = state.str;
   document.getElementById('uiInt').textContent = state.int;
   document.getElementById('uiDex').textContent = state.dex;
+  
+  const armBonus = state.armor.power + (state.armor.plus * 3.5) + getMilestoneBonus(state.armor.plus);
   document.getElementById('uiDef').innerHTML = `${Math.round(state.def + armBonus)} <span style="font-size:0.75rem; color:#6ee7b7; font-weight:normal;">(${state.def}+${Math.round(armBonus)})</span>`;
 
   const getPrefix = (plus) => {
@@ -1576,7 +1617,6 @@ function updateUI() {
   document.getElementById('uiGold').textContent = state.gold.toLocaleString();
   document.getElementById('uiFame').textContent = state.fame.toLocaleString();
   
-  // Live gold text in shop
   const shopGold = document.getElementById('shopGoldText');
   if (shopGold) shopGold.textContent = state.gold.toLocaleString() + ' G';
 
@@ -1610,7 +1650,6 @@ function clearLogs() {
 /* ==================== DEATH & MIRACLE OF GOD ==================== */
 function checkHeroDeath(cause) {
   if (state.hp <= 0) {
-    // 20% Miracle of God Passive
     if (Math.random() < 0.20) {
       state.hp = 10;
       playSound('victory');
@@ -1618,14 +1657,14 @@ function checkHeroDeath(cause) {
 20% 확률의 신의 기적으로 치명상을 극복하고 기적처럼 목숨을 건졌습니다! (HP 10으로 생환)`);
       addLog(`✨ 체력이 바닥났으나 <b>「신의 기적」(20% 확률)</b>이 강림하여 구사일생으로 살아남았습니다! (HP 10)`, 'reward');
       updateUI();
-      return false; // survived!
+      return false;
     } else {
       playSound('fail');
       alert(`💀 [용사 전사]
 ${state.name}이(가) ${cause} 도중 장렬히 전사했습니다...
-모험가의 모든 기록이 명예의 전당으로 이동합니다.`);
+모든 커리어 기록이 명예의 전당으로 이동합니다.`);
       retireHero(`장렬한 전사 (${cause})`);
-      return true; // died
+      return true;
     }
   }
   return false;
@@ -1718,7 +1757,6 @@ function executeDungeonOneClick(dungeonId, mode) {
   if (state.charClass === 'warrior') baseHpLoss = Math.round(baseHpLoss * 0.8);
   if (mode === 'safe') baseHpLoss = Math.round(baseHpLoss * 0.65);
 
-  // Lethal choice warning prompt!
   if (state.hp <= baseHpLoss) {
     const proceed = confirm(`⚠️ !경고 용사가 죽음에 이를 수도 있습니다!
 현재 체력: ${state.hp} / 예상 소모: ${baseHpLoss}
@@ -1857,7 +1895,7 @@ function executeQuest(idx) {
   advanceSeason();
 }
 
-/* ==================== TRAINING & REST ==================== */
+/* ==================== TRAINING & REST (PURE ATTRIBUTES) ==================== */
 function openTrainingModal() {
   playSound('click');
   openModal('modalTraining');
@@ -1885,8 +1923,8 @@ function trainStat(stat) {
     state.maxHp += 15;
   }
 
-  const names = { str: '근력', int: '마력', dex: '민첩', def: '방어' };
-  addLog(`🏋️ 집중 수련을 통해 <b>${names[stat]}</b> 스탯이 +${gain} 상승했습니다! (HP -20)`, 'event');
+  const names = { str: '근력(STR)', int: '마력(INT)', dex: '민첩(DEX)', def: '방어(DEF)' };
+  addLog(`🏋️ 집중 수련을 통해 순수 <b>${names[stat]}</b> 수치가 +${gain} 상승했습니다! (HP -20)`, 'event');
   playSound('victory');
 
   if (checkHeroDeath('지옥의 한계 수련')) return;
@@ -1907,7 +1945,7 @@ function takeRestAction() {
   advanceSeason();
 }
 
-/* ==================== FORGE & SEPARATE SHOP TABS (v3.3) ==================== */
+/* ==================== FORGE & SEPARATE SHOP TABS (v3.4) ==================== */
 function openForgeModal() {
   playSound('click');
   switchForgeSubTab('upgrade');
@@ -1950,7 +1988,7 @@ function selectForgeTarget(type) {
   
   const mBonus = getMilestoneBonus(item.plus);
   const mText = mBonus > 0 ? ` (🔥 5강 보너스 +${mBonus})` : '';
-  const statType = type === 'weapon' ? '공격' : '방어';
+  const statType = type === 'weapon' ? (state.charClass === 'mage' ? '마력' : '공격') : '방어';
   document.getElementById('forgeItemStat').textContent = `기본 수치: ${item.power} | ${statType} 추가: +${Math.round(item.plus * 3.5 + mBonus)}${mText}`;
 
   const curPlus = item.plus;
@@ -1995,12 +2033,11 @@ function attemptForge() {
   btn.disabled = true;
   btn.textContent = '🔨 제련 중...';
 
-  // 0.5s delay
+  // 0.5s rapid delay
   setTimeout(() => {
     btn.disabled = false;
     btn.textContent = '🔥 망치질하기 (강화 시도)';
 
-    // Check 3% Critical Great Success (+2 levels)
     const isCrit = Math.random() < 0.03;
 
     if (isCrit) {
@@ -2034,7 +2071,6 @@ function attemptForge() {
     }
 
     selectForgeTarget(forgeTarget);
-    // LIVE STAT REFLECTION ON MAIN SCREEN!
     updateUI();
   }, 500);
 }
@@ -2093,13 +2129,13 @@ function buyWeapon(itemId) {
   playSound('victory');
 
   state.weapon = { name: it.name, plus: 0, power: it.stat };
-  addLog(`대장간 무기상점에서 [${it.name}]을 새로 구입하여 장착했습니다! 공격력이 즉시 반영되었습니다. (-${it.cost}G)`, 'reward');
+  const statName = state.charClass === 'mage' ? '마법 주문력' : (state.charClass === 'rogue' ? '치명 공격력' : '물리 공격력');
+  addLog(`대장간 무기상점에서 [${it.name}]을 장착했습니다! ${statName}이 즉시 반영되었습니다. (-${it.cost}G)`, 'reward');
   
-  // LIVE UPDATE
   updateUI();
   renderWeaponShop();
   selectForgeTarget('weapon');
-  alert(`명품 무기 [${it.name}]을 장착했습니다! 공격력이 즉시 상승했습니다.`);
+  alert(`명품 무기 [${it.name}]을 장착했습니다! ${statName}이 즉시 상승했습니다.`);
 }
 
 function buyArmor(itemId) {
@@ -2116,9 +2152,8 @@ function buyArmor(itemId) {
   playSound('victory');
 
   state.armor = { name: it.name, plus: 0, power: it.stat, hpBonus: it.hpBonus || 0 };
-  addLog(`대장간 방어구상점에서 [${it.name}]을 새로 구입하여 장착했습니다! 방어력과 체력이 즉시 반영되었습니다. (-${it.cost}G)`, 'reward');
+  addLog(`대장간 방어구상점에서 [${it.name}]을 장착했습니다! 방어력과 생명력이 즉시 반영되었습니다. (-${it.cost}G)`, 'reward');
   
-  // LIVE UPDATE
   updateUI();
   renderArmorShop();
   selectForgeTarget('armor');
@@ -2189,19 +2224,23 @@ function openPromotionModal() {
   btnSkill.textContent = `✨ ${skillNames[state.charClass]} (3/3)`;
   btnSkill.disabled = false;
 
+  const btnAttack = document.getElementById('btnDuelAttack');
+  btnAttack.textContent = state.charClass === 'mage' ? '🔮 주문 영창 (일반)' : '⚔️ 일반 공격';
+
   openModal('modalPromotion');
 }
 
 function duelTurn(action) {
   playSound('hit');
   const log = document.getElementById('duelLog');
-  const myCp = calculateCP();
-  let playerDmg = Math.round(myCp * 0.25 + 10);
+  const primaryAtk = getPrimaryCombatPower();
+  let playerDmg = Math.round(primaryAtk * 0.5 + 10);
   let guardActive = false;
 
   if (action === 'attack') {
     duelBoss.hp = Math.max(0, duelBoss.hp - playerDmg);
-    log.innerHTML += `<div>🗡️ 당신의 공격! 심사관에게 <b>${playerDmg}</b> 피해를 입혔습니다.</div>`;
+    const atkDesc = state.charClass === 'mage' ? '마법 화살 주문 공격' : '공격';
+    log.innerHTML += `<div>✨ 당신의 ${atkDesc}! 심사관에게 <b>${playerDmg}</b> 피해를 입혔습니다.</div>`;
   } else if (action === 'skill') {
     if (duelSkillUsesLeft <= 0) {
       alert('직업 고유기는 결투 중 3회까지만 사용할 수 있습니다!');
@@ -2217,12 +2256,14 @@ function duelTurn(action) {
       btnSkill.textContent = `✨ ${skillNames[state.charClass]} (소진됨)`;
     }
 
-    let skillDmg = Math.round(playerDmg * 1.8);
+    let skillDmg = Math.round(playerDmg * 1.85);
     if (state.charClass === 'paladin') {
       state.hp = Math.min(state.maxHp, state.hp + 30);
       log.innerHTML += `<div style="color:#fbbf24;">✨ 신성한 스마이트 작렬! (${skillDmg} 피해, HP +30 회복) [남은 스킬: ${duelSkillUsesLeft}회]</div>`;
+    } else if (state.charClass === 'mage') {
+      log.innerHTML += `<div style="color:#60a5fa;">🔮 메테오 폭격 작렬! 심사관에게 <b>${skillDmg}</b>의 마법 폭딜! [남은 스킬: ${duelSkillUsesLeft}회]</div>`;
     } else {
-      log.innerHTML += `<div style="color:#60a5fa;">💥 고유 필살기 적중! 심사관에게 <b>${skillDmg}</b> 막대한 피해! [남은 스킬: ${duelSkillUsesLeft}회]</div>`;
+      log.innerHTML += `<div style="color:#f87171;">💥 고유 필살기 적중! 심사관에게 <b>${skillDmg}</b>의 치명적 피해! [남은 스킬: ${duelSkillUsesLeft}회]</div>`;
     }
     duelBoss.hp = Math.max(0, duelBoss.hp - skillDmg);
   } else if (action === 'guard') {
@@ -2497,7 +2538,7 @@ function loadGameFromLocalStorage() {
 }
 
 function exportSaveData() {
-  const data = { version: '3.3', state: state, hallOfFame: hallOfFame };
+  const data = { version: '3.4', state: state, hallOfFame: hallOfFame };
   const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
