@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>견습에서 전설까지 v3.5 : 나만의 모험가 키우기</title>
+<title>견습에서 전설까지 v3.6 : 나만의 모험가 키우기</title>
 <style>
   :root {
     --bg-main: #0a0d14;
@@ -123,7 +123,7 @@
   }
   .btn-new-char-header:active { transform: scale(0.96); background: #475569; }
 
-  /* Grid Layout (Desktop vs Mobile) */
+  /* Grid Layout */
   .game-grid {
     display: grid;
     grid-template-columns: 320px 1fr;
@@ -250,7 +250,7 @@
     align-items: center;
   }
 
-  /* Primary Combat Stat Banner (Class-Specific!) */
+  /* Primary Combat Stat Banner */
   .primary-atk-banner {
     background: #091222;
     border: 1px solid #1e3a8a;
@@ -424,7 +424,7 @@
   .log-entry.crit { border-left-color: #eab308; background: #261f0c; }
   .log-season { color: var(--text-muted); font-size: 0.75rem; margin-right: 4px; }
 
-  /* ==================== RELIABLE MODALS & BOTTOM SHEET ==================== */
+  /* Modals */
   .modal-overlay {
     display: none;
     position: fixed;
@@ -460,9 +460,7 @@
     to { opacity: 1; transform: scale(1); }
   }
 
-  .sheet-handle {
-    display: none;
-  }
+  .sheet-handle { display: none; }
 
   @media (max-width: 640px) {
     .modal-overlay {
@@ -567,6 +565,12 @@
     gap: 10px;
   }
 
+  .item-row.locked {
+    opacity: 0.6;
+    background: #070910;
+    border-style: dashed;
+  }
+
   @media (max-width: 480px) {
     .item-row {
       flex-direction: column;
@@ -583,6 +587,15 @@
   .item-row-info { display: flex; flex-direction: column; gap: 3px; flex: 1; }
   .item-row-title { font-weight: 800; font-size: 0.95rem; display: flex; align-items: center; gap: 6px; }
   .item-row-desc { font-size: 0.8rem; color: var(--text-muted); line-height: 1.35; }
+
+  .tier-tag {
+    font-size: 0.72rem;
+    font-weight: 900;
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: #334155;
+    color: #e2e8f0;
+  }
 
   .btn-sm {
     padding: 10px 16px;
@@ -601,7 +614,7 @@
     transition: all 0.15s ease;
   }
   .btn-sm:active { transform: scale(0.96); }
-  .btn-sm:disabled { opacity: 0.35; cursor: not-allowed; }
+  .btn-sm:disabled { opacity: 0.45; cursor: not-allowed; }
 
   .btn-close {
     background: #334155;
@@ -738,8 +751,8 @@
 <div class="container">
   <header>
     <div class="logo-title">
-      <h1>⚔️ 견습에서 전설까지 <span style="font-size: 0.72rem; background: #f59e0b22; color: var(--primary); padding: 2px 7px; border-radius: 10px; border: 1px solid #f59e0b44;">v3.5</span></h1>
-      <p>15세 견습생부터 전설의 영웅까지 · 나만의 모험가 육성기</p>
+      <h1>⚔️ 견습에서 전설까지 <span style="font-size: 0.72rem; background: #f59e0b22; color: var(--primary); padding: 2px 7px; border-radius: 10px; border: 1px solid #f59e0b44;">v3.6</span></h1>
+      <p>순차 장비 해금 · 승급 특권 체계 · 나만의 모험가 육성기</p>
     </div>
     <div class="header-actions">
       <div class="nav-tabs">
@@ -791,13 +804,13 @@
         </div>
       </div>
 
-      <!-- Primary Class Combat Rating (Class Specific!) -->
+      <!-- Primary Combat Stat Banner -->
       <div class="primary-atk-banner" id="uiPrimaryAtkBanner">
         <div class="primary-atk-label" id="uiPrimaryAtkLabel">⚔️ 물리 공격력</div>
         <div class="primary-atk-value" id="uiPrimaryAtkValue">26</div>
       </div>
 
-      <!-- 4 Pure Base Attributes -->
+      <!-- 4 Base Attributes -->
       <div class="stats-matrix">
         <div class="stat-item">
           <span class="stat-label">⚔️ 근력 (STR)</span>
@@ -846,12 +859,12 @@
         </div>
       </div>
 
-      <!-- Action Buttons Grid (Touch-Friendly) -->
+      <!-- Action Buttons Grid -->
       <div class="actions-grid">
         <button class="act-btn primary-act" onclick="openDungeonSelectModal()">
           <span class="icon">🗺️</span>
           <span>12단계 던전</span>
-          <span class="desc">골드 대량 파밍·토벌</span>
+          <span class="desc">등급별 인가 필요</span>
         </button>
 
         <button class="act-btn" onclick="openQuestBoardModal()">
@@ -875,13 +888,13 @@
         <button class="act-btn forge-act" onclick="openForgeModal()">
           <span class="icon">🔨</span>
           <span>대장간 강화 / 상점</span>
-          <span class="desc">무기·방어구 상점 분리</span>
+          <span class="desc">순차 티어 구매 해금</span>
         </button>
 
         <button class="act-btn boss-act" id="btnExam" onclick="openPromotionModal()">
           <span class="icon">⚔️</span>
           <span id="txtExamBtn">승급 결투 심사</span>
-          <span class="desc" id="txtExamDesc">스킬 3회 한정 대련</span>
+          <span class="desc" id="txtExamDesc">급여·던전·스탯 특권</span>
         </button>
 
         <button class="act-btn retire-act" id="btnRetire" onclick="confirmRetirement()">
@@ -960,7 +973,7 @@
 
 <!-- ==================== MODALS ==================== -->
 
-<!-- MODAL: 12 DUNGEONS SELECT -->
+<!-- MODAL: 12 DUNGEONS SELECT (RANK-LOCKED!) -->
 <div class="modal-overlay" id="modalDungeonSelect">
   <div class="modal-box">
     <div class="sheet-handle"></div>
@@ -970,7 +983,7 @@
     </div>
     <div class="modal-body">
       <p style="font-size: 0.84rem; color: var(--text-muted); line-height: 1.4;">
-        원하는 던전과 전술을 누르면 1클릭으로 탐험과 보스 토벌을 즉시 진행합니다.
+        상위 위험 던전은 <b>길드 승급 인가(F~S급)</b>를 받아야만 진입할 수 있습니다.
       </p>
       <div class="item-list" id="dungeonSelectList"></div>
     </div>
@@ -1049,7 +1062,7 @@
   </div>
 </div>
 
-<!-- MODAL: FORGE & SHOP -->
+<!-- MODAL: FORGE & SEQUENTIAL TIER SHOP (v3.6) -->
 <div class="modal-overlay" id="modalForge">
   <div class="modal-box">
     <div class="sheet-handle"></div>
@@ -1063,7 +1076,7 @@
       </div>
     </div>
     <div class="modal-body">
-      <!-- Live Gold Display in Shop -->
+      <!-- Live Gold Display -->
       <div style="display: flex; justify-content: space-between; align-items: center; background: #0c1424; padding: 10px 14px; border-radius: 8px; border: 1px solid var(--border);">
         <span style="font-size: 0.85rem; color: #94a3b8;">현재 모험가: <b id="shopClassNotice" style="color: #60a5fa;">[전사]</b></span>
         <span style="font-size: 0.95rem; font-weight: 800; color: var(--gold);">💰 보유 금액: <b id="shopGoldText">300 G</b></span>
@@ -1081,21 +1094,21 @@
           <div style="font-size: 0.88rem; color: #93c5fd;" id="forgeItemStat">+0강 스탯</div>
 
           <div class="forge-rate-box">
-            <div>성공 확률: <b id="forgeRateSuccess" style="color: #10b981;">100%</b></div>
+            <div>성공 확률: <b id="forgeRateSuccess" style="color: #10b981;">90%</b></div>
             <div>대성공(+2강): <b style="color: #facc15;">3%</b></div>
             <div>실패 시: <b id="forgeRateFailPenalty" style="color: #60a5fa;">유지 (안전)</b></div>
-            <div>비용: <b id="forgeCost" style="color: var(--gold);">50 G</b></div>
+            <div>비용: <b id="forgeCost" style="color: var(--gold);">150 G</b></div>
           </div>
 
           <div style="font-size: 0.78rem; color: #cbd5e1; background: #0c1424; padding: 8px 10px; border-radius: 8px; width: 100%; text-align: left; line-height: 1.45; border: 1px solid #1e293b;">
-            🔥 <b>v3.5 대장간 핵심 규칙</b>:<br>
+            🔥 <b>v3.6 대장간 밸런스 규칙</b>:<br>
             • <b>1~10강 90% 고정</b> | <b>11~15강 88%~80%</b> | <b>16~20강 75%~55%</b><br>
             • <b>전 구간 3% 확률로 2단계 대성공(+2강)</b> 발동!<br>
             • <b>5강마다(+5, 10, 15, 20) 스탯 폭증</b> | <b>15강부터 실패 시 1강 하락</b><br>
-            • 고강화 단계는 많은 골드가 소모되어 신중한 도전이 필요합니다.
+            • 고강화는 많은 골드가 소모되어 신중한 도전이 필요합니다.
           </div>
 
-          <!-- Rapid Feedback Toast directly above forge button -->
+          <!-- Rapid Feedback Toast -->
           <div id="forgeResultToast" class="forge-toast"></div>
 
           <button class="btn-sm" id="btnDoForge" style="width: 100%; padding: 14px; font-size: 1.05rem; background: linear-gradient(135deg, #f59e0b, #d97706);" onclick="attemptForge()">
@@ -1104,18 +1117,18 @@
         </div>
       </div>
 
-      <!-- Weapon Shop SubTab -->
+      <!-- Weapon Shop SubTab (Sequential Progression!) -->
       <div id="forgeSubWeapon" style="display: none; flex-direction: column; gap: 8px;">
-        <div style="font-size: 0.82rem; color: var(--text-muted);" id="weaponShopDesc">
-          직업 전용 무기 목록입니다. 구매 시 주력 전투 능력치가 즉시 상승합니다.
+        <div style="font-size: 0.82rem; color: var(--text-muted); line-height: 1.4;">
+          🛡️ <b>순차 티어 해금</b>: 이전 단계(하위) 장비를 구매해야 다음 티어의 상위 무기가 해금됩니다. 중간급 장비를 거쳐가며 모험가를 성장시키세요.
         </div>
         <div class="item-list" id="weaponShopList"></div>
       </div>
 
-      <!-- Armor Shop SubTab -->
+      <!-- Armor Shop SubTab (Sequential Progression!) -->
       <div id="forgeSubArmor" style="display: none; flex-direction: column; gap: 8px;">
-        <div style="font-size: 0.82rem; color: var(--text-muted);">
-          직업 전용 방어구 목록입니다. 구매 시 방어력과 생명력이 즉시 상승합니다.
+        <div style="font-size: 0.82rem; color: var(--text-muted); line-height: 1.4;">
+          🛡️ <b>순차 티어 해금</b>: 이전 단계(하위) 방어구를 구매해야 다음 티어의 방어구가 해금됩니다.
         </div>
         <div class="item-list" id="armorShopList"></div>
       </div>
@@ -1126,7 +1139,7 @@
   </div>
 </div>
 
-<!-- MODAL: PROMOTION DUEL -->
+<!-- MODAL: PROMOTION DUEL & BENEFITS SHOWCASE -->
 <div class="modal-overlay" id="modalPromotion">
   <div class="modal-box">
     <div class="sheet-handle"></div>
@@ -1135,6 +1148,14 @@
       <button class="btn-close-icon" onclick="closeModal('modalPromotion')">✕</button>
     </div>
     <div class="modal-body">
+      <!-- Promotion Perks Showcase Box -->
+      <div id="promotionPerksBox" style="background: linear-gradient(135deg, #1e1b4b, #172554); border: 1px solid #6366f1; border-radius: 10px; padding: 12px; font-size: 0.85rem; line-height: 1.5;">
+        <div style="font-weight: 800; color: #a5b4fc; margin-bottom: 4px; display: flex; align-items: center; gap: 6px;">
+          <span>🎯 승급 시 영구 부여되는 길드 특권</span>
+        </div>
+        <div id="promotionPerksContent" style="color: #e2e8f0;"></div>
+      </div>
+
       <div class="duel-arena">
         <div class="duel-combatants">
           <div class="combatant-card">
@@ -1332,6 +1353,28 @@ function toggleSound() {
 const SEASONS = ['🌸 봄', '☀️ 여름', '🍁 가을', '❄️ 겨울'];
 const RANKS = ['F', 'E', 'D', 'C', 'B', 'A', 'S', 'LEGEND'];
 
+// Rank Salaries & Perks (PROMOTION BENEFIT SYSTEM!)
+const RANK_SALARIES = {
+  'F': 0,
+  'E': 250,
+  'D': 600,
+  'C': 1400,
+  'B': 3000,
+  'A': 6500,
+  'S': 15000,
+  'LEGEND': 35000
+};
+
+const RANK_PERKS = {
+  'E': { maxHp: 20, allStats: 0, gold: 300, dungeonText: '3~4구역 던전 입장 인가' },
+  'D': { maxHp: 35, allStats: 3, gold: 600, dungeonText: '5~6구역 던전 입장 인가' },
+  'C': { maxHp: 60, allStats: 6, gold: 1200, dungeonText: '7~8구역 던전 입장 인가' },
+  'B': { maxHp: 100, allStats: 10, gold: 2500, dungeonText: '9~10구역 설산 던전 입장 인가' },
+  'A': { maxHp: 160, allStats: 16, gold: 5000, dungeonText: '11구역 티탄 유적 입장 인가' },
+  'S': { maxHp: 250, allStats: 25, gold: 12000, dungeonText: '12구역 마왕성 심연 결전 인가' },
+  'LEGEND': { maxHp: 400, allStats: 40, gold: 30000, dungeonText: '대륙 전 구역 절대 권한 인가' }
+};
+
 const CLASS_CONFIG = {
   warrior: {
     name: '전사 (Warrior)',
@@ -1371,89 +1414,91 @@ const CLASS_CONFIG = {
   }
 };
 
+// 12 Dungeons with Minimum Guild Rank Clearance Requirements!
 const DUNGEONS_12 = [
-  { id: 1, name: '슬라임 웅덩이', reqCp: 35, boss: '킹 슬라임', hpCost: 15, gold: [120, 220], fame: 5, drop: '슬라임 젤리 코어' },
-  { id: 2, name: '고블린 야영지', reqCp: 70, boss: '고블린 주술사', hpCost: 20, gold: [220, 380], fame: 8, drop: '주술사의 뼈 피리' },
-  { id: 3, name: '도적단 비밀 요새', reqCp: 120, boss: '도적 두목 칼날손', hpCost: 25, gold: [380, 650], fame: 14, drop: '도적단의 금화 자루' },
-  { id: 4, name: '음습한 독거미 굴', reqCp: 180, boss: '맹독 거미 여왕', hpCost: 30, gold: [600, 1000], fame: 20, drop: '거미 여왕의 독주머니' },
-  { id: 5, name: '버려진 폐광산', reqCp: 260, boss: '폭주한 채광 골렘', hpCost: 35, gold: [900, 1500], fame: 30, drop: '미스릴 원석' },
-  { id: 6, name: '망자의 지하 묘지', reqCp: 380, boss: '데스 나이트', hpCost: 40, gold: [1400, 2200], fame: 45, drop: '망자의 숨결' },
-  { id: 7, name: '저주받은 늑대인간 숲', reqCp: 520, boss: '블러드 울프 로드', hpCost: 45, gold: [2000, 3200], fame: 60, drop: '늑대의 송곳니' },
-  { id: 8, name: '오크 대요새 첨탑', reqCp: 700, boss: '강철 오크 워로드', hpCost: 50, gold: [2800, 4500], fame: 85, drop: '전쟁 군주의 깃발' },
-  { id: 9, name: '혹한의 골렘 설산', reqCp: 950, boss: '서리 거인 프로스트', hpCost: 60, gold: [4000, 6500], fame: 120, drop: '동토의 심장' },
-  { id: 10, name: '흑염룡의 활화산 둥지', reqCp: 1300, boss: '흑염룡 이그니스', hpCost: 70, gold: [6000, 9500], fame: 160, drop: '용의 심장 수정' },
-  { id: 11, name: '고대 티탄의 심연 유적', reqCp: 1750, boss: '티탄의 거신상', hpCost: 80, gold: [9000, 14000], fame: 220, drop: '고대 티탄의 핵' },
-  { id: 12, name: '혼돈의 마왕성 심연', reqCp: 2300, boss: '혼돈의 마왕 벨리알 (최종보스)', hpCost: 95, gold: [16000, 30000], fame: 350, drop: '종언의 묵시록' }
+  { id: 1, name: '슬라임 웅덩이', minRank: 'F', reqCp: 35, boss: '킹 슬라임', hpCost: 15, gold: [120, 220], fame: 5, drop: '슬라임 젤리 코어' },
+  { id: 2, name: '고블린 야영지', minRank: 'F', reqCp: 70, boss: '고블린 주술사', hpCost: 20, gold: [220, 380], fame: 8, drop: '주술사의 뼈 피리' },
+  { id: 3, name: '도적단 비밀 요새', minRank: 'E', reqCp: 120, boss: '도적 두목 칼날손', hpCost: 25, gold: [380, 650], fame: 14, drop: '도적단의 금화 자루' },
+  { id: 4, name: '음습한 독거미 굴', minRank: 'E', reqCp: 180, boss: '맹독 거미 여왕', hpCost: 30, gold: [600, 1000], fame: 20, drop: '거미 여왕의 독주머니' },
+  { id: 5, name: '버려진 폐광산', minRank: 'D', reqCp: 260, boss: '폭주한 채광 골렘', hpCost: 35, gold: [900, 1500], fame: 30, drop: '미스릴 원석' },
+  { id: 6, name: '망자의 지하 묘지', minRank: 'D', reqCp: 380, boss: '데스 나이트', hpCost: 40, gold: [1400, 2200], fame: 45, drop: '망자의 숨결' },
+  { id: 7, name: '저주받은 늑대인간 숲', minRank: 'C', reqCp: 520, boss: '블러드 울프 로드', hpCost: 45, gold: [2000, 3200], fame: 60, drop: '늑대의 송곳니' },
+  { id: 8, name: '오크 대요새 첨탑', minRank: 'C', reqCp: 700, boss: '강철 오크 워로드', hpCost: 50, gold: [2800, 4500], fame: 85, drop: '전쟁 군주의 깃발' },
+  { id: 9, name: '혹한의 골렘 설산', minRank: 'B', reqCp: 950, boss: '서리 거인 프로스트', hpCost: 60, gold: [4000, 6500], fame: 120, drop: '동토의 심장' },
+  { id: 10, name: '흑염룡의 활화산 둥지', minRank: 'B', reqCp: 1300, boss: '흑염룡 이그니스', hpCost: 70, gold: [6000, 9500], fame: 160, drop: '용의 심장 수정' },
+  { id: 11, name: '고대 티탄의 심연 유적', minRank: 'A', reqCp: 1750, boss: '티탄의 거신상', hpCost: 80, gold: [9000, 14000], fame: 220, drop: '고대 티탄의 핵' },
+  { id: 12, name: '혼돈의 마왕성 심연', minRank: 'S', reqCp: 2300, boss: '혼돈의 마왕 벨리알 (최종보스)', hpCost: 95, gold: [16000, 30000], fame: 350, drop: '종언의 묵시록' }
 ];
 
-// Class-specific weapon stats (Mage uses INT, Warrior uses STR, Rogue uses DEX, Paladin uses Holy/STR)
+// Sequential Tier Weapons (Tier 1..6)
 const CLASS_WEAPONS = {
   warrior: [
-    { id: 'w1', name: '강철 츠바이헨더', stat: 15, cost: 250, desc: '물리 공격력 +15' },
-    { id: 'w2', name: '미스릴 클레이모어', stat: 35, cost: 750, desc: '물리 공격력 +35' },
-    { id: 'w3', name: '용살자 바스타드소드', stat: 65, cost: 1800, desc: '물리 공격력 +65' },
-    { id: 'w4', name: '거인 학살자의 대도끼', stat: 105, cost: 3600, desc: '물리 공격력 +105' },
-    { id: 'w5', name: '심연의 마검 티르빙', stat: 150, cost: 6500, desc: '물리 공격력 +150' },
-    { id: 'w6', name: '파멸의 처형검 (종결)', stat: 210, cost: 12000, desc: '물리 공격력 +210' }
+    { id: 'w1', tier: 1, name: '강철 츠바이헨더', stat: 15, cost: 250, desc: '1티어: 물리 공격력 +15' },
+    { id: 'w2', tier: 2, name: '미스릴 클레이모어', stat: 35, cost: 750, desc: '2티어: 물리 공격력 +35' },
+    { id: 'w3', tier: 3, name: '용살자 바스타드소드', stat: 65, cost: 1800, desc: '3티어: 물리 공격력 +65' },
+    { id: 'w4', tier: 4, name: '거인 학살자의 대도끼', stat: 105, cost: 3600, desc: '4티어: 물리 공격력 +105' },
+    { id: 'w5', tier: 5, name: '심연의 마검 티르빙', stat: 150, cost: 6500, desc: '5티어: 물리 공격력 +150' },
+    { id: 'w6', tier: 6, name: '파멸의 처형검 (종결)', stat: 210, cost: 12000, desc: '6티어 종결: 물리 공격력 +210' }
   ],
   mage: [
-    { id: 'm1', name: '오크우드 스태프', stat: 16, cost: 250, desc: '마법 주문력 +16' },
-    { id: 'm2', name: '아케인 오브', stat: 38, cost: 750, desc: '마법 주문력 +38' },
-    { id: 'm3', name: '별빛의 영혼 지팡이', stat: 70, cost: 1800, desc: '마법 주문력 +70' },
-    { id: 'm4', name: '에테르 현자의 보주', stat: 110, cost: 3600, desc: '마법 주문력 +110' },
-    { id: 'm5', name: '대마도사의 파괴 지팡이', stat: 160, cost: 6500, desc: '마법 주문력 +160' },
-    { id: 'm6', name: '세계수의 아티팩트 완드 (종결)', stat: 220, cost: 12000, desc: '마법 주문력 +220' }
+    { id: 'm1', tier: 1, name: '오크우드 스태프', stat: 16, cost: 250, desc: '1티어: 마법 주문력 +16' },
+    { id: 'm2', tier: 2, name: '아케인 오브', stat: 38, cost: 750, desc: '2티어: 마법 주문력 +38' },
+    { id: 'm3', tier: 3, name: '별빛의 영혼 지팡이', stat: 70, cost: 1800, desc: '3티어: 마법 주문력 +70' },
+    { id: 'm4', tier: 4, name: '에테르 현자의 보주', stat: 110, cost: 3600, desc: '4티어: 마법 주문력 +110' },
+    { id: 'm5', tier: 5, name: '대마도사의 파괴 지팡이', stat: 160, cost: 6500, desc: '5티어: 마법 주문력 +160' },
+    { id: 'm6', tier: 6, name: '세계수의 아티팩트 완드 (종결)', stat: 220, cost: 12000, desc: '6티어 종결: 마법 주문력 +220' }
   ],
   rogue: [
-    { id: 'r1', name: '그림자 비수', stat: 16, cost: 250, desc: '치명 공격력 +16' },
-    { id: 'r2', name: '독니의 암살 단검', stat: 38, cost: 750, desc: '치명 공격력 +38' },
-    { id: 'r3', name: '칠흑의 이중 쌍검', stat: 70, cost: 1800, desc: '치명 공격력 +70' },
-    { id: 'r4', name: '바람살의 암습 단도', stat: 110, cost: 3600, desc: '치명 공격력 +110' },
-    { id: 'r5', name: '유령 절단기의 쌍검', stat: 155, cost: 6500, desc: '치명 공격력 +155' },
-    { id: 'r6', name: '그림자 군주의 아지노스 (종결)', stat: 215, cost: 12000, desc: '치명 공격력 +215' }
+    { id: 'r1', tier: 1, name: '그림자 비수', stat: 16, cost: 250, desc: '1티어: 치명 공격력 +16' },
+    { id: 'r2', tier: 2, name: '독니의 암살 단검', stat: 38, cost: 750, desc: '2티어: 치명 공격력 +38' },
+    { id: 'r3', tier: 3, name: '칠흑의 이중 쌍검', stat: 70, cost: 1800, desc: '3티어: 치명 공격력 +70' },
+    { id: 'r4', tier: 4, name: '바람살의 암습 단도', stat: 110, cost: 3600, desc: '4티어: 치명 공격력 +110' },
+    { id: 'r5', tier: 5, name: '유령 절단기의 쌍검', stat: 155, cost: 6500, desc: '5티어: 치명 공격력 +155' },
+    { id: 'r6', tier: 6, name: '그림자 군주의 아지노스 (종결)', stat: 215, cost: 12000, desc: '6티어 종결: 치명 공격력 +215' }
   ],
   paladin: [
-    { id: 'p1', name: '정의의 전투망치', stat: 16, cost: 250, desc: '신성 공격력 +16' },
-    { id: 'p2', name: '심판의 신성 철퇴', stat: 36, cost: 750, desc: '신성 공격력 +36' },
-    { id: 'p3', name: '대천사의 여명검', stat: 68, cost: 1800, desc: '신성 공격력 +68' },
-    { id: 'p4', name: '성스러운 백은 워해머', stat: 108, cost: 3600, desc: '신성 공격력 +108' },
-    { id: 'p5', name: '빛의 성채 홀리소드', stat: 152, cost: 6500, desc: '신성 공격력 +152' },
-    { id: 'p6', name: '신성 군주의 선더해머 (종결)', stat: 210, cost: 12000, desc: '신성 공격력 +210' }
+    { id: 'p1', tier: 1, name: '정의의 전투망치', stat: 16, cost: 250, desc: '1티어: 신성 공격력 +16' },
+    { id: 'p2', tier: 2, name: '심판의 신성 철퇴', stat: 36, cost: 750, desc: '2티어: 신성 공격력 +36' },
+    { id: 'p3', tier: 3, name: '대천사의 여명검', stat: 68, cost: 1800, desc: '3티어: 신성 공격력 +68' },
+    { id: 'p4', tier: 4, name: '성스러운 백은 워해머', stat: 108, cost: 3600, desc: '4티어: 신성 공격력 +108' },
+    { id: 'p5', tier: 5, name: '빛의 성채 홀리소드', stat: 152, cost: 6500, desc: '5티어: 신성 공격력 +152' },
+    { id: 'p6', tier: 6, name: '신성 군주의 선더해머 (종결)', stat: 210, cost: 12000, desc: '6티어 종결: 신성 공격력 +210' }
   ]
 };
 
+// Sequential Tier Armors (Tier 1..6)
 const CLASS_ARMORS = {
   warrior: [
-    { id: 'a1', name: '강철 판금 갑옷', stat: 16, hpBonus: 25, cost: 250, desc: '방어 +16, HP +25' },
-    { id: 'a2', name: '티탄 사슬 중갑', stat: 36, hpBonus: 60, cost: 750, desc: '방어 +36, HP +60' },
-    { id: 'a3', name: '드래곤 스케일 아머', stat: 70, hpBonus: 120, cost: 1900, desc: '방어 +70, HP +120' },
-    { id: 'a4', name: '심연의 흑철 갑주', stat: 110, hpBonus: 200, cost: 3800, desc: '방어 +110, HP +200' },
-    { id: 'a5', name: '발할라 발키리 중갑', stat: 155, hpBonus: 300, cost: 6800, desc: '방어 +155, HP +300' },
-    { id: 'a6', name: '불멸의 성채 갑옷 (종결)', stat: 220, hpBonus: 450, cost: 13000, desc: '방어 +220, HP +450' }
+    { id: 'a1', tier: 1, name: '강철 판금 갑옷', stat: 16, hpBonus: 25, cost: 250, desc: '1티어: 방어 +16, HP +25' },
+    { id: 'a2', tier: 2, name: '티탄 사슬 중갑', stat: 36, hpBonus: 60, cost: 750, desc: '2티어: 방어 +36, HP +60' },
+    { id: 'a3', tier: 3, name: '드래곤 스케일 아머', stat: 70, hpBonus: 120, cost: 1900, desc: '3티어: 방어 +70, HP +120' },
+    { id: 'a4', tier: 4, name: '심연의 흑철 갑주', stat: 110, hpBonus: 200, cost: 3800, desc: '4티어: 방어 +110, HP +200' },
+    { id: 'a5', tier: 5, name: '발할라 발키리 중갑', stat: 155, hpBonus: 300, cost: 6800, desc: '5티어: 방어 +155, HP +300' },
+    { id: 'a6', tier: 6, name: '불멸의 성채 갑옷 (종결)', stat: 220, hpBonus: 450, cost: 13000, desc: '6티어 종결: 방어 +220, HP +450' }
   ],
   mage: [
-    { id: 'ma1', name: '실크 마도 로브', stat: 12, hpBonus: 15, cost: 250, desc: '방어 +12, HP +15' },
-    { id: 'ma2', name: '대현자의 마도포', stat: 30, hpBonus: 40, cost: 750, desc: '방어 +30, HP +40' },
-    { id: 'ma3', name: '아스트랄 에테르 예복', stat: 60, hpBonus: 85, cost: 1900, desc: '방어 +60, HP +85' },
-    { id: 'ma4', name: '성좌의 영원 로브', stat: 95, hpBonus: 150, cost: 3800, desc: '방어 +95, HP +150' },
-    { id: 'ma5', name: '태초의 마도 코트', stat: 140, hpBonus: 230, cost: 6800, desc: '방어 +140, HP +230' },
-    { id: 'ma6', name: '신의 마도 의복 (종결)', stat: 195, hpBonus: 350, cost: 13000, desc: '방어 +195, HP +350' }
+    { id: 'ma1', tier: 1, name: '실크 마도 로브', stat: 12, hpBonus: 15, cost: 250, desc: '1티어: 방어 +12, HP +15' },
+    { id: 'ma2', tier: 2, name: '대현자의 마도포', stat: 30, hpBonus: 40, cost: 750, desc: '2티어: 방어 +30, HP +40' },
+    { id: 'ma3', tier: 3, name: '아스트랄 에테르 예복', stat: 60, hpBonus: 85, cost: 1900, desc: '3티어: 방어 +60, HP +85' },
+    { id: 'ma4', tier: 4, name: '성좌의 영원 로브', stat: 95, hpBonus: 150, cost: 3800, desc: '4티어: 방어 +95, HP +150' },
+    { id: 'ma5', tier: 5, name: '태초의 마도 코트', stat: 140, hpBonus: 230, cost: 6800, desc: '5티어: 방어 +140, HP +230' },
+    { id: 'ma6', tier: 6, name: '신의 마도 의복 (종결)', stat: 195, hpBonus: 350, cost: 13000, desc: '6티어 종결: 방어 +195, HP +350' }
   ],
   rogue: [
-    { id: 'ra1', name: '밤의 은신 가죽 갑옷', stat: 14, hpBonus: 20, cost: 250, desc: '방어 +14, HP +20' },
-    { id: 'ra2', name: '팬텀 슈트', stat: 32, hpBonus: 50, cost: 750, desc: '방어 +32, HP +50' },
-    { id: 'ra3', name: '어둠 추적자의 가죽옷', stat: 65, hpBonus: 100, cost: 1900, desc: '방어 +65, HP +100' },
-    { id: 'ra4', name: '환영의 은신 망토', stat: 100, hpBonus: 170, cost: 3800, desc: '방어 +100, HP +170' },
-    { id: 'ra5', name: '칠흑 암살자의 슈트', stat: 145, hpBonus: 250, cost: 6800, desc: '방어 +145, HP +250' },
-    { id: 'ra6', name: '그림자 군주의 망토 (종결)', stat: 200, hpBonus: 380, cost: 13000, desc: '방어 +200, HP +380' }
+    { id: 'ra1', tier: 1, name: '밤의 은신 가죽 갑옷', stat: 14, hpBonus: 20, cost: 250, desc: '1티어: 방어 +14, HP +20' },
+    { id: 'ra2', tier: 2, name: '팬텀 슈트', stat: 32, hpBonus: 50, cost: 750, desc: '2티어: 방어 +32, HP +50' },
+    { id: 'ra3', tier: 3, name: '어둠 추적자의 가죽옷', stat: 65, hpBonus: 100, cost: 1900, desc: '3티어: 방어 +65, HP +100' },
+    { id: 'ra4', tier: 4, name: '환영의 은신 망토', stat: 100, hpBonus: 170, cost: 3800, desc: '4티어: 방어 +100, HP +170' },
+    { id: 'ra5', tier: 5, name: '칠흑 암살자의 슈트', stat: 145, hpBonus: 250, cost: 6800, desc: '5티어: 방어 +145, HP +250' },
+    { id: 'ra6', tier: 6, name: '그림자 군주의 망토 (종결)', stat: 200, hpBonus: 380, cost: 13000, desc: '6티어 종결: 방어 +200, HP +380' }
   ],
   paladin: [
-    { id: 'pa1', name: '기사단 축복 성갑', stat: 18, hpBonus: 35, cost: 250, desc: '방어 +18, HP +35' },
-    { id: 'pa2', name: '발키리의 은빛 갑주', stat: 40, hpBonus: 75, cost: 750, desc: '방어 +40, HP +75' },
-    { id: 'pa3', name: '태양의 수호 갑옷', stat: 75, hpBonus: 140, cost: 1900, desc: '방어 +75, HP +140' },
-    { id: 'pa4', name: '대천사의 성스러운 흉갑', stat: 115, hpBonus: 230, cost: 3800, desc: '방어 +115, HP +230' },
-    { id: 'pa5', name: '신의 영역 가디언 아머', stat: 160, hpBonus: 340, cost: 6800, desc: '방어 +160, HP +340' },
-    { id: 'pa6', name: '불멸의 성기사단 갑옷 (종결)', stat: 225, hpBonus: 500, cost: 13000, desc: '방어 +225, HP +500' }
+    { id: 'pa1', tier: 1, name: '기사단 축복 성갑', stat: 18, hpBonus: 35, cost: 250, desc: '1티어: 방어 +18, HP +35' },
+    { id: 'pa2', tier: 2, name: '발키리의 은빛 갑주', stat: 40, hpBonus: 75, cost: 750, desc: '2티어: 방어 +40, HP +75' },
+    { id: 'pa3', tier: 3, name: '태양의 수호 갑옷', stat: 75, hpBonus: 140, cost: 1900, desc: '3티어: 방어 +75, HP +140' },
+    { id: 'pa4', tier: 4, name: '대천사의 성스러운 흉갑', stat: 115, hpBonus: 230, cost: 3800, desc: '4티어: 방어 +115, HP +230' },
+    { id: 'pa5', tier: 5, name: '신의 영역 가디언 아머', stat: 160, hpBonus: 340, cost: 6800, desc: '5티어: 방어 +160, HP +340' },
+    { id: 'pa6', tier: 6, name: '불멸의 성기사단 갑옷 (종결)', stat: 225, hpBonus: 500, cost: 13000, desc: '6티어 종결: 방어 +225, HP +500' }
   ]
 };
 
@@ -1475,19 +1520,19 @@ const QUEST_MASTER_POOL = [
   { id: 'q15', title: '신화적 드래곤 비늘 수확', minRank: 'S', reqStat: 'def', reqVal: 85, hpCost: 55, gold: 12000, fame: 260, statReward: { stat: 'def', val: 5 }, desc: '드래곤 서식지에서 최고급 자재 채취. [방어 +5]' }
 ];
 
-// v3.5 Requested Enhancement Rates: 1~10 (90% fixed), 11~15 (-2% each), 16~20 (-5% each)
+// 1~10: 90% fixed, 11~15: 88~80%, 16~20: 75~55%
 const FORGE_RATES = [
-  90, 90, 90, 90, 90, 90, 90, 90, 90, 90, // 0~9 -> +1~10강 (90% 고정)
-  88, 86, 84, 82, 80,                     // 10~14 -> +11~15강 (90%에서 2%씩 감소)
-  75, 70, 65, 60, 55                      // 15~19 -> +16~20강 (80%에서 5%씩 감소)
+  90, 90, 90, 90, 90, 90, 90, 90, 90, 90,
+  88, 86, 84, 82, 80,
+  75, 70, 65, 60, 55
 ];
 
-// v3.5 High-Stakes Gold Costs (Makes 20강 rare and valuable, prevents cheap spam)
+// High-Stakes Gold Costs
 const FORGE_COSTS = [
-  150, 220, 320, 450, 650,        // +1~5강
-  950, 1400, 2000, 2900, 4200,    // +6~10강
-  6000, 8500, 12000, 17000, 24000,// +11~15강
-  33000, 45000, 60000, 80000, 110000 // +16~20강
+  150, 220, 320, 450, 650,
+  950, 1400, 2000, 2900, 4200,
+  6000, 8500, 12000, 17000, 24000,
+  33000, 45000, 60000, 80000, 110000
 ];
 
 /* ==================== STATE ==================== */
@@ -1505,8 +1550,10 @@ let state = {
   int: 6,
   dex: 10,
   def: 14,
-  weapon: { name: '훈련용 대검', plus: 0, power: 8 },
-  armor: { name: '가죽 덧댄 갑옷', plus: 0, power: 6, hpBonus: 0 },
+  unlockedWpnTier: 0, // starts at starter weapon
+  unlockedArmTier: 0,
+  weapon: { name: '훈련용 대검', plus: 0, power: 8, tier: 0 },
+  armor: { name: '가죽 덧댄 갑옷', plus: 0, power: 6, hpBonus: 0, tier: 0 },
   artifact: { name: '용기의 부적', power: 3 },
   gold: 300,
   fame: 10,
@@ -1530,20 +1577,15 @@ function getMilestoneBonus(plus) {
   return bonus;
 }
 
-// Calculate the Class-specific Primary Combat Power
 function getPrimaryCombatPower() {
   const wpnBonus = state.weapon.power + (state.weapon.plus * 3.5) + getMilestoneBonus(state.weapon.plus);
   if (state.charClass === 'warrior') {
-    // Physical Attack: STR + weapon
     return Math.round(state.str * 1.5 + wpnBonus);
   } else if (state.charClass === 'mage') {
-    // Magic Spell Power: INT + staff/orb
     return Math.round(state.int * 1.6 + wpnBonus);
   } else if (state.charClass === 'rogue') {
-    // Critical Agile Attack: DEX + dagger
     return Math.round(state.dex * 1.5 + wpnBonus);
   } else if (state.charClass === 'paladin') {
-    // Holy Power: Def + Str + Mace
     return Math.round(state.str * 0.9 + state.int * 0.8 + wpnBonus);
   }
   return Math.round(state.str + wpnBonus);
@@ -1594,11 +1636,9 @@ function updateUI() {
   document.getElementById('uiCp').textContent = cp;
   document.getElementById('uiTierEstimate').textContent = getTierDescription(cp);
 
-  // Class Primary Combat Rating Display (IMMERSION FIX!)
   document.getElementById('uiPrimaryAtkLabel').textContent = c.primaryName;
   document.getElementById('uiPrimaryAtkValue').textContent = primaryAtk;
 
-  // 4 Pure Base Attributes (Universal, not labeled as Attack!)
   document.getElementById('uiStr').textContent = state.str;
   document.getElementById('uiInt').textContent = state.int;
   document.getElementById('uiDex').textContent = state.dex;
@@ -1634,7 +1674,7 @@ function updateUI() {
   const nextRankIdx = RANKS.indexOf(state.rank) + 1;
   if (nextRankIdx < RANKS.length) {
     document.getElementById('txtExamBtn').textContent = `${RANKS[nextRankIdx]}급 결투 심사`;
-    document.getElementById('txtExamDesc').textContent = '스킬 3회 한정 대련';
+    document.getElementById('txtExamDesc').textContent = '급여·던전·스탯 특권';
   } else {
     document.getElementById('txtExamBtn').textContent = '최고 등급 달성';
     document.getElementById('txtExamDesc').textContent = '대륙 최고의 영웅';
@@ -1681,9 +1721,16 @@ ${state.name}이(가) ${cause} 도중 장렬히 전사했습니다...
   return false;
 }
 
-/* ==================== ADVANCE SEASON ==================== */
+/* ==================== ADVANCE SEASON (WITH GUILD SALARY!) ==================== */
 function advanceSeason() {
   if (state.isRetired) return;
+
+  // Pay Quarterly Guild Salary by Rank!
+  const salary = RANK_SALARIES[state.rank] || 0;
+  if (salary > 0) {
+    state.gold += salary;
+    addLog(`💰 [길드 정기 급여] ${state.rank}급 공인 모험가 품위 유지비 <b>+${salary.toLocaleString()}G</b> 수령!`, 'reward');
+  }
 
   if (state.charClass === 'paladin' && state.hp > 0 && state.hp < state.maxHp) {
     state.hp = Math.min(state.maxHp, state.hp + 15);
@@ -1724,19 +1771,23 @@ function refreshSeasonalQuests() {
   state.seasonalQuests = shuffled.slice(0, 6);
 }
 
-/* ==================== 1-CLICK STREAMLINED DUNGEONS ==================== */
+/* ==================== 1-CLICK STREAMLINED DUNGEONS (RANK-LOCKED!) ==================== */
 function openDungeonSelectModal() {
   playSound('click');
   const list = document.getElementById('dungeonSelectList');
   list.innerHTML = '';
   const myCp = calculateCP();
+  const playerRankIdx = RANKS.indexOf(state.rank);
 
   DUNGEONS_12.forEach(d => {
     const row = document.createElement('div');
-    row.className = 'item-row';
+    const reqRankIdx = RANKS.indexOf(d.minRank);
+    const isLocked = playerRankIdx < reqRankIdx;
+
+    row.className = `item-row ${isLocked ? 'locked' : ''}`;
     const isHard = myCp < d.reqCp;
-    const diffColor = isHard ? '#ef4444' : (myCp > d.reqCp * 1.4 ? '#10b981' : '#f59e0b');
-    const diffText = isHard ? '위험' : (myCp > d.reqCp * 1.4 ? '안전' : '적정');
+    const diffColor = isLocked ? '#94a3b8' : (isHard ? '#ef4444' : (myCp > d.reqCp * 1.4 ? '#10b981' : '#f59e0b'));
+    const diffText = isLocked ? `[🔒 ${d.minRank}급 인가 필요]` : (isHard ? '위험' : (myCp > d.reqCp * 1.4 ? '안전' : '적정'));
 
     row.innerHTML = `
       <div class="item-row-info">
@@ -1749,8 +1800,11 @@ function openDungeonSelectModal() {
         </div>
       </div>
       <div class="btn-group" style="display: flex; gap: 6px;">
-        <button class="btn-sm" style="background:#2563eb; color:#fff;" onclick="executeDungeonOneClick(${d.id}, 'rush')">⚔️ 전력 공략</button>
-        <button class="btn-sm" style="background:#059669; color:#fff;" onclick="executeDungeonOneClick(${d.id}, 'safe')">🛡️ 안전 파밍</button>
+        ${isLocked ? 
+          `<button class="btn-sm" style="background:#334155; color:#94a3b8; width:100%;" onclick="alert('해당 던전은 [${d.minRank}급] 이상 길드 승급 인가를 받아야만 출격할 수 있습니다!')">🔒 ${d.minRank}급 필요</button>` :
+          `<button class="btn-sm" style="background:#2563eb; color:#fff;" onclick="executeDungeonOneClick(${d.id}, 'rush')">⚔️ 전력 공략</button>
+           <button class="btn-sm" style="background:#059669; color:#fff;" onclick="executeDungeonOneClick(${d.id}, 'safe')">🛡️ 안전 파밍</button>`
+        }
       </div>
     `;
     list.appendChild(row);
@@ -1763,6 +1817,14 @@ function executeDungeonOneClick(dungeonId, mode) {
   closeModal('modalDungeonSelect');
   const d = DUNGEONS_12.find(x => x.id === dungeonId);
   if (!d) return;
+
+  const playerRankIdx = RANKS.indexOf(state.rank);
+  const reqRankIdx = RANKS.indexOf(d.minRank);
+  if (playerRankIdx < reqRankIdx) {
+    alert(`[길드 규정 위반]
+해당 던전은 [${d.minRank}급] 이상 승급 인가를 받은 모험가만 출격할 수 있습니다!`);
+    return;
+  }
 
   let baseHpLoss = d.hpCost;
   if (state.charClass === 'warrior') baseHpLoss = Math.round(baseHpLoss * 0.8);
@@ -1906,7 +1968,7 @@ function executeQuest(idx) {
   advanceSeason();
 }
 
-/* ==================== TRAINING & REST (PURE ATTRIBUTES) ==================== */
+/* ==================== TRAINING & REST ==================== */
 function openTrainingModal() {
   playSound('click');
   openModal('modalTraining');
@@ -1956,7 +2018,7 @@ function takeRestAction() {
   advanceSeason();
 }
 
-/* ==================== FORGE & SEPARATE SHOP TABS (v3.5) ==================== */
+/* ==================== FORGE & SEQUENTIAL TIER SHOP (v3.6) ==================== */
 function openForgeModal() {
   playSound('click');
   switchForgeSubTab('upgrade');
@@ -2044,7 +2106,6 @@ function attemptForge() {
   btn.disabled = true;
   btn.textContent = '🔨 제련 중...';
 
-  // 0.5s rapid delay
   setTimeout(() => {
     btn.disabled = false;
     btn.textContent = '🔥 망치질하기 (강화 시도)';
@@ -2086,41 +2147,67 @@ function attemptForge() {
   }, 500);
 }
 
+// Sequential Weapon Shop: Must buy Tier 1 to unlock Tier 2, etc.!
 function renderWeaponShop() {
   const list = document.getElementById('weaponShopList');
   list.innerHTML = '';
   const items = CLASS_WEAPONS[state.charClass] || [];
+  const currentUnlockedTier = state.unlockedWpnTier || 0;
 
   items.forEach(it => {
     const row = document.createElement('div');
-    row.className = 'item-row';
     const isEquipped = state.weapon.name === it.name;
+    const isUnlocked = it.tier === 1 || currentUnlockedTier >= (it.tier - 1);
+
+    row.className = `item-row ${!isUnlocked ? 'locked' : ''}`;
     row.innerHTML = `
       <div class="item-row-info">
-        <div class="item-row-title">${it.name} ${isEquipped ? '<span style="color:#10b981; font-size:0.75rem;">[착용 중]</span>' : ''} <span style="color:var(--gold); font-size:0.82rem;">(${it.cost.toLocaleString()}G)</span></div>
-        <div class="item-row-desc">${it.desc}</div>
+        <div class="item-row-title">
+          <span class="tier-tag">${it.tier}티어</span>
+          <span>${it.name}</span> 
+          ${isEquipped ? '<span style="color:#10b981; font-size:0.75rem;">[착용 중]</span>' : ''} 
+          <span style="color:var(--gold); font-size:0.82rem;">(${it.cost.toLocaleString()}G)</span>
+        </div>
+        <div class="item-row-desc">
+          ${it.desc} ${!isUnlocked ? `<br><span style="color:#f87171;">🔒 ${it.tier - 1}티어 무기 구매 후 해금됩니다.</span>` : ''}
+        </div>
       </div>
-      <button class="btn-sm" ${isEquipped ? 'disabled style="opacity:0.5;"' : ''} onclick="buyWeapon('${it.id}')">${isEquipped ? '착용 중' : '구매 장착'}</button>
+      <button class="btn-sm" ${(!isUnlocked || isEquipped) ? 'disabled' : ''} onclick="buyWeapon('${it.id}')">
+        ${isEquipped ? '착용 중' : (!isUnlocked ? `🔒 ${it.tier - 1}티어 필요` : '구매 장착')}
+      </button>
     `;
     list.appendChild(row);
   });
 }
 
+// Sequential Armor Shop: Must buy Tier 1 to unlock Tier 2, etc.!
 function renderArmorShop() {
   const list = document.getElementById('armorShopList');
   list.innerHTML = '';
   const items = CLASS_ARMORS[state.charClass] || [];
+  const currentUnlockedTier = state.unlockedArmTier || 0;
 
   items.forEach(it => {
     const row = document.createElement('div');
-    row.className = 'item-row';
     const isEquipped = state.armor.name === it.name;
+    const isUnlocked = it.tier === 1 || currentUnlockedTier >= (it.tier - 1);
+
+    row.className = `item-row ${!isUnlocked ? 'locked' : ''}`;
     row.innerHTML = `
       <div class="item-row-info">
-        <div class="item-row-title">${it.name} ${isEquipped ? '<span style="color:#10b981; font-size:0.75rem;">[착용 중]</span>' : ''} <span style="color:var(--gold); font-size:0.82rem;">(${it.cost.toLocaleString()}G)</span></div>
-        <div class="item-row-desc">${it.desc}</div>
+        <div class="item-row-title">
+          <span class="tier-tag">${it.tier}티어</span>
+          <span>${it.name}</span> 
+          ${isEquipped ? '<span style="color:#10b981; font-size:0.75rem;">[착용 중]</span>' : ''} 
+          <span style="color:var(--gold); font-size:0.82rem;">(${it.cost.toLocaleString()}G)</span>
+        </div>
+        <div class="item-row-desc">
+          ${it.desc} ${!isUnlocked ? `<br><span style="color:#f87171;">🔒 ${it.tier - 1}티어 방어구 구매 후 해금됩니다.</span>` : ''}
+        </div>
       </div>
-      <button class="btn-sm" ${isEquipped ? 'disabled style="opacity:0.5;"' : ''} onclick="buyArmor('${it.id}')">${isEquipped ? '착용 중' : '구매 장착'}</button>
+      <button class="btn-sm" ${(!isUnlocked || isEquipped) ? 'disabled' : ''} onclick="buyArmor('${it.id}')">
+        ${isEquipped ? '착용 중' : (!isUnlocked ? `🔒 ${it.tier - 1}티어 필요` : '구매 장착')}
+      </button>
     `;
     list.appendChild(row);
   });
@@ -2131,6 +2218,12 @@ function buyWeapon(itemId) {
   const it = items.find(x => x.id === itemId);
   if (!it) return;
 
+  const currentUnlockedTier = state.unlockedWpnTier || 0;
+  if (it.tier > 1 && currentUnlockedTier < it.tier - 1) {
+    alert(`이전 단계인 [${it.tier - 1}티어 무기]를 먼저 구매하셔야 다음 상위 무기를 해금할 수 있습니다!`);
+    return;
+  }
+
   if (state.gold < it.cost) {
     alert('골드가 부족합니다!');
     return;
@@ -2139,14 +2232,16 @@ function buyWeapon(itemId) {
   state.gold -= it.cost;
   playSound('victory');
 
-  state.weapon = { name: it.name, plus: 0, power: it.stat };
+  state.unlockedWpnTier = Math.max(state.unlockedWpnTier || 0, it.tier);
+  state.weapon = { name: it.name, plus: 0, power: it.stat, tier: it.tier };
   const statName = state.charClass === 'mage' ? '마법 주문력' : (state.charClass === 'rogue' ? '치명 공격력' : '물리 공격력');
-  addLog(`대장간 무기상점에서 [${it.name}]을 장착했습니다! ${statName}이 즉시 반영되었습니다. (-${it.cost}G)`, 'reward');
+  addLog(`대장간에서 [${it.tier}티어: ${it.name}]을 장착했습니다! ${statName}이 상승하고 다음 티어 장비가 해금되었습니다. (-${it.cost}G)`, 'reward');
   
   updateUI();
   renderWeaponShop();
   selectForgeTarget('weapon');
-  alert(`명품 무기 [${it.name}]을 장착했습니다! ${statName}이 즉시 상승했습니다.`);
+  alert(`[${it.tier}티어 무기: ${it.name}] 장착 완료!
+다음 상위 티어 장비 구매가 해금되었습니다.`);
 }
 
 function buyArmor(itemId) {
@@ -2154,6 +2249,12 @@ function buyArmor(itemId) {
   const it = items.find(x => x.id === itemId);
   if (!it) return;
 
+  const currentUnlockedTier = state.unlockedArmTier || 0;
+  if (it.tier > 1 && currentUnlockedTier < it.tier - 1) {
+    alert(`이전 단계인 [${it.tier - 1}티어 방어구]를 먼저 구매하셔야 다음 상위 방어구를 해금할 수 있습니다!`);
+    return;
+  }
+
   if (state.gold < it.cost) {
     alert('골드가 부족합니다!');
     return;
@@ -2162,16 +2263,18 @@ function buyArmor(itemId) {
   state.gold -= it.cost;
   playSound('victory');
 
-  state.armor = { name: it.name, plus: 0, power: it.stat, hpBonus: it.hpBonus || 0 };
-  addLog(`대장간 방어구상점에서 [${it.name}]을 장착했습니다! 방어력과 생명력이 즉시 반영되었습니다. (-${it.cost}G)`, 'reward');
+  state.unlockedArmTier = Math.max(state.unlockedArmTier || 0, it.tier);
+  state.armor = { name: it.name, plus: 0, power: it.stat, hpBonus: it.hpBonus || 0, tier: it.tier };
+  addLog(`대장간에서 [${it.tier}티어: ${it.name}]을 장착했습니다! 방어력과 체력이 상승하고 다음 티어 장비가 해금되었습니다. (-${it.cost}G)`, 'reward');
   
   updateUI();
   renderArmorShop();
   selectForgeTarget('armor');
-  alert(`명품 방어구 [${it.name}]을 장착했습니다! 방어력과 생명력이 즉시 상승했습니다.`);
+  alert(`[${it.tier}티어 방어구: ${it.name}] 장착 완료!
+다음 상위 티어 장비 구매가 해금되었습니다.`);
 }
 
-/* ==================== REAL-TIME PROMOTION DUEL ==================== */
+/* ==================== REAL-TIME PROMOTION DUEL (WITH PROMOTION PERKS!) ==================== */
 let duelBoss = { name: '', maxHp: 100, hp: 100, atk: 20, rank: 'E' };
 let duelUsedPotion = false;
 let duelSkillUsesLeft = 3;
@@ -2196,6 +2299,16 @@ function openPromotionModal() {
 • 길드 명성: ${reqFameTable[nextRank]} (현재: ${state.fame})`);
     return;
   }
+
+  const perk = RANK_PERKS[nextRank];
+  const sal = RANK_SALARIES[nextRank];
+  const perksBox = document.getElementById('promotionPerksContent');
+  perksBox.innerHTML = `
+    • <b>분기별 정기 급여 인상</b>: 매 턴마다 <b>+${sal.toLocaleString()} G</b> 영구 수령<br>
+    • <b>던전 입장 인가</b>: <b>${perk.dungeonText}</b> 획득<br>
+    • <b>영구 신체 단련 보너스</b>: <b>최대 HP +${perk.maxHp}</b> ${perk.allStats > 0 ? `, <b>모든 스탯 +${perk.allStats}</b>` : ''}<br>
+    • <b>승급 축하금</b>: <b>+${perk.gold.toLocaleString()} G</b> 즉시 지급
+  `;
 
   const bossNames = {
     'E': '신입 판별관 바르톨', 'D': '베테랑 검투사 카심', 'C': '마도 결투사 엘리아스',
@@ -2290,17 +2403,40 @@ function duelTurn(action) {
     log.innerHTML += `<div style="color:#f43f5e;">🧪 영약을 복용하여 HP를 50 회복했습니다!</div>`;
   }
 
+  // Boss Defeated -> PROMOTION REWARD CELEBRATION!
   if (duelBoss.hp <= 0) {
     playSound('victory');
-    log.innerHTML += `<div style="color:#f59e0b; font-weight:800;">🎉 심사관 격파! 승급 심사 합격!</div>`;
+    log.innerHTML += `<div style="color:#f59e0b; font-weight:800;">🎉 심사관 격파! 승급 심사 통과!</div>`;
     document.getElementById('duelActionBtns').style.display = 'none';
-    state.rank = duelBoss.rank;
+    
+    const newRank = duelBoss.rank;
+    state.rank = newRank;
     state.fame += 50;
-    state.gold += 800;
-    addLog(`🏆 1:1 진검 대련 끝에 <b>[${duelBoss.rank}급 모험가]</b>로 공식 승급했습니다! (+800G, 명성 +50)`, 'rank');
+
+    // Apply Rank Perks!
+    const perk = RANK_PERKS[newRank];
+    state.baseMaxHp += perk.maxHp;
+    state.maxHp += perk.maxHp;
+    state.hp = state.maxHp; // Full recovery on promotion!
+    state.str += perk.allStats;
+    state.int += perk.allStats;
+    state.dex += perk.allStats;
+    state.def += perk.allStats;
+    state.gold += perk.gold;
+
+    const sal = RANK_SALARIES[newRank];
+    addLog(`🏆 <b>[${newRank}급 모험가 승급 특권 발동!]</b> 최대 HP +${perk.maxHp}, 모든 스탯 +${perk.allStats}, 축하금 +${perk.gold}G, ${perk.dungeonText}, 분기 정기 급여 ${sal.toLocaleString()}G 인상!`, 'rank');
     updateUI();
+
     setTimeout(() => {
-      alert(`🎉 축하합니다! ${duelBoss.rank}급 모험가 승급에 성공하셨습니다!`);
+      alert(`🎉 축하합니다! [${newRank}급 모험가]로 공식 승급했습니다!
+
+[획득한 길드 특권]
+• 최대 HP +${perk.maxHp} 영구 증가 (체력 100% 완쾌)
+• 모든 기본 스탯 +${perk.allStats} 영구 상승
+• ${perk.dungeonText}
+• 승급 축하금: +${perk.gold.toLocaleString()} G
+• 매 분기 정기 급여: +${sal.toLocaleString()} G 영구 수령!`);
       closeModal('modalPromotion');
       advanceSeason();
     }, 800);
@@ -2471,8 +2607,10 @@ function startNewCareerFromModal() {
     int: c.baseInt,
     dex: c.baseDex,
     def: c.baseDef,
-    weapon: { name: c.wpnName, plus: 0, power: 8 },
-    armor: { name: c.armName, plus: 0, power: 6, hpBonus: 0 },
+    unlockedWpnTier: 0,
+    unlockedArmTier: 0,
+    weapon: { name: c.wpnName, plus: 0, power: 8, tier: 0 },
+    armor: { name: c.armName, plus: 0, power: 6, hpBonus: 0, tier: 0 },
     artifact: { name: '용기의 부적', power: 3 },
     gold: 300,
     fame: 10,
@@ -2549,7 +2687,7 @@ function loadGameFromLocalStorage() {
 }
 
 function exportSaveData() {
-  const data = { version: '3.4', state: state, hallOfFame: hallOfFame };
+  const data = { version: '3.6', state: state, hallOfFame: hallOfFame };
   const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
