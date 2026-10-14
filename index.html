@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>견습에서 전설까지 v7.0 : 나만의 모험가 키우기 (Masters & Epilogue Edition)</title>
+<title>견습에서 전설까지 v7.1 : 나만의 모험가 키우기 (Definitive Edition)</title>
 <style>
   :root {
     --bg-main: #0a0d14;
@@ -769,8 +769,9 @@
     <div class="progress-bar-wrap">
       <div class="progress-bar-fill" id="loadingFill"></div>
     </div>
-    <div style="font-size: 0.78rem; color: var(--text-muted);">
-      모험가의 한 해가 쉼 없이 흘러갑니다...
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+      <span style="font-size: 0.78rem; color: var(--text-muted);">모험가의 한 해가 쉼 없이 흘러갑니다...</span>
+      <button class="btn-sm" style="background:#2563eb; color:#fff; font-size:0.75rem; padding:4px 10px; min-height:28px;" onclick="skipLoadingNow()">⚡ 즉시 완료 (Skip)</button>
     </div>
   </div>
 </div>
@@ -962,7 +963,8 @@
     <div class="modal-body" id="endingBody"></div>
     <div class="modal-footer" style="display:flex; gap:8px;">
       <button class="btn-sm" style="flex:1; background: #2563eb; color:#fff; font-size:0.95rem; padding:12px;" onclick="startNewCareerFromEnding()">✨ 새로운 전설 시작하기</button>
-      <button class="btn-close" onclick="viewHallFromEnding()">🏆 명예의 전당 보기</button>
+      <button class="btn-sm" style="background: #059669; color:#fff; font-size:0.85rem; padding:10px;" onclick="copyEndingToClipboard()">📋 기록 복사</button>
+      <button class="btn-close" onclick="viewHallFromEnding()">🏆 전당</button>
     </div>
   </div>
 </div>
@@ -1458,7 +1460,10 @@ const SHOP_ELIXIRS = [
   { id: 'elx_def', name: '강철 수호의 성수', cost: 15000, stat: 'def', val: 3, icon: '🟡', desc: '성스러운 성수가 신체를 감싸 방어(DEF)가 +3 영구 상승합니다.' },
   { id: 'elx_all', name: '궁극의 용사 영약', cost: 35000, stat: 'all', val: 2, icon: '🌟', desc: '전설의 만능 비약으로 모든 스탯(근력/마력/민첩/방어)이 +2 영구 상승합니다.' },
   { id: 'inv_monument', name: '길드 기념비 건립 기부', cost: 20000, stat: 'fame', val: 80, icon: '🏛️', desc: '길드 중앙 광장에 기념비를 세워 길드 명성이 +80 상승합니다.' },
-  { id: 'inv_library', name: '왕립 도서관 장서 기증', cost: 50000, stat: 'fame', val: 200, icon: '👑', desc: '왕립 아카데미에 대형 도서관을 기증하여 길드 명성이 +200 상승합니다.' }
+  { id: 'inv_library', name: '왕립 도서관 장서 기증', cost: 50000, stat: 'fame', val: 200, icon: '👑', desc: '왕립 아카데미에 대형 도서관을 기증하여 길드 명성이 +200 상승합니다.' },
+  { id: 'relic_heart', name: '고대 용의 심장 핵', cost: 100000, stat: 'all', val: 10, icon: '💎', desc: '대륙 최강의 신수 드래곤의 심장 핵. 모든 스탯(근/마/민/방)이 +10 영구 상승합니다.' },
+  { id: 'relic_essence', name: '세계수의 정수', cost: 250000, stat: 'all', val: 25, icon: '🌳', desc: '태초 세계수의 순수한 생명 정수. 모든 스탯(근/마/민/방)이 +25 영구 폭증합니다.' },
+  { id: 'relic_fortress', name: '길드 대영지 및 영구 요새 건립', cost: 500000, stat: 'estate', val: 1500, icon: '🏰', desc: '모험가 전용 거대 영지를 매입하여 길드 명성 +1,500 및 연간 급여 영구 +20% 보너스!' }
 ];
 
 /* ==================== HIDDEN MASTERS ROSTER ==================== */
@@ -1468,9 +1473,9 @@ const HIDDEN_MASTERS = [
     name: '은둔한 검선 풍호',
     title: '바람의 검사',
     desc: '대륙 최북단 설산에 은둔하며 자연의 검을 깨우친 전설의 검선입니다.',
-    reqCp: 1800,
-    hp: 3200,
-    atk: 240,
+    reqCp: 1600,
+    hp: 2200,
+    atk: 160,
     statReward: { str: 8, dex: 8, int: 0, def: 0 },
     rewardText: '근력 +8, 민첩 +8',
     gold: 15000,
@@ -1481,9 +1486,9 @@ const HIDDEN_MASTERS = [
     name: '심연의 흑마도사 모건',
     title: '어둠의 심령 대마도사',
     desc: '금지된 차원 마법을 홀로 연구하여 심연의 마나를 다루는 원로 마법사입니다.',
-    reqCp: 2400,
-    hp: 4400,
-    atk: 300,
+    reqCp: 2200,
+    hp: 3200,
+    atk: 220,
     statReward: { str: 0, dex: 0, int: 16, def: 8 },
     rewardText: '마력 +16, 방어 +8',
     gold: 25000,
@@ -1494,9 +1499,9 @@ const HIDDEN_MASTERS = [
     name: '불패의 철권왕 바르칸',
     title: '황야의 무투패왕',
     desc: '무기 없이 맨주먹만으로 용을 때려잡았다는 전설의 맨몸 격투가입니다.',
-    reqCp: 3000,
-    hp: 5800,
-    atk: 360,
+    reqCp: 2800,
+    hp: 4400,
+    atk: 280,
     statReward: { str: 16, dex: 0, int: 0, def: 16 },
     rewardText: '근력 +16, 방어 +16',
     gold: 40000,
@@ -1507,9 +1512,9 @@ const HIDDEN_MASTERS = [
     name: '그림자 암살단주 야영',
     title: '환영의 지배자',
     desc: '대륙 역사상 가장 은밀하고 치명적인 암살단을 홀로 이끌었던 전설의 닌자입니다.',
-    reqCp: 3700,
-    hp: 7500,
-    atk: 430,
+    reqCp: 3400,
+    hp: 5800,
+    atk: 350,
     statReward: { str: 5, dex: 22, int: 5, def: 5 },
     rewardText: '민첩 +22, 전 스탯 +5',
     gold: 60000,
@@ -1520,9 +1525,9 @@ const HIDDEN_MASTERS = [
     name: '대륙의 무신 천마',
     title: '궁극의 은둔 무신 (최강자)',
     desc: '무의 극의에 도달하여 인간의 한계를 초월한 대륙 최강의 은둔 절대자입니다.',
-    reqCp: 4500,
-    hp: 9900,
-    atk: 520,
+    reqCp: 4000,
+    hp: 7500,
+    atk: 420,
     statReward: { str: 25, dex: 25, int: 25, def: 25 },
     rewardText: '모든 스탯 +25 영구 폭증!!',
     gold: 100000,
@@ -1552,6 +1557,7 @@ let state = {
   mastersDefeated: 0,
   defeatedMasterIds: [],
   elixirsConsumed: 0,
+  salaryMultiplier: 1.0,
   isRetired: false,
   logs: []
 };
@@ -1639,7 +1645,7 @@ function updateUI() {
   document.getElementById('uiFame').textContent = state.fame.toLocaleString();
 
   const sal = RANK_SALARIES[state.rank] || 250;
-  document.getElementById('uiSalary').textContent = `${(sal * 4).toLocaleString()} G (분기당 ${sal.toLocaleString()}G)`;
+  const annualSal = Math.round((sal * 4) * (state.salaryMultiplier || 1.0)); document.getElementById('uiSalary').textContent = `${annualSal.toLocaleString()} G (분기당 ${Math.round(annualSal/4).toLocaleString()}G)`;
 
   const shopGold = document.getElementById('shopGoldText');
   if (shopGold) shopGold.textContent = state.gold.toLocaleString() + ' G';
@@ -1778,7 +1784,18 @@ function launchThreeSecondLoading(challengeExam) {
   modal.style.display = 'flex';
 
   const startTime = Date.now();
-  const duration = 3000; // Exact 3 seconds
+  const duration = 3000;
+  window.loadingTimer = null;
+
+  window.skipLoadingNow = function() {
+    if (window.loadingTimer) {
+      clearInterval(window.loadingTimer);
+      window.loadingTimer = null;
+    }
+    modal.style.display = 'none';
+    if (btn) btn.disabled = false;
+    executeDynamicYear(challengeExam);
+  };
 
   const steps = [
     { at: 750, text: `☀️ 여름: 뜨거운 태양 아래 혈투와 수련에 몰두합니다... (50%)`, pct: 50 },
@@ -1788,7 +1805,7 @@ function launchThreeSecondLoading(challengeExam) {
 
   let nextStepIdx = 0;
 
-  const timer = setInterval(() => {
+  window.loadingTimer = setInterval(() => {
     const elapsed = Date.now() - startTime;
     const progress = Math.min(100, Math.round((elapsed / duration) * 100));
     fill.style.width = `${progress}%`;
@@ -2125,9 +2142,10 @@ function duelTurn(action) {
       return;
     }
     duelUsedPotion = true;
-    duelPlayerHp = Math.min(duelPlayerMaxHp, duelPlayerHp + 50);
+    const healVal = Math.round(duelPlayerMaxHp * 0.40);
+    duelPlayerHp = Math.min(duelPlayerMaxHp, duelPlayerHp + healVal);
     document.getElementById('btnDuelPotion').disabled = true;
-    log.innerHTML += `<div style="color:#f43f5e;">🧪 영약을 복용하여 LP 50을 회복했습니다!</div>`;
+    log.innerHTML += `<div style="color:#f43f5e;">🧪 비장의 영약을 복용하여 LP ${healVal} (40%)을 회복했습니다!</div>`;
   }
 
   // Check Boss Defeat
@@ -2263,7 +2281,7 @@ function concludeDuelOutcome(isWin) {
 /* ==================== YEAR ROLLOVER & SUMMARY ==================== */
 function finishYearRollover(summary) {
   // Pay Annual Guild Salary
-  const salary = (RANK_SALARIES[state.rank] || 250) * 4;
+  const salary = Math.round((RANK_SALARIES[state.rank] || 250) * 4 * (state.salaryMultiplier || 1.0));
   state.gold += salary;
   addLog(`💰 [길드 연간 정기 급여] 공인 ${state.rank}급 1년분 유지비 <b>+${salary.toLocaleString()}G</b> 수령!`, 'reward');
 
@@ -2350,9 +2368,17 @@ function renderAnnualReport(s, salary) {
     `;
   });
 
+  const typeCounts = {};
+  s.events.forEach(e => {
+    const k = e.icon;
+    typeCounts[k] = (typeCounts[k] || 0) + 1;
+  });
+  const summaryBadges = Object.entries(typeCounts).map(([icon, cnt]) => `${icon} ${cnt}회`).join(' · ');
+
   body.innerHTML = `
-    <div style="font-size: 0.88rem; color: #cbd5e1; margin-bottom: 8px;">
-      <b>${state.name}</b>의 ${s.age}세 한 해 동안 4개의 사건이 다이내믹하게 전개되었습니다.
+    <div style="display:flex; justify-content:space-between; align-items:center; background:#0f172a; padding:8px 12px; border-radius:8px; border:1px solid #1e293b; margin-bottom:10px;">
+      <span style="font-size:0.84rem; color:#cbd5e1;"><b>${state.name}</b> (${s.age}세 연간 구성)</span>
+      <span style="font-size:0.8rem; color:#38bdf8; font-weight:800;">[ ${summaryBadges} ]</span>
     </div>
 
     ${eventsHtml}
@@ -2523,7 +2549,7 @@ function challengeHiddenMaster(id) {
     masterObj: m
   };
 
-  duelPlayerMaxHp = 100 + state.def * 2 + Math.round(calculateCP() * 0.1);
+  duelPlayerMaxHp = Math.round(600 + state.def * 6 + calculateCP() * 0.7);
   duelPlayerHp = duelPlayerMaxHp;
   duelUsedPotion = false;
   duelSkillUsesLeft = 3;
@@ -2579,7 +2605,9 @@ function renderElixirShop() {
   SHOP_ELIXIRS.forEach(it => {
     const row = document.createElement('div');
     row.className = 'item-row';
-    const canAfford = state.gold >= it.cost;
+    const canAfford1 = state.gold >= it.cost;
+    const canAfford10 = state.gold >= it.cost * 10;
+    const isRepeatable = it.stat !== 'estate';
 
     row.innerHTML = `
       <div class="item-row-info">
@@ -2592,40 +2620,54 @@ function renderElixirShop() {
           ${it.desc}
         </div>
       </div>
-      <button class="btn-sm" style="background:${canAfford ? '#f59e0b' : '#334155'}; color:${canAfford ? '#000' : '#94a3b8'}; font-weight:800;" ${!canAfford ? 'disabled' : ''} onclick="buyElixir('${it.id}')">
-        ${canAfford ? '구매 섭취' : '골드 부족'}
-      </button>
+      <div style="display:flex; gap:6px;">
+        <button class="btn-sm" style="background:${canAfford1 ? '#f59e0b' : '#334155'}; color:${canAfford1 ? '#000' : '#94a3b8'}; font-weight:800; min-width:70px;" ${!canAfford1 ? 'disabled' : ''} onclick="buyElixir('${it.id}', 1)">
+          ${canAfford1 ? '1개 구매' : '부족'}
+        </button>
+        ${isRepeatable ? `
+        <button class="btn-sm" style="background:${canAfford10 ? '#d97706' : '#1e293b'}; color:${canAfford10 ? '#fff' : '#64748b'}; font-weight:800; min-width:80px;" ${!canAfford10 ? 'disabled' : ''} onclick="buyElixir('${it.id}', 10)">
+          ${canAfford10 ? '10개 일괄' : '10개 부족'}
+        </button>` : ''}
+      </div>
     `;
     list.appendChild(row);
   });
 }
 
-function buyElixir(id) {
+function buyElixir(id, count = 1) {
   const item = SHOP_ELIXIRS.find(x => x.id === id);
   if (!item) return;
 
-  if (state.gold < item.cost) {
-    alert(`골드가 부족합니다! (필요: ${item.cost.toLocaleString()}G / 보유: ${state.gold.toLocaleString()}G)`);
+  const totalCost = item.cost * count;
+  if (state.gold < totalCost) {
+    alert(`골드가 부족합니다! (필요: ${totalCost.toLocaleString()}G / 보유: ${state.gold.toLocaleString()}G)`);
     return;
   }
 
-  state.gold -= item.cost;
+  state.gold -= totalCost;
+  const totalVal = item.val * count;
+
   if (item.stat === 'all') {
-    state.str += item.val;
-    state.int += item.val;
-    state.dex += item.val;
-    state.def += item.val;
+    state.str += totalVal;
+    state.int += totalVal;
+    state.dex += totalVal;
+    state.def += totalVal;
   } else if (item.stat === 'fame') {
-    state.fame += item.val;
+    state.fame += totalVal;
+  } else if (item.stat === 'estate') {
+    state.fame += totalVal;
+    state.salaryMultiplier = (state.salaryMultiplier || 1.0) + 0.20;
+    alert(`🏰 [길드 대영지 및 영구 요새 건립 완료!]
+길드 명성 +${totalVal.toLocaleString()} 획득 및 연간 정기 급여가 영구적으로 +20% 인상되었습니다!`);
   } else {
-    state[item.stat] += item.val;
+    state[item.stat] += totalVal;
   }
 
-  state.elixirsConsumed = (state.elixirsConsumed || 0) + 1;
+  state.elixirsConsumed = (state.elixirsConsumed || 0) + count;
   playSound('growth');
 
-  const statNames = { str: '근력', int: '마력', dex: '민첩', def: '방어', fame: '명성', all: '모든 스탯' };
-  addLog(`🏺 [비약 섭취] <b>${item.name}</b>을(를) 구매하여 <b>${statNames[item.stat]} +${item.val}</b> 영구 성장! (-${item.cost.toLocaleString()}G)`, 'growth');
+  const statNames = { str: '근력', int: '마력', dex: '민첩', def: '방어', fame: '명성', all: '모든 스탯', estate: '명성 및 급여' };
+  addLog(`🏺 [비약 섭취] <b>${item.name}</b> x${count}개 구매! <b>${statNames[item.stat]} +${totalVal}</b> 성장! (-${totalCost.toLocaleString()}G)`, 'growth');
 
   renderElixirShop();
   updateUI();
@@ -2646,13 +2688,15 @@ function renderWeaponShop() {
     row.className = `item-row ${!isUnlocked ? 'locked' : ''}`;
     const tagClass = it.isEndGame ? 'endgame-tag' : 'tier-tag';
     const tagText = it.isEndGame ? '👑 종결선택' : `${it.tier}티어`;
+    const diff = it.stat - state.weapon.power;
+    const diffText = isEquipped ? '' : (diff > 0 ? `<b style="color:#10b981;">(공격력 +${diff} 상승)</b>` : '');
 
     row.innerHTML = `
       <div class="item-row-info">
         <div class="item-row-title">
           <span class="${tagClass}">${tagText}</span>
           <span>${it.name}</span> 
-          ${isEquipped ? '<span style="color:#10b981; font-size:0.75rem;">[착용 중]</span>' : ''} 
+          ${isEquipped ? '<span style="color:#10b981; font-size:0.75rem;">[착용 중]</span>' : diffText} 
           <span style="color:var(--gold); font-size:0.82rem;">(${it.cost.toLocaleString()}G)</span>
         </div>
         <div class="item-row-desc">
@@ -2681,13 +2725,15 @@ function renderArmorShop() {
     row.className = `item-row ${!isUnlocked ? 'locked' : ''}`;
     const tagClass = it.isEndGame ? 'endgame-tag' : 'tier-tag';
     const tagText = it.isEndGame ? '👑 종결선택' : `${it.tier}티어`;
+    const diff = it.stat - state.armor.power;
+    const diffText = isEquipped ? '' : (diff > 0 ? `<b style="color:#10b981;">(방어력 +${diff} 상승)</b>` : '');
 
     row.innerHTML = `
       <div class="item-row-info">
         <div class="item-row-title">
           <span class="${tagClass}">${tagText}</span>
           <span>${it.name}</span> 
-          ${isEquipped ? '<span style="color:#10b981; font-size:0.75rem;">[착용 중]</span>' : ''} 
+          ${isEquipped ? '<span style="color:#10b981; font-size:0.75rem;">[착용 중]</span>' : diffText} 
           <span style="color:var(--gold); font-size:0.82rem;">(${it.cost.toLocaleString()}G)</span>
         </div>
         <div class="item-row-desc">
@@ -2910,6 +2956,31 @@ function retireHero(reason) {
   `;
 
   openModal('modalEnding');
+}
+
+
+function copyEndingToClipboard() {
+  const ending = determineEnding();
+  const cp = calculateCP();
+  const mastersCount = state.mastersDefeated || 0;
+  const score = Math.round(cp * 2.0 + state.fame * 1.5 + state.gold * 0.15 + state.bossesDefeated * 80 + mastersCount * 200);
+
+  const text = `[⚔️ 견습에서 전설까지 최종 커리어 정산]
+모험가: ${state.name} (${CLASS_CONFIG[state.charClass].name})
+활동 기간: 15세 ~ ${state.age}세
+최종 지위: ${state.rank}급 공인
+엔딩: ${ending.title} (${ending.grade})
+전투력: ${cp.toLocaleString()} CP | 자산: ${state.gold.toLocaleString()} G | 명성: ${state.fame.toLocaleString()}
+보스 토벌: ${state.bossesDefeated}체 | 재야의 고수: ${mastersCount}인 격파
+최종 점수: ${score.toLocaleString()} 점
+
+${ending.story}`;
+
+  navigator.clipboard.writeText(text).then(() => {
+    alert('📋 일대기 요약이 클립보드에 복사되었습니다! 친구나 커뮤니티에 공유해보세요.');
+  }).catch(() => {
+    alert('클립보드 접근이 제한되었습니다.');
+  });
 }
 
 function startNewCareerFromEnding() {
