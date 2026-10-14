@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>견습에서 전설까지 v4.0 : 나만의 모험가 키우기</title>
+<title>견습에서 전설까지 v4.1 : 나만의 모험가 키우기 (Kickru Edition)</title>
 <style>
   :root {
     --bg-main: #0a0d14;
@@ -879,22 +879,22 @@
 
       <!-- Action Buttons Grid -->
       <div class="actions-grid">
-        <button class="act-btn primary-act" onclick="openDungeonSelectModal()">
+        <button class="act-btn primary-act" onclick="openDungeonPopup()">
           <span class="icon">🗺️</span>
-          <span>12단계 던전</span>
-          <span class="desc">등급별 인가 필요</span>
+          <span>적정 던전 출격</span>
+          <span class="desc">전투력 자동 매칭</span>
         </button>
 
-        <button class="act-btn" onclick="openQuestBoardModal()">
+        <button class="act-btn" onclick="openQuestPopup()">
           <span class="icon">📜</span>
-          <span>길드 의뢰 (6건)</span>
-          <span class="desc">고액 보수 & 스탯 성장</span>
+          <span>길드 즉석 의뢰</span>
+          <span class="desc">주력 스탯/방어 수주</span>
         </button>
 
-        <button class="act-btn" onclick="openTrainingModal()">
+        <button class="act-btn" onclick="openTrainingPopup()">
           <span class="icon">🏋️</span>
-          <span>스탯 집중 수련</span>
-          <span class="desc">체력 20 소모</span>
+          <span>종합 신체 수련</span>
+          <span class="desc">전 스탯 +1~6 (대성공 2배)</span>
         </button>
 
         <button class="act-btn" onclick="takeRestAction()">
@@ -991,91 +991,53 @@
 
 <!-- ==================== MODALS ==================== -->
 
-<!-- MODAL: 12 DUNGEONS SELECT -->
-<div class="modal-overlay" id="modalDungeonSelect">
+<!-- MODAL: MATCHED DUNGEON POPUP -->
+<div class="modal-overlay" id="modalDungeonPopup">
   <div class="modal-box">
     <div class="sheet-handle"></div>
     <div class="modal-header">
-      <h3>🗺️ 12단계 던전 공략소</h3>
-      <button class="btn-close-icon" onclick="closeModal('modalDungeonSelect')">✕</button>
+      <h3 id="dungeonPopupTitle">🗺️ 적정 던전 출격 매칭</h3>
+      <button class="btn-close-icon" onclick="closeModal('modalDungeonPopup')">✕</button>
     </div>
-    <div class="modal-body">
-      <p style="font-size: 0.84rem; color: var(--text-muted); line-height: 1.4;">
-        상위 위험 던전은 <b>길드 승급 인가(F~S급)</b>를 받아야만 진입할 수 있습니다.
-      </p>
-      <div class="item-list" id="dungeonSelectList"></div>
+    <div class="modal-body" id="dungeonPopupBody">
+      <!-- Populated dynamically: Zone, Boss, CP comparison, rewards, lethal warning -->
     </div>
-    <div class="modal-footer">
-      <button class="btn-close" onclick="closeModal('modalDungeonSelect')">닫기</button>
+    <div class="modal-footer" id="dungeonPopupFooter" style="display:flex; gap:8px;">
+      <!-- Action buttons: Rush, Safe, Close -->
     </div>
   </div>
 </div>
 
-<!-- MODAL: GUILD QUEST BOARD -->
-<div class="modal-overlay" id="modalQuestBoard">
+<!-- MODAL: RANDOM QUEST POPUP -->
+<div class="modal-overlay" id="modalQuestPopup">
   <div class="modal-box">
     <div class="sheet-handle"></div>
     <div class="modal-header">
-      <h3>📜 길드 의뢰 게시판 (시즌 6건)</h3>
-      <button class="btn-close-icon" onclick="closeModal('modalQuestBoard')">✕</button>
+      <h3 id="questPopupTitle">📜 길드 즉석 의뢰 접수</h3>
+      <button class="btn-close-icon" onclick="closeModal('modalQuestPopup')">✕</button>
     </div>
-    <div class="modal-body">
-      <p style="font-size: 0.84rem; color: var(--text-muted); line-height: 1.4;">
-        의뢰 완수 시 풍성한 골드와 함께 <b>스탯이 영구 성장</b>합니다.
-      </p>
-      <div class="item-list" id="questBoardList"></div>
+    <div class="modal-body" id="questPopupBody">
+      <!-- Populated dynamically: Quest title, category tag, flavor story, rewards, hp cost -->
     </div>
-    <div class="modal-footer">
-      <button class="btn-close" onclick="closeModal('modalQuestBoard')">닫기</button>
+    <div class="modal-footer" id="questPopupFooter" style="display:flex; gap:8px;">
+      <!-- Action buttons: Accept & Complete, Close -->
     </div>
   </div>
 </div>
 
-<!-- MODAL: TRAINING -->
-<div class="modal-overlay" id="modalTraining">
+<!-- MODAL: ALL-STAT TRAINING POPUP -->
+<div class="modal-overlay" id="modalTrainingPopup">
   <div class="modal-box">
     <div class="sheet-handle"></div>
     <div class="modal-header">
-      <h3>🏋️ 스탯 집중 수련</h3>
-      <button class="btn-close-icon" onclick="closeModal('modalTraining')">✕</button>
+      <h3 id="trainingPopupTitle">🏋️ 모험가 종합 신체 수련</h3>
+      <button class="btn-close-icon" onclick="closeModal('modalTrainingPopup')">✕</button>
     </div>
-    <div class="modal-body">
-      <p style="font-size: 0.84rem; color: var(--text-muted); line-height: 1.4;">
-        1분기 동안 기초 신체 능력치를 집중 단련합니다. 체력 20이 소모됩니다.
-      </p>
-      <div class="item-list">
-        <div class="item-row">
-          <div class="item-row-info">
-            <div class="item-row-title">⚔️ 웨이트 트레이닝 (완력 단련)</div>
-            <div class="item-row-desc">근육량과 순수 완력 강화: <b>근력(STR) +3~6</b> (체력 -20)</div>
-          </div>
-          <button class="btn-sm" onclick="trainStat('str')">근력 수련</button>
-        </div>
-        <div class="item-row">
-          <div class="item-row-info">
-            <div class="item-row-title">✨ 고대 마도서 명상 (마나 정제)</div>
-            <div class="item-row-desc">정신력과 마나 친화력 강화: <b>마력(INT) +3~6</b></div>
-          </div>
-          <button class="btn-sm" onclick="trainStat('int')">마력 수련</button>
-        </div>
-        <div class="item-row">
-          <div class="item-row-info">
-            <div class="item-row-title">🏃 고난도 장애물 주파 (민첩 단련)</div>
-            <div class="item-row-desc">반사신경과 속도 강화: <b>민첩(DEX) +3~6</b> (체력 -20)</div>
-          </div>
-          <button class="btn-sm" onclick="trainStat('dex')">민첩 수련</button>
-        </div>
-        <div class="item-row">
-          <div class="item-row-info">
-            <div class="item-row-title">🛡️ 방패술 및 맷집 단련 (내구도 강화)</div>
-            <div class="item-row-desc">신체 내구도 강화: <b>방어(DEF) +3~6</b>, 최대 HP +15 영구 증가</div>
-          </div>
-          <button class="btn-sm" onclick="trainStat('def')">방어 수련</button>
-        </div>
-      </div>
+    <div class="modal-body" id="trainingPopupBody">
+      <!-- Initial view: training description, probabilities, lethal warning -->
     </div>
-    <div class="modal-footer">
-      <button class="btn-close" onclick="closeModal('modalTraining')">닫기</button>
+    <div class="modal-footer" id="trainingPopupFooter" style="display:flex; gap:8px;">
+      <!-- Action buttons: Start Training, Close -->
     </div>
   </div>
 </div>
@@ -1608,7 +1570,8 @@ const FORGE_COSTS = [
 /* ==================== STATE ==================== */
 let state = {
   name: '카엘',
-  charClass: 'novice', // Starts as Novice Adventurer!
+  charClass: 'novice',
+  examDoneThisYear: false, // Starts as Novice Adventurer!
   isAdvanced: false,
   age: 15,
   seasonIdx: 0,
@@ -1748,12 +1711,26 @@ function updateUI() {
   if (shopClass) shopClass.textContent = `[${c.name}]`;
 
   const nextRankIdx = RANKS.indexOf(state.rank) + 1;
-  if (nextRankIdx < RANKS.length) {
-    document.getElementById('txtExamBtn').textContent = `${RANKS[nextRankIdx]}급 결투 심사`;
-    document.getElementById('txtExamDesc').textContent = '급여·던전·스탯 특권';
-  } else {
-    document.getElementById('txtExamBtn').textContent = '최고 등급 달성';
+  const btnExam = document.getElementById('btnExam');
+  if (nextRankIdx >= RANKS.length) {
+    document.getElementById('txtExamBtn').textContent = '👑 최고 등급 달성';
     document.getElementById('txtExamDesc').textContent = '대륙 최고의 영웅';
+    if (btnExam) btnExam.style.borderColor = 'var(--gold)';
+  } else {
+    const nextRank = RANKS[nextRankIdx];
+    if (state.seasonIdx !== 3) {
+      document.getElementById('txtExamBtn').textContent = `🔒 ${nextRank}급 심사 [4분기 대기]`;
+      document.getElementById('txtExamDesc').textContent = `매년 4분기(겨울) 연 1회 개시`;
+      if (btnExam) btnExam.style.borderColor = '#334155';
+    } else if (state.examDoneThisYear) {
+      document.getElementById('txtExamBtn').textContent = `🔒 올해 심사 완료`;
+      document.getElementById('txtExamDesc').textContent = `내년 4분기 재도전 가능`;
+      if (btnExam) btnExam.style.borderColor = '#475569';
+    } else {
+      document.getElementById('txtExamBtn').textContent = `⚔️ [4분기] ${nextRank}급 결투 심사!`;
+      document.getElementById('txtExamDesc').textContent = `올해 도전 기회 1회 남음!`;
+      if (btnExam) btnExam.style.borderColor = '#f59e0b';
+    }
   }
 
   saveGameToLocalStorage();
@@ -1878,6 +1855,7 @@ function advanceSeason() {
   if (state.seasonIdx >= 4) {
     state.seasonIdx = 0;
     state.age++;
+    state.examDoneThisYear = false; // Reset annual 4th-quarter promotion exam attempt!
     addLog(`🎂 한 해가 지나 ${state.name}의 나이가 <b>${state.age}세</b>가 되었습니다.`, 'event');
 
     // 1-Year Kickru Random Growth Simulation!
@@ -1946,60 +1924,85 @@ function advanceClass(cls) {
   renderArmorShop();
 }
 
-/* ==================== 1-CLICK STREAMLINED DUNGEONS ==================== */
-function openDungeonSelectModal() {
+/* ==================== STREAMLINED AUTO-MATCHED DUNGEONS ==================== */
+let currentMatchedDungeon = null;
+
+function openDungeonPopup() {
   playSound('click');
-  const list = document.getElementById('dungeonSelectList');
-  list.innerHTML = '';
   const myCp = calculateCP();
   const playerRankIdx = RANKS.indexOf(state.rank);
 
-  DUNGEONS_12.forEach(d => {
-    const row = document.createElement('div');
-    const reqRankIdx = RANKS.indexOf(d.minRank);
-    const isLocked = playerRankIdx < reqRankIdx;
-
-    row.className = `item-row ${isLocked ? 'locked' : ''}`;
-    const isHard = myCp < d.reqCp;
-    const diffColor = isLocked ? '#94a3b8' : (isHard ? '#ef4444' : (myCp > d.reqCp * 1.4 ? '#10b981' : '#f59e0b'));
-    const diffText = isLocked ? `[🔒 ${d.minRank}급 인가 필요]` : (isHard ? '위험' : (myCp > d.reqCp * 1.4 ? '안전' : '적정'));
-
-    row.innerHTML = `
-      <div class="item-row-info">
-        <div class="item-row-title">
-          <span>${d.id}구역. ${d.name}</span>
-          <span style="font-size: 0.78rem; color: ${diffColor};">[CP ${d.reqCp} / ${diffText}]</span>
-        </div>
-        <div class="item-row-desc">
-          보스: <b>${d.boss}</b> | 보상: 💰 <b>${d.gold[0]}~${d.gold[1]}G</b> | 체력 소모: 약 ${d.hpCost}
-        </div>
-      </div>
-      <div class="btn-group" style="display: flex; gap: 6px;">
-        ${isLocked ? 
-          `<button class="btn-sm" style="background:#334155; color:#94a3b8; width:100%;" onclick="alert('해당 던전은 [${d.minRank}급] 이상 길드 승급 인가를 받아야만 출격할 수 있습니다!')">🔒 ${d.minRank}급 필요</button>` :
-          `<button class="btn-sm" style="background:#2563eb; color:#fff;" onclick="executeDungeonOneClick(${d.id}, 'rush')">⚔️ 전력 공략</button>
-           <button class="btn-sm" style="background:#059669; color:#fff;" onclick="executeDungeonOneClick(${d.id}, 'safe')">🛡️ 안전 파밍</button>`
-        }
-      </div>
-    `;
-    list.appendChild(row);
-  });
-
-  openModal('modalDungeonSelect');
-}
-
-function executeDungeonOneClick(dungeonId, mode) {
-  closeModal('modalDungeonSelect');
-  const d = DUNGEONS_12.find(x => x.id === dungeonId);
-  if (!d) return;
-
-  const playerRankIdx = RANKS.indexOf(state.rank);
-  const reqRankIdx = RANKS.indexOf(d.minRank);
-  if (playerRankIdx < reqRankIdx) {
-    alert(`[길드 규정 위반]
-해당 던전은 [${d.minRank}급] 이상 승급 인가를 받은 모험가만 출격할 수 있습니다!`);
+  // Find eligible dungeons authorized by guild rank
+  const eligible = DUNGEONS_12.filter(d => RANKS.indexOf(d.minRank) <= playerRankIdx);
+  if (eligible.length === 0) {
+    alert('출격 가능한 던전이 없습니다!');
     return;
   }
+
+  // Find dungeon whose reqCp is CLOSEST to myCp
+  let best = eligible[0];
+  let minDiff = Math.abs(best.reqCp - myCp);
+  for (const d of eligible) {
+    const diff = Math.abs(d.reqCp - myCp);
+    if (diff < minDiff) {
+      minDiff = diff;
+      best = d;
+    }
+  }
+
+  currentMatchedDungeon = best;
+  const d = best;
+
+  const isHard = myCp < d.reqCp;
+  const isEasy = myCp >= d.reqCp * 1.35;
+  const diffBadge = isEasy ? '<span style="color:#10b981; font-weight:bold;">🟢 수월함 (안정 파밍)</span>' :
+                    (isHard ? '<span style="color:#ef4444; font-weight:bold;">🔴 위험 (치열한 혈투)</span>' :
+                              '<span style="color:#f59e0b; font-weight:bold;">🟡 최적 매칭 (적정 난이도)</span>');
+
+  let baseHpLoss = d.hpCost;
+  if (state.charClass === 'warrior') baseHpLoss = Math.round(baseHpLoss * 0.8);
+  const safeHpLoss = Math.round(baseHpLoss * 0.65);
+
+  const body = document.getElementById('dungeonPopupBody');
+  body.innerHTML = `
+    <div style="background: rgba(15,23,42,0.6); border: 1px solid var(--border); border-radius: 10px; padding: 14px; margin-bottom: 12px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 8px;">
+        <span style="font-size: 1.1rem; font-weight: 800; color: #60a5fa;">제 ${d.id}구역. ${d.name}</span>
+        <span style="font-size: 0.78rem; background: #1e293b; padding: 3px 8px; border-radius: 6px; border: 1px solid #3b82f6;">[🔒 ${d.minRank}급 인가 구역]</span>
+      </div>
+      <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 10px;">
+        모험가의 현재 전투력에 가장 근접한 최적 난이도 구역으로 자동 배정되었습니다.
+      </div>
+      
+      <div style="background: #0f172a; border-radius: 8px; padding: 10px; margin-bottom: 10px; font-size: 0.85rem; line-height: 1.6;">
+        <div>📊 <b>전투력(CP) 분석</b>: 내 전투력 <b>${myCp.toLocaleString()} CP</b> vs 권장 <b>${d.reqCp.toLocaleString()} CP</b> [${diffBadge}]</div>
+        <div>👑 <b>구역 지배 보스</b>: <span style="color: #fbbf24; font-weight:bold;">${d.boss}</span></div>
+        <div>💰 <b>토벌 정산금</b>: <span style="color: var(--gold); font-weight:bold;">${d.gold[0].toLocaleString()} ~ ${d.gold[1].toLocaleString()} G</span></div>
+        <div>🎖️ <b>길드 명성</b>: <span style="color: #38bdf8; font-weight:bold;">+${d.fame}</span></div>
+        <div>🎁 <b>특수 전리품</b>: <b>[${d.drop}]</b> (40% 확률 추가 고가 매각)</div>
+        <div>💥 <b>예상 체력 소모</b>: 전력 공략 약 <b>${baseHpLoss} HP</b> / 안전 파밍 약 <b>${safeHpLoss} HP</b></div>
+      </div>
+
+      <div style="font-size: 0.8rem; color: #94a3b8;">
+        💡 던전 선택창 없이 모험가의 역량에 최적화된 던전으로 즉시 출격합니다.
+      </div>
+    </div>
+  `;
+
+  const footer = document.getElementById('dungeonPopupFooter');
+  footer.innerHTML = `
+    <button class="btn-sm" style="flex:1; background: #2563eb; color: #fff; padding: 10px;" onclick="executeMatchedDungeon('rush')">⚔️ 전력 공략 (정면 돌파)</button>
+    <button class="btn-sm" style="flex:1; background: #059669; color: #fff; padding: 10px;" onclick="executeMatchedDungeon('safe')">🛡️ 안전 파밍 (HP 절약)</button>
+    <button class="btn-sm" style="background: #334155; color: #cbd5e1; padding: 10px;" onclick="closeModal('modalDungeonPopup')">닫기</button>
+  `;
+
+  openModal('modalDungeonPopup');
+}
+
+function executeMatchedDungeon(mode) {
+  closeModal('modalDungeonPopup');
+  const d = currentMatchedDungeon;
+  if (!d) return;
 
   let baseHpLoss = d.hpCost;
   if (state.charClass === 'warrior') baseHpLoss = Math.round(baseHpLoss * 0.8);
@@ -2042,10 +2045,10 @@ function executeDungeonOneClick(dungeonId, mode) {
     if (Math.random() < 0.4) {
       const dropBonus = Math.round(goldEarned * 0.8);
       state.gold += dropBonus;
-      dropLog = ` 🎁 전리품 <b>[${d.drop}]</b> 고가 매각 (+${dropBonus}G)!`;
+      dropLog = ` 🎁 전리품 <b>[${d.drop}]</b> 고가 매각 (+${dropBonus.toLocaleString()}G)!`;
     }
 
-    addLog(`👑 [${d.name}] 토벌 성공! 보스 <b>${d.boss}</b> 격파! (+${goldEarned}G, 명성 +${fameEarned}, HP -${baseHpLoss})${dropLog}`, 'dungeon');
+    addLog(`👑 [${d.name}] 토벌 성공! 보스 <b>${d.boss}</b> 격파! (+${goldEarned.toLocaleString()}G, 명성 +${fameEarned}, HP -${baseHpLoss})${dropLog}`, 'dungeon');
 
     if (checkHeroDeath(`${d.name} 탐험`)) return;
 
@@ -2070,44 +2073,228 @@ function executeDungeonOneClick(dungeonId, mode) {
   advanceSeason();
 }
 
-/* ==================== GUILD QUEST BOARD ==================== */
-function openQuestBoardModal() {
-  playSound('click');
-  const list = document.getElementById('questBoardList');
-  list.innerHTML = '';
+/* ==================== INSTANT RANDOM GUILD QUESTS ==================== */
+let currentDrawnQuest = null;
 
-  if (!state.seasonalQuests || state.seasonalQuests.length === 0) {
-    refreshSeasonalQuests();
+function openQuestPopup() {
+  playSound('click');
+
+  // Determine Primary Stat based on Class
+  let primaryStat = 'str';
+  let unrelatedStats = ['int', 'dex'];
+  if (state.charClass === 'warrior') {
+    primaryStat = 'str';
+    unrelatedStats = ['int', 'dex'];
+  } else if (state.charClass === 'mage') {
+    primaryStat = 'int';
+    unrelatedStats = ['str', 'dex'];
+  } else if (state.charClass === 'rogue') {
+    primaryStat = 'dex';
+    unrelatedStats = ['str', 'int'];
+  } else if (state.charClass === 'paladin') {
+    primaryStat = 'str';
+    unrelatedStats = ['dex', 'int'];
+  } else { // novice
+    const rollNovice = Math.random();
+    primaryStat = rollNovice < 0.33 ? 'str' : (rollNovice < 0.66 ? 'int' : 'dex');
+    unrelatedStats = ['def'];
   }
 
-  state.seasonalQuests.forEach((q, idx) => {
-    const row = document.createElement('div');
-    row.className = 'item-row';
-    const hasStat = state[q.reqStat] >= q.reqVal;
-    const statNames = { str: '근력', int: '마력', dex: '민첩', def: '방어' };
+  const statNames = { str: '근력(STR)', int: '마력(INT)', dex: '민첩(DEX)', def: '방어(DEF)' };
 
-    row.innerHTML = `
-      <div class="item-row-info">
-        <div class="item-row-title">
-          <span>${q.title}</span>
-          <span style="font-size:0.75rem; color:${hasStat ? '#10b981' : '#ef4444'};">[요구 ${statNames[q.reqStat]} ${q.reqVal}]</span>
+  // Roll probabilities: 90% Primary/Def, 9% Unrelated, 1% Fail
+  const roll = Math.random() * 100;
+  let qType = 'primary';
+  if (roll < 1.0) {
+    qType = 'fail';
+  } else if (roll < 91.0) {
+    qType = 'primary';
+  } else {
+    qType = 'unrelated';
+  }
+
+  const rankIdx = RANKS.indexOf(state.rank);
+  const baseGold = 130 + rankIdx * 260 + Math.floor(Math.random() * 160);
+  const baseFame = 6 + rankIdx * 5;
+  const baseHpCost = 15 + Math.min(15, rankIdx * 2);
+  const statVal = (rankIdx >= 4) ? 3 : ((rankIdx >= 2) ? 2 : 1);
+
+  let targetStat = primaryStat;
+  let questTitle = '';
+  let questDesc = '';
+  let tagHtml = '';
+
+  if (qType === 'fail') {
+    questTitle = '⚠️ [돌발 사고] 가짜 의뢰와 마수의 매복';
+    questDesc = '의뢰인이 제시한 좌표에 도착했으나 악의적인 사기 계약이었으며, 흉악한 몬스터 무리의 기습을 받아 보수 없이 퇴각했습니다.';
+    tagHtml = '<span style="background:#dc2626; color:#fff; font-size:0.75rem; padding:2px 8px; border-radius:4px;">1% 확률 돌발 실패</span>';
+    currentDrawnQuest = {
+      type: 'fail',
+      title: questTitle,
+      desc: questDesc,
+      gold: 0,
+      fame: -3,
+      hpCost: 15,
+      stat: null,
+      statVal: 0
+    };
+  } else {
+    if (qType === 'primary') {
+      // 90%: Primary stat (60%) or DEF (40%)
+      const isDef = Math.random() < 0.4;
+      targetStat = isDef ? 'def' : primaryStat;
+      tagHtml = `<span style="background:#2563eb; color:#fff; font-size:0.75rem; padding:2px 8px; border-radius:4px;">90% 확률 [주력 ${statNames[targetStat]} 특화]</span>`;
+
+      if (targetStat === 'str') {
+        const pool = [
+          { t: '광산 오크 돌격대 분쇄 토벌', d: '광산 깊숙이 침입한 흉포한 오크 돌격대를 완력으로 제압하고 광부들을 구출합니다.' },
+          { t: '외곽 방어 성벽용 거석 운반', d: '무너진 외곽 방어선을 복구하기 위해 채석장에서 거대한 화강암을 직접 운반합니다.' },
+          { t: '농경지 습격 거대 멧돼지 포획', d: '성난 돌진으로 수확물을 짓밟는 거대 마수 멧돼지를 맨몸으로 때려잡습니다.' },
+          { t: '왕국 보급로 차단 몬스터 격퇴', d: '대검을 휘둘러 길목을 막고 보급 마차를 노리는 마수 무리를 단숨에 베어 넘깁니다.' }
+        ];
+        const pick = pool[Math.floor(Math.random() * pool.length)];
+        questTitle = pick.t; questDesc = pick.d;
+      } else if (targetStat === 'int') {
+        const pool = [
+          { t: '고대 마도 결계 복구 및 정화', d: '사악한 마기에 오염된 수호 결계석에 순수 마력을 집중 주입하여 안정화합니다.' },
+          { t: '봉인된 아카데미 비전서 마력 해독', d: '도서관 깊숙한 밀실에 보관된 고대 대마법사의 암호 비전서를 마력으로 해독합니다.' },
+          { t: '폭주 아케인 정령 진정 작전', d: '불안정하게 날뛰는 마나 정령들과 감응하여 주변의 마력 왜곡을 평정합니다.' },
+          { t: '길드 비상 전이 마법진 에너지 충전', d: '비상용 순간이동 마법진에 정밀한 마나를 불어넣어 차원 통로를 재가동합니다.' }
+        ];
+        const pick = pool[Math.floor(Math.random() * pool.length)];
+        questTitle = pick.t; questDesc = pick.d;
+      } else if (targetStat === 'dex') {
+        const pool = [
+          { t: '국경 밀수단 은밀 정찰 및 추적', d: '소리 없이 어둠 속을 이동하여 국경을 넘나드는 밀수단의 본거지를 정찰합니다.' },
+          { t: '위험 절벽 지대 희귀 영약 채집', d: '바람이 몰아치는 칼날 절벽을 신속하게 도약하여 전설의 약초를 채취합니다.' },
+          { t: '왕궁 밀사의 특급 비밀문서 호송', d: '적들의 암살 위협을 기민하게 따돌리고 최단 시간 내에 비밀 지령을 전달합니다.' },
+          { t: '도심 잠입 그림자 암살자 소탕', d: '골목길에 숨어든 그림자 암살자들의 급습을 반사신경으로 회피하며 제압합니다.' }
+        ];
+        const pick = pool[Math.floor(Math.random() * pool.length)];
+        questTitle = pick.t; questDesc = pick.d;
+      } else { // def
+        const pool = [
+          { t: '해일 및 급류 대비 방파제 수호', d: '거센 급류와 수생 마수의 파상공세 속에서 방패벽을 세워 마을 제방을 지켜냅니다.' },
+          { t: '독기 분출 지하 동굴 방어선 사수', d: '맹독 가스가 뿜어져 나오는 동굴 입구에서 온몸으로 마수의 진격을 저지합니다.' },
+          { t: '호위 마차 철통 방패 방어 임무', d: '도적단의 빗발치는 화살과 투척 무기를 방패로 완벽히 튕겨내며 마차를 수호합니다.' },
+          { t: '길드 성역 전선 사수 결사대', d: '적들의 맹렬한 집중 포화 속에서 물러서지 않고 버텨내어 아군의 퇴로를 엽니다.' }
+        ];
+        const pick = pool[Math.floor(Math.random() * pool.length)];
+        questTitle = pick.t; questDesc = pick.d;
+      }
+    } else {
+      // 9%: Unrelated stat
+      targetStat = unrelatedStats[Math.floor(Math.random() * unrelatedStats.length)];
+      tagHtml = `<span style="background:#7c3aed; color:#fff; font-size:0.75rem; padding:2px 8px; border-radius:4px;">9% 확률 [이색 ${statNames[targetStat]} 단련]</span>`;
+      
+      const pool = [
+        { t: '길드 학술원 고문서 필사 지원', d: '전투와 무관하지만 집중력과 다방면 지식을 기를 수 있는 필사 작업을 진행합니다.' },
+        { t: '신전 건축용 목재 운반 봉사', d: '신전 재건 현장에 참여하여 신체 밸런스를 다잡는 육체 노동을 지원합니다.' },
+        { t: '도심 연금술 실험실 안전 보조', d: '위험한 약물 반응을 관찰하고 안전 장치를 조율하는 실험을 보조합니다.' },
+        { t: '미로형 지하수로 측량 조사', d: '복잡한 수로의 구조를 파악하고 맵을 작성하는 측량 임무를 수행합니다.' }
+      ];
+      const pick = pool[Math.floor(Math.random() * pool.length)];
+      questTitle = pick.t; questDesc = pick.d;
+    }
+
+    currentDrawnQuest = {
+      type: qType,
+      title: questTitle,
+      desc: questDesc,
+      gold: baseGold,
+      fame: baseFame,
+      hpCost: baseHpCost,
+      stat: targetStat,
+      statVal: statVal
+    };
+  }
+
+  const q = currentDrawnQuest;
+  const body = document.getElementById('questPopupBody');
+
+  if (q.type === 'fail') {
+    body.innerHTML = `
+      <div style="background: rgba(127, 29, 29, 0.4); border: 1px solid #ef4444; border-radius: 10px; padding: 14px; margin-bottom: 12px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 8px;">
+          <span style="font-size: 1.05rem; font-weight: 800; color: #f87171;">${q.title}</span>
+          ${tagHtml}
         </div>
-        <div class="item-row-desc">
-          ${q.desc}<br>
-          💰 보수: <b style="color:#fbbf24;">${q.gold}G</b> | 🎖️ 명성: +${q.fame} | 💥 HP -${q.hpCost} | <b>✨ ${statNames[q.statReward.stat]} +${q.statReward.val}</b>
+        <p style="font-size: 0.85rem; color: #fca5a5; line-height: 1.5; margin-bottom: 12px;">
+          ${q.desc}
+        </p>
+        <div style="background: #1e1b4b; border-radius: 8px; padding: 10px; font-size: 0.85rem; line-height: 1.6; border: 1px solid #4338ca;">
+          <div>💰 <b>수령 보수</b>: <span style="color:#94a3b8;">0 G (지급 불가)</span></div>
+          <div>🎖️ <b>길드 명성</b>: <span style="color:#f87171;">-3 (의뢰 실패)</span></div>
+          <div>💥 <b>소모 체력</b>: <span style="color:#f87171;">-${q.hpCost} HP</span> (현재 체력: ${state.hp}/${state.maxHp})</div>
         </div>
       </div>
-      <button class="btn-sm" onclick="executeQuest(${idx})">수주 및 완수</button>
     `;
-    list.appendChild(row);
-  });
 
-  openModal('modalQuestBoard');
+    const footer = document.getElementById('questPopupFooter');
+    footer.innerHTML = `
+      <button class="btn-sm" style="flex:1; background: #dc2626; color: #fff; padding: 10px;" onclick="confirmQuestFailure()">확인 (부상 수습 및 귀환)</button>
+    `;
+  } else {
+    let finalGold = q.gold;
+    if (state.charClass === 'rogue') finalGold = Math.round(finalGold * 1.35);
+    const rogueNotice = (state.charClass === 'rogue') ? ' (도적 특권 +35% 포함)' : '';
+    const defNotice = (q.stat === 'def') ? ` (최대 HP +${q.statVal * 5} 보너스)` : '';
+
+    body.innerHTML = `
+      <div style="background: rgba(15,23,42,0.6); border: 1px solid var(--border); border-radius: 10px; padding: 14px; margin-bottom: 12px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 8px;">
+          <span style="font-size: 1.05rem; font-weight: 800; color: #60a5fa;">${q.title}</span>
+          ${tagHtml}
+        </div>
+        <p style="font-size: 0.85rem; color: #cbd5e1; line-height: 1.5; margin-bottom: 12px;">
+          ${q.desc}
+        </p>
+        <div style="background: #0f172a; border-radius: 8px; padding: 10px; font-size: 0.85rem; line-height: 1.6; border: 1px solid var(--border);">
+          <div>💰 <b>완수 보수</b>: <span style="color:var(--gold); font-weight:bold;">+${finalGold.toLocaleString()} G</span>${rogueNotice}</div>
+          <div>🎖️ <b>길드 명성</b>: <span style="color:#38bdf8; font-weight:bold;">+${q.fame}</span></div>
+          <div>✨ <b>영구 스탯 성장</b>: <span style="color:#10b981; font-weight:bold;">${statNames[q.stat]} +${q.statVal}</span>${defNotice}</div>
+          <div>💥 <b>소모 체력</b>: <span style="color:#f87171; font-weight:bold;">-${q.hpCost} HP</span> (현재 체력: ${state.hp}/${state.maxHp})</div>
+        </div>
+        <div style="font-size:0.78rem; color:#94a3b8; margin-top:8px;">
+          💡 길드 의뢰 게시판 선택 없이 누르자마자 추천 의뢰를 즉시 수주했습니다.
+        </div>
+      </div>
+    `;
+
+    const footer = document.getElementById('questPopupFooter');
+    footer.innerHTML = `
+      <button class="btn-sm" style="flex:1; background: #059669; color: #fff; padding: 10px;" onclick="executeDrawnQuest()">✅ 의뢰 수행 및 완수</button>
+      <button class="btn-sm" style="background: #334155; color: #cbd5e1; padding: 10px;" onclick="closeModal('modalQuestPopup')">닫기 (보류)</button>
+    `;
+  }
+
+  openModal('modalQuestPopup');
 }
 
-function executeQuest(idx) {
-  closeModal('modalQuestBoard');
-  const q = state.seasonalQuests[idx];
+function confirmQuestFailure() {
+  closeModal('modalQuestPopup');
+  const q = currentDrawnQuest;
+  if (!q) return;
+
+  if (state.hp <= q.hpCost) {
+    const proceed = confirm(`⚠️ !경고 용사가 죽음에 이를 수도 있습니다!
+현재 체력: ${state.hp} / 예상 소모: ${q.hpCost}
+계속 진행하시겠습니까?`);
+    if (!proceed) return;
+  }
+
+  state.hp -= q.hpCost;
+  state.fame = Math.max(0, state.fame - 3);
+  playSound('fail');
+  addLog(`⚠️ [1% 확률 돌발사고] ${q.title} 도중 기습을 받아 실패했습니다... (명성 -3, HP -${q.hpCost})`, 'danger');
+
+  if (checkHeroDeath('의뢰 도중 돌발 사고')) return;
+  advanceSeason();
+}
+
+function executeDrawnQuest() {
+  closeModal('modalQuestPopup');
+  const q = currentDrawnQuest;
   if (!q) return;
 
   if (state.hp <= q.hpCost) {
@@ -2118,65 +2305,163 @@ function executeQuest(idx) {
   }
 
   state.hp -= q.hpCost;
-  const hasStat = state[q.reqStat] >= q.reqVal;
-  const successRate = hasStat ? 0.95 : 0.55;
+  let finalGold = q.gold;
+  if (state.charClass === 'rogue') finalGold = Math.round(finalGold * 1.35);
 
-  if (Math.random() < successRate) {
-    playSound('victory');
-    let finalGold = q.gold;
-    if (state.charClass === 'rogue') finalGold = Math.round(finalGold * 1.35);
-
-    state[q.statReward.stat] += q.statReward.val;
-    const statNames = { str: '근력', int: '마력', dex: '민첩', def: '방어' };
-
-    state.gold += finalGold;
-    state.fame += q.fame;
-    addLog(`📜 의뢰 [${q.title}] 완수! (+${finalGold}G, 명성 +${q.fame}, <b>${statNames[q.statReward.stat]} +${q.statReward.val}</b> 성장!)`, 'reward');
-  } else {
-    playSound('fail');
-    state.fame = Math.max(0, state.fame - 3);
-    addLog(`⚠️ 의뢰 [${q.title}] 도중 실패했습니다. (명성 -3, HP -${q.hpCost})`, 'danger');
+  state[q.stat] += q.statVal;
+  if (q.stat === 'def') {
+    state.baseMaxHp += q.statVal * 5;
+    state.maxHp += q.statVal * 5;
   }
 
-  if (checkHeroDeath(`의뢰 [${q.title}]`)) return;
+  state.gold += finalGold;
+  state.fame += q.fame;
 
+  const statNames = { str: '근력', int: '마력', dex: '민첩', def: '방어' };
+  playSound('victory');
+  addLog(`📜 의뢰 [${q.title}] 완수! (+${finalGold.toLocaleString()}G, 명성 +${q.fame}, <b>${statNames[q.stat]} +${q.statVal}</b> 성장, HP -${q.hpCost})`, 'reward');
+
+  if (checkHeroDeath(`의뢰 [${q.title}]`)) return;
   advanceSeason();
 }
 
-/* ==================== TRAINING & REST ==================== */
-function openTrainingModal() {
-  playSound('click');
-  openModal('modalTraining');
+/* ==================== ALL-STAT TRAINING SYSTEM ==================== */
+function rollSingleStatGain() {
+  const r = Math.random() * 100;
+  if (r < 30) {
+    // +1~2: 30% 확률 (각 15%)
+    return Math.random() < 0.5 ? 1 : 2;
+  } else if (r < 80) {
+    // +3: 50% 확률
+    return 3;
+  } else {
+    // +4~+6: 10%~20% 확률 분기 (한계 돌파)
+    const topRoll = Math.random() * 100;
+    if (topRoll < 50) return 4;
+    else if (topRoll < 80) return 5;
+    else return 6;
+  }
 }
 
-function trainStat(stat) {
-  closeModal('modalTraining');
+function openTrainingPopup() {
+  playSound('click');
+  const body = document.getElementById('trainingPopupBody');
+  body.innerHTML = `
+    <div style="background: rgba(15,23,42,0.6); border: 1px solid var(--border); border-radius: 10px; padding: 14px; margin-bottom: 12px;">
+      <div style="font-size: 1.05rem; font-weight: 800; color: #60a5fa; margin-bottom: 6px;">
+        🏋️ 모험가 전신 종합 단련 (Kickru Mode)
+      </div>
+      <p style="font-size: 0.85rem; color: #cbd5e1; line-height: 1.5; margin-bottom: 12px;">
+        1분기 동안 기초 체력과 무공, 마나 호흡을 전방위적으로 연마합니다.<br>
+        모든 기초 능력치(근력, 마력, 민첩, 방어)가 각각 독립적인 확률에 의해 <b>+1 ~ +6</b> 사이로 골고루 성장합니다!
+      </p>
+
+      <div style="background: #0f172a; border-radius: 8px; padding: 10px; font-size: 0.84rem; line-height: 1.6; border: 1px solid var(--border); margin-bottom: 10px;">
+        <div>📊 <b>스탯별 독립 상승 확률 (각 스탯 동일 적용)</b>:</div>
+        <div style="padding-left: 10px; color: #94a3b8;">
+          • <b>+1 ~ +2</b> 성장: <b style="color:#60a5fa;">30%</b> 확률<br>
+          • <b>+3</b> 표준 성장: <b style="color:#10b981;">50%</b> 확률<br>
+          • <b>+4 ~ +6</b> 한계 돌파: <b style="color:#fbbf24;">10%</b> 확률
+        </div>
+        <div style="margin-top: 6px; color: #f59e0b;">
+          🌟 <b>1% 초월 대성공</b>: 발동 시 <b>모든 스탯 획득량 2배 (x2)</b> 폭풍 성장!
+        </div>
+        <div style="margin-top: 4px; color: #f87171;">
+          💥 <b>소모 체력</b>: <b>-20 HP</b> (현재 체력: ${state.hp}/${state.maxHp})
+        </div>
+      </div>
+    </div>
+  `;
+
+  const footer = document.getElementById('trainingPopupFooter');
+  footer.innerHTML = `
+    <button class="btn-sm" style="flex:1; background: #2563eb; color: #fff; padding: 10px;" onclick="executeTrainingAction()">🔥 수련 시작하기 (-20 HP)</button>
+    <button class="btn-sm" style="background: #334155; color: #cbd5e1; padding: 10px;" onclick="closeModal('modalTrainingPopup')">닫기</button>
+  `;
+
+  openModal('modalTrainingPopup');
+}
+
+function executeTrainingAction() {
   if (state.hp <= 20) {
     const proceed = confirm(`⚠️ !경고 용사가 죽음에 이를 수도 있습니다!
 현재 체력: ${state.hp} / 소모 체력: 20
 과로로 사망할 위험이 있습니다. 계속 진행하시겠습니까?`);
     if (!proceed) return;
   }
+
   state.hp -= 20;
 
-  let gain = Math.floor(Math.random() * 4) + 3;
-  if (state.charClass === 'mage' && stat === 'int') {
-    gain = Math.round(gain * 1.5);
-    addLog('마법사의 마나 폭주 특성으로 마력 수련 효율이 증폭되었습니다!', 'reward');
+  // 1% Great Success
+  const isGreat = Math.random() < 0.01;
+
+  let gStr = rollSingleStatGain();
+  let gInt = rollSingleStatGain();
+  let gDex = rollSingleStatGain();
+  let gDef = rollSingleStatGain();
+
+  if (isGreat) {
+    gStr *= 2;
+    gInt *= 2;
+    gDex *= 2;
+    gDef *= 2;
   }
 
-  state[stat] += gain;
-  if (stat === 'def') {
-    state.baseMaxHp += 15;
-    state.maxHp += 15;
+  // Apply to stats
+  state.str += gStr;
+  state.int += gInt;
+  state.dex += gDex;
+  state.def += gDef;
+  const hpGain = gDef * 5;
+  state.baseMaxHp += hpGain;
+  state.maxHp += hpGain;
+
+  if (isGreat) {
+    playSound('crit');
+  } else {
+    playSound('growth');
   }
 
-  const names = { str: '근력(STR)', int: '마력(INT)', dex: '민첩(DEX)', def: '방어(DEF)' };
-  addLog(`🏋️ 집중 수련을 통해 순수 <b>${names[stat]}</b> 수치가 +${gain} 상승했습니다! (HP -20)`, 'event');
-  playSound('victory');
+  // Show Result inside modal
+  const body = document.getElementById('trainingPopupBody');
+  const greatBanner = isGreat ? `
+    <div style="background: linear-gradient(135deg, #78350f, #b45309); border: 2px solid #f59e0b; border-radius: 8px; padding: 10px; margin-bottom: 12px; text-align: center;">
+      <div style="font-size: 1.1rem; font-weight: 900; color: #fef08a;">🌟 [1% 확률 대성공 발동!!]</div>
+      <div style="font-size: 0.85rem; color: #fff;">한계를 초월하여 모든 훈련 스탯이 2배로 폭증했습니다!</div>
+    </div>
+  ` : `
+    <div style="background: rgba(16,185,129,0.2); border: 1px solid #10b981; border-radius: 8px; padding: 8px; margin-bottom: 12px; text-align: center;">
+      <span style="font-size: 0.95rem; font-weight: 700; color: #34d399;">✨ 고된 수련을 마치고 모든 신체 능력이 고르게 성장했습니다!</span>
+    </div>
+  `;
 
+  body.innerHTML = `
+    ${greatBanner}
+    <div style="background: #0f172a; border-radius: 8px; padding: 12px; font-size: 0.9rem; line-height: 1.8; border: 1px solid var(--border);">
+      <div>💪 <b>근력 (STR)</b>: <span style="color:#60a5fa; font-weight:bold;">+${gStr}</span> (현재: ${state.str})</div>
+      <div>🔮 <b>마력 (INT)</b>: <span style="color:#c084fc; font-weight:bold;">+${gInt}</span> (현재: ${state.int})</div>
+      <div>🏃 <b>민첩 (DEX)</b>: <span style="color:#34d399; font-weight:bold;">+${gDex}</span> (현재: ${state.dex})</div>
+      <div>🛡️ <b>방어 (DEF)</b>: <span style="color:#fbbf24; font-weight:bold;">+${gDef}</span> (현재: ${state.def}, 최대 HP +${hpGain})</div>
+      <div style="border-top: 1px solid #334155; margin-top: 6px; padding-top: 6px; color:#f87171;">
+        💥 <b>소모 체력</b>: -20 HP (남은 체력: ${state.hp}/${state.maxHp})
+      </div>
+    </div>
+  `;
+
+  const footer = document.getElementById('trainingPopupFooter');
+  footer.innerHTML = `
+    <button class="btn-sm" style="flex:1; background: #059669; color: #fff; padding: 10px;" onclick="finishTrainingPopup()">확인</button>
+  `;
+
+  const logMsg = isGreat ?
+    `🌟 [1% 대성공!!] 극한 수련으로 모든 스탯이 2배 폭증했습니다! (근력 +${gStr}, 마력 +${gInt}, 민첩 +${gDex}, 방어 +${gDef}, HP -20)` :
+    `🏋️ 전신 종합 수련 완료! (근력 +${gStr}, 마력 +${gInt}, 민첩 +${gDex}, 방어 +${gDef}, HP -20)`;
+  addLog(logMsg, isGreat ? 'crit' : 'event');
+}
+
+function finishTrainingPopup() {
+  closeModal('modalTrainingPopup');
   if (checkHeroDeath('지옥의 한계 수련')) return;
-
   advanceSeason();
 }
 
@@ -2460,6 +2745,24 @@ function openPromotionModal() {
     return;
   }
 
+  // Enforce 4th Quarter (Winter) check!
+  if (state.seasonIdx !== 3) {
+    alert(`[길드 심사 규정]
+길드 정기 승급 심사는 매년 4분기(겨울)에만 연 1회 실시됩니다.
+현재 분기: ${state.age}세 ${SEASONS[state.seasonIdx]}
+
+4분기 심사 시즌 전까지 의뢰와 던전, 수련으로 자격을 갖추어 주세요!`);
+    return;
+  }
+
+  // Enforce 1-attempt per year check!
+  if (state.examDoneThisYear) {
+    alert(`[심사 기회 소진]
+올해(${state.age}세)의 승급 심사 도전 기회(연 1회)를 이미 소진했습니다.
+내년 4분기(겨울) 정기 심사에 다시 도전해주세요!`);
+    return;
+  }
+
   const nextRank = RANKS[nextRankIdx];
   const reqCpTable = { 'E': 60, 'D': 130, 'C': 260, 'B': 450, 'A': 750, 'S': 1200, 'LEGEND': 1800 };
   const reqFameTable = { 'E': 20, 'D': 60, 'C': 150, 'B': 300, 'A': 600, 'S': 1200, 'LEGEND': 2500 };
@@ -2529,6 +2832,7 @@ function openPromotionModal() {
 
 function duelTurn(action) {
   playSound('hit');
+  state.examDoneThisYear = true;
   const log = document.getElementById('duelLog');
   const primaryAtk = getPrimaryCombatPower();
   let playerDmg = Math.round(primaryAtk * 0.5 + 10);
@@ -2854,7 +3158,10 @@ function saveGameToLocalStorage() {
 function loadGameFromLocalStorage() {
   try {
     const savedState = localStorage.getItem('fantasy_rpg_state_v4');
-    if (savedState) state = JSON.parse(savedState);
+    if (savedState) {
+      state = JSON.parse(savedState);
+      if (state.examDoneThisYear === undefined) state.examDoneThisYear = false;
+    }
     const savedHall = localStorage.getItem('fantasy_rpg_hall_v4');
     if (savedHall) hallOfFame = JSON.parse(savedHall);
   } catch (e) {}
