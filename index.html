@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>견습에서 전설까지 v5.0 : 나만의 모험가 키우기 (Streamlined Edition)</title>
+<title>견습에서 전설까지 v6.0 : 나만의 모험가 키우기 (DynRoutine Edition)</title>
 <style>
   :root {
     --bg-main: #0a0d14;
@@ -276,7 +276,7 @@
 
   .act-btn.primary-act {
     grid-column: span 2;
-    min-height: 84px;
+    min-height: 88px;
     background: linear-gradient(135deg, #1e3a8a, #1d4ed8);
     border: 2px solid #60a5fa;
   }
@@ -284,7 +284,7 @@
     background: linear-gradient(135deg, #2563eb, #3b82f6);
   }
 
-  .act-btn.forge-act {
+  .act-btn.shop-act {
     border-color: #f59e0b;
   }
 
@@ -332,7 +332,6 @@
   .log-entry.danger { border-left: 3px solid #ef4444; color: #fca5a5; }
   .log-entry.growth { border-left: 3px solid #fbbf24; color: #fef08a; }
   .log-entry.rank { border-left: 3px solid #a855f7; color: #e9d5ff; }
-  .log-entry.forge { border-left: 3px solid #f97316; color: #fed7aa; }
   .log-entry.crit { border-left: 3px solid #f59e0b; background: #27210e; color: #fef08a; font-weight: 800; }
 
   .log-season {
@@ -433,29 +432,52 @@
     font-weight: 800;
   }
 
-  /* Forge UI */
-  .forge-tab-nav {
+  /* 3-Second Loading Modal */
+  .loading-box {
+    background: #0f172a;
+    border: 2px solid #3b82f6;
+    border-radius: 16px;
+    padding: 24px;
+    width: 100%;
+    max-width: 480px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.9);
+  }
+  .progress-bar-wrap {
+    width: 100%;
+    height: 14px;
+    background: #1e293b;
+    border-radius: 7px;
+    overflow: hidden;
+    border: 1px solid #334155;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #3b82f6, #60a5fa, #fbbf24);
+    transition: width 0.1s linear;
+  }
+
+  /* Shop UI */
+  .shop-tab-nav {
     display: flex;
     gap: 6px;
     margin-bottom: 10px;
   }
-  .forge-tab-nav button {
+  .shop-tab-nav button {
     flex: 1;
     padding: 8px;
     font-size: 0.85rem;
     background: #1e293b;
     color: #94a3b8;
   }
-  .forge-tab-nav button.active {
+  .shop-tab-nav button.active {
     background: var(--primary);
     color: #000;
     font-weight: 900;
-  }
-
-  .forge-target-selector {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 12px;
   }
 
   .item-list {
@@ -473,7 +495,7 @@
     justify-content: space-between;
     align-items: center;
   }
-  .item-row.locked { opacity: 0.55; }
+  .item-row.locked { opacity: 0.52; }
 
   .item-row-info {
     display: flex;
@@ -482,7 +504,7 @@
     font-size: 0.82rem;
   }
   .item-row-title { font-weight: 800; color: #fff; display: flex; gap: 6px; align-items: center; }
-  .item-row-desc { color: var(--text-muted); }
+  .item-row-desc { color: var(--text-muted); line-height: 1.35; }
 
   .tier-tag {
     font-size: 0.72rem;
@@ -492,24 +514,14 @@
     border-radius: 4px;
     font-weight: 800;
   }
-
-  .forge-toast {
-    padding: 8px 12px;
-    border-radius: 8px;
-    font-size: 0.82rem;
-    text-align: center;
-    font-weight: 700;
-    margin-bottom: 8px;
-    display: none;
-  }
-  .forge-toast.success { background: #064e3b; color: #a7f3d0; border: 1px solid #10b981; }
-  .forge-toast.fail { background: #7f1d1d; color: #fecaca; border: 1px solid #ef4444; }
-  .forge-toast.downgrade { background: #831843; color: #fbcfe8; border: 1px solid #f43f5e; }
-  .forge-toast.crit { background: #78350f; color: #fef08a; border: 2px solid #f59e0b; animation: pulse 0.5s infinite alternate; }
-
-  @keyframes pulse {
-    from { transform: scale(1); }
-    to { transform: scale(1.02); }
+  .endgame-tag {
+    font-size: 0.72rem;
+    background: #78350f;
+    color: #fef08a;
+    border: 1px solid #f59e0b;
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-weight: 900;
   }
 
   /* Class Advancement Cards */
@@ -586,7 +598,7 @@
   <header>
     <div class="game-title">
       <span>⚔️ 견습에서 전설까지</span>
-      <span class="career-badge">v5.0 Streamlined Edition</span>
+      <span class="career-badge">v6.0 DynRoutine Edition</span>
     </div>
     <div class="header-actions">
       <button class="btn-sm" onclick="openHallOfFameModal()">🏆 전당</button>
@@ -610,11 +622,11 @@
       <!-- Routine Guide -->
       <div style="background: rgba(15,23,42,0.6); border: 1px solid var(--border); border-radius: 10px; padding: 10px; font-size: 0.8rem; line-height: 1.45;">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 4px;">
-          <span style="font-weight: 800; color: #93c5fd;">📅 연간 모험 루틴 (4분기)</span>
+          <span style="font-weight: 800; color: #93c5fd;">🎲 연간 다이내믹 루틴 (4사건)</span>
           <span style="font-weight: 800; color: #fbbf24;" id="uiAgeText">15세</span>
         </div>
         <div style="color: var(--text-muted);">
-          <b>봄(던전) $ightarrow$ 여름(수련) $ightarrow$ 가을(의뢰) $ightarrow$ 겨울(이벤트/승급)</b>
+          매년 <b>던전, 수련, 의뢰, 랜덤 이벤트</b>가 유동적으로 무작위 발생합니다!
         </div>
       </div>
 
@@ -654,13 +666,13 @@
       <div class="gear-box">
         <div class="gear-row">
           <span style="color:var(--text-muted); font-weight:700;">🗡️ 무기</span>
-          <span class="gear-name" id="uiWeaponText">낡은 단검 (+0)</span>
-          <span class="gear-tier" id="uiWeaponTier">0티어</span>
+          <span class="gear-name" id="uiWeaponText">수습생 나무검</span>
+          <span class="gear-tier" id="uiWeaponTier">1티어</span>
         </div>
         <div class="gear-row">
           <span style="color:var(--text-muted); font-weight:700;">🛡️ 방어구</span>
-          <span class="gear-name" id="uiArmorText">수습생 조끼 (+0)</span>
-          <span class="gear-tier" id="uiArmorTier">0티어</span>
+          <span class="gear-name" id="uiArmorText">수습생 가죽 조끼</span>
+          <span class="gear-tier" id="uiArmorTier">1티어</span>
         </div>
       </div>
 
@@ -678,22 +690,22 @@
     <div class="right-panel">
       <!-- Actions Grid -->
       <div class="actions-grid">
-        <button class="act-btn primary-act" onclick="executeOneYear()">
+        <button class="act-btn primary-act" id="btnRunYear" onclick="startOneYearWithLoading()">
           <span class="icon">📅</span>
-          <span>1년 모험 수행 (4분기 일괄)</span>
-          <span class="desc">1분기 던전 · 2분기 수련 · 3분기 의뢰 · 4분기 이벤트/심사 일괄 진행</span>
+          <span>1년 모험 수행 (3초 시뮬레이션)</span>
+          <span class="desc">매년 유동적인 4개 사건(수련/던전/의뢰/이벤트) 자동 진행 및 리포트</span>
         </button>
 
-        <button class="act-btn forge-act" onclick="openForgeModal()">
-          <span class="icon">🔨</span>
-          <span>대장간 강화 / 상점</span>
-          <span class="desc">순차 티어 구매 해금 · 20단계 강화</span>
+        <button class="act-btn shop-act" onclick="openShopModal()">
+          <span class="icon">🛒</span>
+          <span>길드 장비 상점</span>
+          <span class="desc">무기 & 방어구 직업별 10단계 확장 (종결 2종 선택)</span>
         </button>
 
         <button class="act-btn boss-act" id="btnExamQuick" onclick="showPromotionStatusModal()">
           <span class="icon">⚔️</span>
           <span id="txtExamBtn">길드 승급 심사 현황</span>
-          <span class="desc" id="txtExamDesc">4분기 도전 요건 실시간 확인</span>
+          <span class="desc" id="txtExamDesc">심사 개시 여부 및 요건 확인</span>
         </button>
 
         <button class="act-btn retire-act" id="btnRetire" onclick="confirmRetirement()">
@@ -713,6 +725,24 @@
 
 <!-- ==================== MODALS ==================== -->
 
+<!-- MODAL: 3-SECOND LOADING BAR -->
+<div class="modal-overlay" id="modalYearLoading" style="z-index: 2000;">
+  <div class="loading-box">
+    <div style="font-size: 1.25rem; font-weight: 900; color: #60a5fa;" id="loadingTitle">
+      ⏳ 15세 모험 시뮬레이션 진행 중...
+    </div>
+    <div style="font-size: 0.88rem; color: #cbd5e1; min-height: 24px;" id="loadingDesc">
+      🌸 봄: 장비를 챙겨 새로운 모험지로 출발합니다... (25%)
+    </div>
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-fill" id="loadingFill"></div>
+    </div>
+    <div style="font-size: 0.78rem; color: var(--text-muted);">
+      모험가의 한 해가 쉼 없이 흘러갑니다...
+    </div>
+  </div>
+</div>
+
 <!-- MODAL: ANNUAL REPORT -->
 <div class="modal-overlay" id="modalAnnualReport">
   <div class="modal-box">
@@ -729,19 +759,17 @@
   </div>
 </div>
 
-<!-- MODAL: EXAM CHOICE (4TH QUARTER) -->
+<!-- MODAL: EXAM CHOICE -->
 <div class="modal-overlay" id="modalExamChoice">
   <div class="modal-box">
     <div class="modal-header">
-      <h3>⚔️ 4분기 길드 승급 결투 심사 신청</h3>
+      <h3>⚔️ 길드 공인 승급 결투 심사 개시!</h3>
       <button class="btn-close-icon" onclick="closeModal('modalExamChoice')">✕</button>
     </div>
-    <div class="modal-body" id="examChoiceBody">
-      <!-- Details about next rank, CP/Fame match, perks -->
-    </div>
+    <div class="modal-body" id="examChoiceBody"></div>
     <div class="modal-footer" style="display:flex; gap:8px;">
       <button class="btn-sm" style="flex:1; background: #8b5cf6; color: #fff; padding: 10px;" onclick="chooseExamAndRun(true)">⚔️ 승급 심사 도전</button>
-      <button class="btn-sm" style="flex:1; background: #334155; color: #cbd5e1; padding: 10px;" onclick="chooseExamAndRun(false)">🎲 일반 이벤트 진행 (심사 미루기)</button>
+      <button class="btn-sm" style="flex:1; background: #334155; color: #cbd5e1; padding: 10px;" onclick="chooseExamAndRun(false)">🎲 일반 모험 전념 (심사 미루기)</button>
     </div>
   </div>
 </div>
@@ -794,9 +822,7 @@
       <h3>📜 길드 승급 심사 자격 현황</h3>
       <button class="btn-close-icon" onclick="closeModal('modalPromotionStatus')">✕</button>
     </div>
-    <div class="modal-body" id="promoStatusBody">
-      <!-- Displays current rank, next rank requirements, perks -->
-    </div>
+    <div class="modal-body" id="promoStatusBody"></div>
     <div class="modal-footer">
       <button class="btn-close" onclick="closeModal('modalPromotionStatus')">닫기</button>
     </div>
@@ -836,65 +862,35 @@
   </div>
 </div>
 
-<!-- MODAL: FORGE & SEQUENTIAL TIER SHOP -->
-<div class="modal-overlay" id="modalForge">
+<!-- MODAL: EXPANDED EQUIPMENT SHOP (NO ENHANCEMENT) -->
+<div class="modal-overlay" id="modalShop">
   <div class="modal-box">
     <div class="modal-header">
-      <h3>🔨 대장간 제련 & 상점</h3>
+      <h3>🛒 길드 장비 상점 (무기 & 방어구)</h3>
       <div style="display: flex; gap: 5px; align-items: center;">
-        <button class="btn-sm" id="btnForgeTabUpgrade" style="padding: 6px 10px; min-height: 32px; font-size: 0.8rem;" onclick="switchForgeSubTab('upgrade')">강화</button>
-        <button class="btn-sm" id="btnForgeTabWpn" style="padding: 6px 10px; min-height: 32px; font-size: 0.8rem; background: #334155; color: #fff;" onclick="switchForgeSubTab('weapon')">무기상점</button>
-        <button class="btn-sm" id="btnForgeTabArm" style="padding: 6px 10px; min-height: 32px; font-size: 0.8rem; background: #334155; color: #fff;" onclick="switchForgeSubTab('armor')">방어구상점</button>
-        <button class="btn-close-icon" onclick="closeModal('modalForge')">✕</button>
+        <button class="btn-sm" id="btnShopTabWpn" style="padding: 6px 12px; min-height: 32px; font-size: 0.82rem; background: var(--primary); color: #000;" onclick="switchShopTab('weapon')">🗡️ 무기 상점</button>
+        <button class="btn-sm" id="btnShopTabArm" style="padding: 6px 12px; min-height: 32px; font-size: 0.82rem; background: #334155; color: #fff;" onclick="switchShopTab('armor')">🛡️ 방어구 상점</button>
+        <button class="btn-close-icon" onclick="closeModal('modalShop')">✕</button>
       </div>
     </div>
     <div class="modal-body">
-      <!-- SUBTAB: UPGRADE -->
-      <div id="forgeSubUpgrade" style="display: flex; flex-direction: column; gap: 10px;">
-        <div class="forge-target-selector">
-          <button class="btn-sm" id="btnTargetWpn" style="flex:1; background:var(--primary); color:#000;" onclick="selectForgeTarget('weapon')">🗡️ 무기 강화</button>
-          <button class="btn-sm" id="btnTargetArm" style="flex:1;" onclick="selectForgeTarget('armor')">🛡️ 방어구 강화</button>
-        </div>
-
-        <div style="background: #0f172a; border: 1px solid var(--border); border-radius: 10px; padding: 14px; text-align: center;">
-          <div style="font-size: 1.15rem; font-weight: 900; color: #fff; margin-bottom: 4px;" id="forgeItemName">낡은 단검 (+0)</div>
-          <div style="font-size: 0.84rem; color: var(--text-muted); margin-bottom: 12px;" id="forgeItemStat">공격력: +6</div>
-
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 0.84rem; margin-bottom: 12px;">
-            <div style="background: #1e293b; padding: 8px; border-radius: 6px;">
-              성공 확률: <b style="color: #10b981;" id="forgeRateSuccess">90%</b>
-            </div>
-            <div style="background: #1e293b; padding: 8px; border-radius: 6px;">
-              실패 시: <b style="color: #ef4444;" id="forgeRateFailPenalty">등급 유지 (안전)</b>
-            </div>
-          </div>
-
-          <div style="font-size: 0.8rem; color: #fbbf24; margin-bottom: 12px;">
-            🌟 모든 구간 <b>3% 확률 2단계 대성공(+2강)</b> | 5강마다 성능 대폭 향상!
-          </div>
-
-          <!-- Toast Notification -->
-          <div class="forge-toast" id="forgeResultToast"></div>
-
-          <button style="width: 100%; padding: 12px; background: linear-gradient(135deg, #d97706, #f59e0b); color: #000; font-size: 1rem; font-weight: 900;" id="btnDoForge" onclick="attemptForge()">
-            🔥 망치질하기 (<span id="forgeCost">300 G</span>)
-          </button>
-        </div>
+      <div style="font-size: 0.82rem; color: #94a3b8; background: #0f172a; padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border);">
+        💡 강화 시스템 대신 <b>장비 수가 2배로 확장</b>되었습니다. 상위 티어를 순차 해금하며, 최종 10티어 종결 장비는 <b>2종 중 취향에 맞춰 선택</b>할 수 있습니다!
       </div>
 
-      <!-- SUBTAB: WEAPON SHOP -->
-      <div id="forgeSubWeapon" style="display: none; flex-direction: column; gap: 8px;">
+      <!-- WEAPONS -->
+      <div id="shopTabWeapon" style="display: flex; flex-direction: column; gap: 8px;">
         <div class="item-list" id="weaponShopList"></div>
       </div>
 
-      <!-- SUBTAB: ARMOR SHOP -->
-      <div id="forgeSubArmor" style="display: none; flex-direction: column; gap: 8px;">
+      <!-- ARMORS -->
+      <div id="shopTabArmor" style="display: none; flex-direction: column; gap: 8px;">
         <div class="item-list" id="armorShopList"></div>
       </div>
     </div>
     <div class="modal-footer" style="display:flex; justify-content:space-between; align-items:center;">
-      <div style="font-size:0.85rem; font-weight:800; color:var(--gold);">보유 골드: <span id="shopGoldText">0 G</span></div>
-      <button class="btn-close" onclick="closeModal('modalForge')">닫기</button>
+      <div style="font-size:0.88rem; font-weight:800; color:var(--gold);">보유 골드: <span id="shopGoldText">0 G</span></div>
+      <button class="btn-close" onclick="closeModal('modalShop')">닫기</button>
     </div>
   </div>
 </div>
@@ -992,13 +988,6 @@ function playSound(type) {
       gain.gain.setValueAtTime(0.18, now);
       gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
       osc.start(now); osc.stop(now + 0.12);
-    } else if (type === 'hammer') {
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(800, now);
-      osc.frequency.exponentialRampToValueAtTime(300, now + 0.1);
-      gain.gain.setValueAtTime(0.2, now);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
-      osc.start(now); osc.stop(now + 0.1);
     } else if (type === 'victory') {
       [523.25, 659.25, 783.99, 1046.50].forEach((freq, i) => {
         const o = audioCtx.createOscillator();
@@ -1036,6 +1025,12 @@ function playSound(type) {
         g.gain.exponentialRampToValueAtTime(0.001, now + i * 0.07 + 0.18);
         o.start(now + i * 0.07); o.stop(now + i * 0.07 + 0.18);
       });
+    } else if (type === 'tick') {
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(880, now);
+      gain.gain.setValueAtTime(0.04, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.03);
+      osc.start(now); osc.stop(now + 0.03);
     }
   } catch(e) {}
 }
@@ -1070,7 +1065,7 @@ const CLASS_CONFIG = {
     tagClass: 'tag-novice',
     primaryLabel: '⚔️ 물리 공격력 (STR)',
     passive: '초심자의 행운 (균형 잡힌 성장)',
-    wpnName: '수습생 강철검', armName: '단단한 가죽 조끼'
+    wpnName: '수습생 나무검', armName: '수습생 가죽 조끼'
   },
   warrior: {
     name: '전사',
@@ -1084,7 +1079,7 @@ const CLASS_CONFIG = {
     tagClass: 'tag-mage',
     primaryLabel: '🔮 마법 주문력 (INT 기반)',
     passive: '마나 폭주 (마력 수련 효율 증폭)',
-    wpnName: '오크우드 스태프', armName: '실크 마도 로브'
+    wpnName: '오크우드 마도 스태프', armName: '실크 마도 로브'
   },
   rogue: {
     name: '도적',
@@ -1117,6 +1112,7 @@ const DUNGEONS_12 = [
   { id: 12, name: '혼돈의 마왕성 심연', minRank: 'S', reqCp: 2300, boss: '혼돈의 마왕 벨리알 (최종보스)', gold: [16000, 30000], fame: 350, drop: '종언의 묵시록' }
 ];
 
+/* ==================== 16 RANDOM EVENTS ==================== */
 const RANDOM_EVENTS = [
   // Positive (+)
   {
@@ -1148,8 +1144,8 @@ const RANDOM_EVENTS = [
     id: 'pe4', type: 'pos', title: '대륙 명장의 무료 담금질',
     desc: '우연히 만난 전설적인 명장 대장장이가 장비의 결을 예술적으로 다듬어 주었습니다.',
     apply(s) {
-      s.def += 2; s.weapon.power += 5; s.gold += 300;
-      return `방어력 +2, 무기 공격력 +5, 금화 +300G 보너스!`;
+      s.def += 2; s.gold += 500;
+      return `방어력 +2, 금화 +500G 보너스!`;
     }
   },
   {
@@ -1259,100 +1255,128 @@ const RANDOM_EVENTS = [
   }
 ];
 
-// Sequential Tier Weapons
+/* ==================== EXPANDED WEAPONS & ARMORS (DOUBLED + 2 END-GAME CHOICES) ==================== */
 const CLASS_WEAPONS = {
   novice: [
-    { id: 'nw1', tier: 1, name: '수습생 강철검', stat: 12, cost: 200, desc: '1티어: 기본 공격력 +12' },
-    { id: 'nw2', tier: 2, name: '숙련된 모험가의 검', stat: 25, cost: 600, desc: '2티어: 기본 공격력 +25' }
+    { id: 'nw1', tier: 1, name: '수습생 나무검', stat: 6, cost: 100, desc: '1티어: 공격력 +6' },
+    { id: 'nw2', tier: 2, name: '수습생 청동 단검', stat: 14, cost: 300, desc: '2티어: 공격력 +14' },
+    { id: 'nw3', tier: 3, name: '길드 훈련용 강철검', stat: 22, cost: 600, desc: '3티어: 공격력 +22' },
+    { id: 'nw4', tier: 4, name: '숙련된 모험가의 검', stat: 32, cost: 1200, desc: '4티어: 공격력 +32' }
   ],
   warrior: [
-    { id: 'w1', tier: 1, name: '강철 츠바이헨더', stat: 15, cost: 250, desc: '1티어: 물리 공격력 +15' },
-    { id: 'w2', tier: 2, name: '미스릴 클레이모어', stat: 35, cost: 750, desc: '2티어: 물리 공격력 +35' },
-    { id: 'w3', tier: 3, name: '용살자 바스타드소드', stat: 65, cost: 1800, desc: '3티어: 물리 공격력 +65' },
-    { id: 'w4', tier: 4, name: '거인 학살자의 대도끼', stat: 105, cost: 3600, desc: '4티어: 물리 공격력 +105' },
-    { id: 'w5', tier: 5, name: '심연의 마검 티르빙', stat: 150, cost: 6500, desc: '5티어: 물리 공격력 +150' },
-    { id: 'w6', tier: 6, name: '파멸의 처형검 (종결)', stat: 210, cost: 12000, desc: '6티어 종결: 물리 공격력 +210' }
+    { id: 'w1', tier: 1, name: '강철 츠바이헨더', stat: 35, cost: 400, desc: '1티어: 물리 공격력 +35' },
+    { id: 'w2', tier: 2, name: '견고한 배틀액스', stat: 55, cost: 1000, desc: '2티어: 물리 공격력 +55' },
+    { id: 'w3', tier: 3, name: '미스릴 클레이모어', stat: 80, cost: 2200, desc: '3티어: 물리 공격력 +80' },
+    { id: 'w4', tier: 4, name: '용살자의 바스타드소드', stat: 110, cost: 4500, desc: '4티어: 물리 공격력 +110' },
+    { id: 'w5', tier: 5, name: '거인 학살자의 대도끼', stat: 145, cost: 8500, desc: '5티어: 물리 공격력 +145' },
+    { id: 'w6', tier: 6, name: '진홍빛 오크 워해머', stat: 185, cost: 16000, desc: '6티어: 물리 공격력 +185' },
+    { id: 'w7', tier: 7, name: '심연의 흑철 마검', stat: 230, cost: 28000, desc: '7티어: 물리 공격력 +230' },
+    { id: 'w8', tier: 8, name: '고대 티탄의 거검', stat: 280, cost: 48000, desc: '8티어: 물리 공격력 +280' },
+    { id: 'w9', tier: 9, name: '발할라 파괴자의 대검', stat: 335, cost: 75000, desc: '9티어: 물리 공격력 +335' },
+    { id: 'w10a', tier: 10, isEndGame: true, name: '파멸의 심연 대검 (극공형)', stat: 420, defBonus: 0, cost: 130000, desc: '👑 10티어 종결 A: 압도적인 극강 물리 공격력 +420' },
+    { id: 'w10b', tier: 10, isEndGame: true, name: '불멸의 성채 대방패검 (균형형)', stat: 350, defBonus: 70, cost: 130000, desc: '👑 10티어 종결 B: 물리 공격력 +350 & 방어력 +70 (공방일체)' }
   ],
   mage: [
-    { id: 'm1', tier: 1, name: '오크우드 스태프', stat: 16, cost: 250, desc: '1티어: 마법 주문력 +16' },
-    { id: 'm2', tier: 2, name: '아케인 오브', stat: 38, cost: 750, desc: '2티어: 마법 주문력 +38' },
-    { id: 'm3', tier: 3, name: '별빛의 영혼 지팡이', stat: 70, cost: 1800, desc: '3티어: 마법 주문력 +70' },
-    { id: 'm4', tier: 4, name: '에테르 현자의 보주', stat: 110, cost: 3600, desc: '4티어: 마법 주문력 +110' },
-    { id: 'm5', tier: 5, name: '대마도사의 파괴 지팡이', stat: 160, cost: 6500, desc: '5티어: 마법 주문력 +160' },
-    { id: 'm6', tier: 6, name: '세계수의 아티팩트 완드 (종결)', stat: 220, cost: 12000, desc: '6티어 종결: 마법 주문력 +220' }
+    { id: 'm1', tier: 1, name: '오크우드 마도 스태프', stat: 38, cost: 400, desc: '1티어: 마법 주문력 +38' },
+    { id: 'm2', tier: 2, name: '비전 수정 지팡이', stat: 58, cost: 1000, desc: '2티어: 마법 주문력 +58' },
+    { id: 'm3', tier: 3, name: '아케인 오브', stat: 85, cost: 2200, desc: '3티어: 마법 주문력 +85' },
+    { id: 'm4', tier: 4, name: '별빛의 영혼 지팡이', stat: 115, cost: 4500, desc: '4티어: 마법 주문력 +115' },
+    { id: 'm5', tier: 5, name: '에테르 현자의 보주', stat: 150, cost: 8500, desc: '5티어: 마법 주문력 +150' },
+    { id: 'm6', tier: 6, name: '화염 군주의 홍련 로드', stat: 190, cost: 16000, desc: '6티어: 마법 주문력 +190' },
+    { id: 'm7', tier: 7, name: '대마도사의 파괴 지팡이', stat: 240, cost: 28000, desc: '7티어: 마법 주문력 +240' },
+    { id: 'm8', tier: 8, name: '차원 왜곡의 아스트랄 완드', stat: 290, cost: 48000, desc: '8티어: 마법 주문력 +290' },
+    { id: 'm9', tier: 9, name: '세계수의 성령 보주', stat: 345, cost: 75000, desc: '9티어: 마법 주문력 +345' },
+    { id: 'm10a', tier: 10, isEndGame: true, name: '대천체 별빛의 비전 완드 (극딜형)', stat: 430, defBonus: 0, cost: 130000, desc: '👑 10티어 종결 A: 순수 마법 주문력 극대화 +430' },
+    { id: 'm10b', tier: 10, isEndGame: true, name: '시간 왜곡의 크로노스 오브 (유틸형)', stat: 360, defBonus: 65, cost: 130000, desc: '👑 10티어 종결 B: 마법 주문력 +360 & 방어력 +65 (안정 화력)' }
   ],
   rogue: [
-    { id: 'r1', tier: 1, name: '그림자 비수', stat: 16, cost: 250, desc: '1티어: 치명 공격력 +16' },
-    { id: 'r2', tier: 2, name: '독니의 암살 단검', stat: 38, cost: 750, desc: '2티어: 치명 공격력 +38' },
-    { id: 'r3', tier: 3, name: '칠흑의 이중 쌍검', stat: 70, cost: 1800, desc: '3티어: 치명 공격력 +70' },
-    { id: 'r4', tier: 4, name: '바람살의 암습 단도', stat: 110, cost: 3600, desc: '4티어: 치명 공격력 +110' },
-    { id: 'r5', tier: 5, name: '유령 절단기의 쌍검', stat: 155, cost: 6500, desc: '5티어: 치명 공격력 +155' },
-    { id: 'r6', tier: 6, name: '그림자 군주의 아지노스 (종결)', stat: 215, cost: 12000, desc: '6티어 종결: 치명 공격력 +215' }
+    { id: 'r1', tier: 1, name: '그림자 비수', stat: 36, cost: 400, desc: '1티어: 치명 공격력 +36' },
+    { id: 'r2', tier: 2, name: '독니의 곡도', stat: 56, cost: 1000, desc: '2티어: 치명 공격력 +56' },
+    { id: 'r3', tier: 3, name: '암살자의 크리스 단검', stat: 82, cost: 2200, desc: '3티어: 치명 공격력 +82' },
+    { id: 'r4', tier: 4, name: '칠흑의 이중 쌍검', stat: 112, cost: 4500, desc: '4티어: 치명 공격력 +112' },
+    { id: 'r5', tier: 5, name: '바람살의 암습 단도', stat: 148, cost: 8500, desc: '5티어: 치명 공격력 +148' },
+    { id: 'r6', tier: 6, name: '밤의 전령 맹독 쌍비수', stat: 188, cost: 16000, desc: '6티어: 치명 공격력 +188' },
+    { id: 'r7', tier: 7, name: '유령 절단기의 쌍검', stat: 235, cost: 28000, desc: '7티어: 치명 공격력 +235' },
+    { id: 'r8', tier: 8, name: '심연 침투자의 그림자 칼날', stat: 285, cost: 48000, desc: '8티어: 치명 공격력 +285' },
+    { id: 'r9', tier: 9, name: '환영 군주의 처형도', stat: 340, cost: 75000, desc: '9티어: 치명 공격력 +340' },
+    { id: 'r10a', tier: 10, isEndGame: true, name: '그림자 군주의 아지노스 쌍검 (극치명형)', stat: 425, defBonus: 0, cost: 130000, desc: '👑 10티어 종결 A: 치명 공격력 극대화 +425 (원샷원킬)' },
+    { id: 'r10b', tier: 10, isEndGame: true, name: '환영 절단기의 유령 비수 (기동형)', stat: 355, defBonus: 65, cost: 130000, desc: '👑 10티어 종결 B: 치명 공격력 +355 & 방어력 +65 (환영 생존)' }
   ],
   paladin: [
-    { id: 'p1', tier: 1, name: '정의의 전투망치', stat: 16, cost: 250, desc: '1티어: 신성 공격력 +16' },
-    { id: 'p2', tier: 2, name: '심판의 신성 철퇴', stat: 36, cost: 750, desc: '2티어: 신성 공격력 +36' },
-    { id: 'p3', tier: 3, name: '대천사의 여명검', stat: 68, cost: 1800, desc: '3티어: 신성 공격력 +68' },
-    { id: 'p4', tier: 4, name: '성스러운 백은 워해머', stat: 108, cost: 3600, desc: '4티어: 신성 공격력 +108' },
-    { id: 'p5', tier: 5, name: '빛의 성채 홀리소드', stat: 152, cost: 6500, desc: '5티어: 신성 공격력 +152' },
-    { id: 'p6', tier: 6, name: '신성 군주의 선더해머 (종결)', stat: 210, cost: 12000, desc: '6티어 종결: 신성 공격력 +210' }
+    { id: 'p1', tier: 1, name: '정의의 전투망치', stat: 36, cost: 400, desc: '1티어: 신성 공격력 +36' },
+    { id: 'p2', tier: 2, name: '축복받은 백은 메이스', stat: 56, cost: 1000, desc: '2티어: 신성 공격력 +56' },
+    { id: 'p3', tier: 3, name: '심판의 신성 철퇴', stat: 82, cost: 2200, desc: '3티어: 신성 공격력 +82' },
+    { id: 'p4', tier: 4, name: '대천사의 여명검', stat: 112, cost: 4500, desc: '4티어: 신성 공격력 +112' },
+    { id: 'p5', tier: 5, name: '성스러운 백은 워해머', stat: 148, cost: 8500, desc: '5티어: 신성 공격력 +148' },
+    { id: 'p6', tier: 6, name: '빛의 성채 홀리소드', stat: 188, cost: 16000, desc: '6티어: 신성 공격력 +188' },
+    { id: 'p7', tier: 7, name: '십자군 사령관의 심판검', stat: 235, cost: 28000, desc: '7티어: 신성 공격력 +235' },
+    { id: 'p8', tier: 8, name: '신성 수호자의 여명 해머', stat: 285, cost: 48000, desc: '8티어: 신성 공격력 +285' },
+    { id: 'p9', tier: 9, name: '천공 성채의 신벌 메이스', stat: 340, cost: 75000, desc: '9티어: 신성 공격력 +340' },
+    { id: 'p10a', tier: 10, isEndGame: true, name: '신성 군주의 심판 해머 (강타형)', stat: 425, defBonus: 0, cost: 130000, desc: '👑 10티어 종결 A: 신성 공격력 극대화 +425 (단죄의 일격)' },
+    { id: 'p10b', tier: 10, isEndGame: true, name: '대천사의 백은 수호검 (철벽형)', stat: 350, defBonus: 75, cost: 130000, desc: '👑 10티어 종결 B: 신성 공격력 +350 & 방어력 +75 (불침 성역)' }
   ]
 };
 
-// Sequential Tier Armors
 const CLASS_ARMORS = {
   novice: [
-    { id: 'na1', tier: 1, name: '단단한 가죽 조끼', stat: 10, cost: 200, desc: '1티어: 방어 +10' },
-    { id: 'na2', tier: 2, name: '경비대 체인메일', stat: 22, cost: 600, desc: '2티어: 방어 +22' }
+    { id: 'na1', tier: 1, name: '수습생 가죽 조끼', stat: 6, cost: 100, desc: '1티어: 방어력 +6' },
+    { id: 'na2', tier: 2, name: '길드 훈련생 흉갑', stat: 12, cost: 300, desc: '2티어: 방어력 +12' },
+    { id: 'na3', tier: 3, name: '경비대 체인메일', stat: 20, cost: 600, desc: '3티어: 방어력 +20' },
+    { id: 'na4', tier: 4, name: '견습 기사의 가죽 중갑', stat: 28, cost: 1200, desc: '4티어: 방어력 +28' }
   ],
   warrior: [
-    { id: 'a1', tier: 1, name: '강철 판금 갑옷', stat: 16, cost: 250, desc: '1티어: 방어 +16' },
-    { id: 'a2', tier: 2, name: '티탄 사슬 중갑', stat: 36, cost: 750, desc: '2티어: 방어 +36' },
-    { id: 'a3', tier: 3, name: '드래곤 스케일 아머', stat: 70, cost: 1900, desc: '3티어: 방어 +70' },
-    { id: 'a4', tier: 4, name: '심연의 흑철 갑주', stat: 110, cost: 3800, desc: '4티어: 방어 +110' },
-    { id: 'a5', tier: 5, name: '발할라 발키리 중갑', stat: 155, cost: 6800, desc: '5티어: 방어 +155' },
-    { id: 'a6', tier: 6, name: '불멸의 성채 갑옷 (종결)', stat: 220, cost: 13000, desc: '6티어 종결: 방어 +220' }
+    { id: 'a1', tier: 1, name: '강철 판금 갑옷', stat: 30, cost: 400, desc: '1티어: 방어력 +30' },
+    { id: 'a2', tier: 2, name: '중보병 철갑 조끼', stat: 50, cost: 1000, desc: '2티어: 방어력 +50' },
+    { id: 'a3', tier: 3, name: '티탄 사슬 중갑', stat: 75, cost: 2200, desc: '3티어: 방어력 +75' },
+    { id: 'a4', tier: 4, name: '드래곤 스케일 아머', stat: 105, cost: 4500, desc: '4티어: 방어력 +105' },
+    { id: 'a5', tier: 5, name: '심연의 흑철 갑주', stat: 140, cost: 8500, desc: '5티어: 방어력 +140' },
+    { id: 'a6', tier: 6, name: '베히모스 뼈 가죽 성갑', stat: 180, cost: 16000, desc: '6티어: 방어력 +180' },
+    { id: 'a7', tier: 7, name: '발할라 발키리 중갑', stat: 225, cost: 28000, desc: '7티어: 방어력 +225' },
+    { id: 'a8', tier: 8, name: '고대 티탄의 요새 갑주', stat: 275, cost: 48000, desc: '8티어: 방어력 +275' },
+    { id: 'a9', tier: 9, name: '천공의 아다만티움 성갑', stat: 330, cost: 75000, desc: '9티어: 방어력 +330' },
+    { id: 'a10a', tier: 10, isEndGame: true, name: '발할라의 피빛 투혼 갑주 (공격형)', stat: 340, atkBonus: 55, cost: 130000, desc: '👑 10티어 종결 A: 방어력 +340 & 물리 공격력 +55' },
+    { id: 'a10b', tier: 10, isEndGame: true, name: '불멸의 성채 철벽 성갑 (수호형)', stat: 420, atkBonus: 0, cost: 130000, desc: '👑 10티어 종결 B: 절대 수호 방어력 극대화 +420' }
   ],
   mage: [
-    { id: 'ma1', tier: 1, name: '실크 마도 로브', stat: 12, cost: 250, desc: '1티어: 방어 +12' },
-    { id: 'ma2', tier: 2, name: '대현자의 마도포', stat: 30, cost: 750, desc: '2티어: 방어 +30' },
-    { id: 'ma3', tier: 3, name: '아스트랄 에테르 예복', stat: 60, cost: 1900, desc: '3티어: 방어 +60' },
-    { id: 'ma4', tier: 4, name: '성좌의 영원 로브', stat: 95, cost: 3800, desc: '4티어: 방어 +95' },
-    { id: 'ma5', tier: 5, name: '태초의 마도 코트', stat: 140, cost: 6800, desc: '5티어: 방어 +140' },
-    { id: 'ma6', tier: 6, name: '신의 마도 의복 (종결)', stat: 195, cost: 13000, desc: '6티어 종결: 방어 +195' }
+    { id: 'ma1', tier: 1, name: '실크 마도 로브', stat: 25, cost: 400, desc: '1티어: 방어력 +25' },
+    { id: 'ma2', tier: 2, name: '견습 학사의 에테르 코트', stat: 42, cost: 1000, desc: '2티어: 방어력 +42' },
+    { id: 'ma3', tier: 3, name: '대현자의 마도포', stat: 65, cost: 2200, desc: '3티어: 방어력 +65' },
+    { id: 'ma4', tier: 4, name: '아스트랄 에테르 예복', stat: 92, cost: 4500, desc: '4티어: 방어력 +92' },
+    { id: 'ma5', tier: 5, name: '성좌의 영원 로브', stat: 125, cost: 8500, desc: '5티어: 방어력 +125' },
+    { id: 'ma6', tier: 6, name: '마력 공명 엘리멘탈 코트', stat: 162, cost: 16000, desc: '6티어: 방어력 +162' },
+    { id: 'ma7', tier: 7, name: '태초의 마도 의복', stat: 205, cost: 28000, desc: '7티어: 방어력 +205' },
+    { id: 'ma8', tier: 8, name: '심연 심령의 결계 로브', stat: 255, cost: 48000, desc: '8티어: 방어력 +255' },
+    { id: 'ma9', tier: 9, name: '신의 대마법사 예복', stat: 310, cost: 75000, desc: '9티어: 방어력 +310' },
+    { id: 'ma10a', tier: 10, isEndGame: true, name: '성좌의 태초 마도 로브 (증폭형)', stat: 320, atkBonus: 60, cost: 130000, desc: '👑 10티어 종결 A: 방어력 +320 & 마법 주문력 +60' },
+    { id: 'ma10b', tier: 10, isEndGame: true, name: '신성 아케인 결계 예복 (결계형)', stat: 400, atkBonus: 0, cost: 130000, desc: '👑 10티어 종결 B: 절대 마도 방어력 극대화 +400' }
   ],
   rogue: [
-    { id: 'ra1', tier: 1, name: '암살자의 가죽 흉갑', stat: 14, cost: 250, desc: '1티어: 방어 +14' },
-    { id: 'ra2', tier: 2, name: '어둠의 그림자 망토', stat: 32, cost: 750, desc: '2티어: 방어 +32' },
-    { id: 'ra3', tier: 3, name: '독안개의 기습 의복', stat: 64, cost: 1900, desc: '3티어: 방어 +64' },
-    { id: 'ra4', tier: 4, name: '유령 도적의 은신복', stat: 100, cost: 3800, desc: '4티어: 방어 +100' },
-    { id: 'ra5', tier: 5, name: '심연 암살자의 가죽 중갑', stat: 145, cost: 6800, desc: '5티어: 방어 +145' },
-    { id: 'ra6', tier: 6, name: '그림자 군주의 망령 갑옷 (종결)', stat: 205, cost: 13000, desc: '6티어 종결: 방어 +205' }
+    { id: 'ra1', tier: 1, name: '암살자의 가죽 흉갑', stat: 28, cost: 400, desc: '1티어: 방어력 +28' },
+    { id: 'ra2', tier: 2, name: '야행성 도적의 경량 조끼', stat: 46, cost: 1000, desc: '2티어: 방어력 +46' },
+    { id: 'ra3', tier: 3, name: '어둠의 그림자 망토', stat: 70, cost: 2200, desc: '3티어: 방어력 +70' },
+    { id: 'ra4', tier: 4, name: '독안개의 기습 의복', stat: 98, cost: 4500, desc: '4티어: 방어력 +98' },
+    { id: 'ra5', tier: 5, name: '유령 도적의 은신복', stat: 132, cost: 8500, desc: '5티어: 방어력 +132' },
+    { id: 'ra6', tier: 6, name: '그림자 늑대의 가죽 성갑', stat: 170, cost: 16000, desc: '6티어: 방어력 +170' },
+    { id: 'ra7', tier: 7, name: '심연 암살자의 가죽 중갑', stat: 215, cost: 28000, desc: '7티어: 방어력 +215' },
+    { id: 'ra8', tier: 8, name: '밤의 지배자 스텔스 갑주', stat: 265, cost: 48000, desc: '8티어: 방어력 +265' },
+    { id: 'ra9', tier: 9, name: '환영 군주의 그림자 가죽옷', stat: 320, cost: 75000, desc: '9티어: 방어력 +320' },
+    { id: 'ra10a', tier: 10, isEndGame: true, name: '심연 암살자의 유령 흉갑 (치명형)', stat: 330, atkBonus: 55, cost: 130000, desc: '👑 10티어 종결 A: 방어력 +330 & 치명 공격력 +55' },
+    { id: 'ra10b', tier: 10, isEndGame: true, name: '그림자 성역의 망령 외투 (회피형)', stat: 410, atkBonus: 0, cost: 130000, desc: '👑 10티어 종결 B: 절대 회피 방어력 극대화 +410' }
   ],
   paladin: [
-    { id: 'pa1', tier: 1, name: '기사단 축복 성갑', stat: 18, cost: 250, desc: '1티어: 방어 +18' },
-    { id: 'pa2', tier: 2, name: '십자군의 신성 흉갑', stat: 38, cost: 750, desc: '2티어: 방어 +38' },
-    { id: 'pa3', tier: 3, name: '빛의 인도자 백은 갑주', stat: 74, cost: 1900, desc: '3티어: 방어 +74' },
-    { id: 'pa4', tier: 4, name: '대천사의 수호 철갑', stat: 115, cost: 3800, desc: '4티어: 방어 +115' },
-    { id: 'pa5', tier: 5, name: '성스러운 새벽의 판금갑', stat: 160, cost: 6800, desc: '5티어: 방어 +160' },
-    { id: 'pa6', tier: 6, name: '절대 성역의 아에기스 (종결)', stat: 225, cost: 13000, desc: '6티어 종결: 방어 +225' }
+    { id: 'pa1', tier: 1, name: '기사단 축복 성갑', stat: 32, cost: 400, desc: '1티어: 방어력 +32' },
+    { id: 'pa2', tier: 2, name: '수호 기사의 백은 흉갑', stat: 52, cost: 1000, desc: '2티어: 방어력 +52' },
+    { id: 'pa3', tier: 3, name: '십자군의 신성 흉갑', stat: 78, cost: 2200, desc: '3티어: 방어력 +78' },
+    { id: 'pa4', tier: 4, name: '빛의 인도자 백은 갑주', stat: 110, cost: 4500, desc: '4티어: 방어력 +110' },
+    { id: 'pa5', tier: 5, name: '대천사의 수호 철갑', stat: 145, cost: 8500, desc: '5티어: 방어력 +145' },
+    { id: 'pa6', tier: 6, name: '성스러운 새벽의 판금갑', stat: 185, cost: 16000, desc: '6티어: 방어력 +185' },
+    { id: 'pa7', tier: 7, name: '신전 수호 성기사 갑주', stat: 230, cost: 28000, desc: '7티어: 방어력 +230' },
+    { id: 'pa8', tier: 8, name: '빛의 성채 미스릴 판금갑', stat: 280, cost: 48000, desc: '8티어: 방어력 +280' },
+    { id: 'pa9', tier: 9, name: '대천사장의 축복 성갑', stat: 335, cost: 75000, desc: '9티어: 방어력 +335' },
+    { id: 'pa10a', tier: 10, isEndGame: true, name: '새벽빛 인도자의 성스러운 판금갑 (증폭형)', stat: 345, atkBonus: 55, cost: 130000, desc: '👑 10티어 종결 A: 방어력 +345 & 신성 공격력 +55' },
+    { id: 'pa10b', tier: 10, isEndGame: true, name: '절대 성역의 이지스 성갑 (수호형)', stat: 430, atkBonus: 0, cost: 130000, desc: '👑 10티어 종결 B: 절대 수호 방어력 극대화 +430' }
   ]
 };
-
-// 20-Stage Enhancement Rates & Upgraded Costs
-const FORGE_RATES = [
-  90, 90, 90, 90, 90, // 0->1 ~ 4->5
-  90, 90, 90, 90, 90, // 5->6 ~ 9->10
-  88, 86, 84, 82, 80, // 10->11 ~ 14->15 (-2% each)
-  75, 70, 65, 60, 55  // 15->16 ~ 19->20 (-5% each)
-];
-
-const FORGE_COSTS = [
-  300, 500, 800, 1300, 2000,
-  3000, 4500, 6500, 9500, 14000,
-  20000, 28000, 38000, 52000, 70000,
-  95000, 130000, 180000, 250000, 350000
-];
 
 /* ==================== STATE MANAGEMENT ==================== */
 let state = {
@@ -1366,10 +1390,10 @@ let state = {
   int: 10,
   dex: 11,
   def: 10,
-  unlockedWpnTier: 0,
-  unlockedArmTier: 0,
-  weapon: { name: '낡은 단검', plus: 0, power: 6, tier: 0 },
-  armor: { name: '수습생 조끼', plus: 0, power: 5, tier: 0 },
+  unlockedWpnTier: 1,
+  unlockedArmTier: 1,
+  weapon: { name: '수습생 나무검', power: 6, defBonus: 0, tier: 1 },
+  armor: { name: '수습생 가죽 조끼', power: 6, atkBonus: 0, tier: 1 },
   gold: 300,
   fame: 10,
   bossesDefeated: 0,
@@ -1378,7 +1402,6 @@ let state = {
 };
 
 let hallOfFame = [];
-let forgeTarget = 'weapon';
 let pendingYearContext = null;
 let duelBoss = null;
 let duelPlayerHp = 100;
@@ -1389,33 +1412,23 @@ let lastAnnualSummary = null;
 
 function saveGameToLocalStorage() {
   try {
-    localStorage.setItem('fantasy_rpg_state_v5', JSON.stringify(state));
-    localStorage.setItem('fantasy_rpg_hall_v5', JSON.stringify(hallOfFame));
+    localStorage.setItem('fantasy_rpg_state_v6', JSON.stringify(state));
+    localStorage.setItem('fantasy_rpg_hall_v6', JSON.stringify(hallOfFame));
   } catch (e) {}
 }
 
 function loadGameFromLocalStorage() {
   try {
-    const savedState = localStorage.getItem('fantasy_rpg_state_v5');
+    const savedState = localStorage.getItem('fantasy_rpg_state_v6');
     if (savedState) state = JSON.parse(savedState);
-    const savedHall = localStorage.getItem('fantasy_rpg_hall_v5');
+    const savedHall = localStorage.getItem('fantasy_rpg_hall_v6');
     if (savedHall) hallOfFame = JSON.parse(savedHall);
   } catch (e) {}
 }
 
 /* ==================== COMBAT POWER & STAT FORMULAS ==================== */
-function getMilestoneBonus(plus) {
-  let bonus = 0;
-  if (plus >= 5) bonus += 15;
-  if (plus >= 10) bonus += 35;
-  if (plus >= 15) bonus += 70;
-  if (plus >= 20) bonus += 130;
-  return bonus;
-}
-
 function getPrimaryCombatPower() {
-  const wPlusBonus = Math.round(state.weapon.plus * 3.5 + getMilestoneBonus(state.weapon.plus));
-  const totalWpnPower = state.weapon.power + wPlusBonus;
+  const totalWpnPower = state.weapon.power + (state.armor.atkBonus || 0);
 
   if (state.charClass === 'mage') {
     return Math.round(state.int * 1.6 + totalWpnPower * 1.3);
@@ -1431,8 +1444,7 @@ function getPrimaryCombatPower() {
 
 function calculateCP() {
   const primaryAtk = getPrimaryCombatPower();
-  const aPlusBonus = Math.round(state.armor.plus * 3.5 + getMilestoneBonus(state.armor.plus));
-  const totalArmPower = state.armor.power + aPlusBonus;
+  const totalArmPower = state.armor.power + (state.weapon.defBonus || 0);
   const effectiveDef = state.def * 1.2 + totalArmPower * 1.3;
   const statSum = state.str + state.int + state.dex + state.def;
 
@@ -1462,10 +1474,10 @@ function updateUI() {
   document.getElementById('uiPrimaryPower').textContent = getPrimaryCombatPower();
   document.getElementById('uiCp').textContent = `${calculateCP().toLocaleString()} CP`;
 
-  document.getElementById('uiWeaponText').textContent = `${state.weapon.name} (+${state.weapon.plus})`;
+  document.getElementById('uiWeaponText').textContent = state.weapon.name;
   document.getElementById('uiWeaponTier').textContent = `${state.weapon.tier}티어`;
 
-  document.getElementById('uiArmorText').textContent = `${state.armor.name} (+${state.armor.plus})`;
+  document.getElementById('uiArmorText').textContent = state.armor.name;
   document.getElementById('uiArmorTier').textContent = `${state.armor.tier}티어`;
 
   document.getElementById('uiGold').textContent = state.gold.toLocaleString();
@@ -1477,7 +1489,7 @@ function updateUI() {
   const shopGold = document.getElementById('shopGoldText');
   if (shopGold) shopGold.textContent = state.gold.toLocaleString() + ' G';
 
-  // Promotion Button Status in Action Grid
+  // Promotion Status Button in Action Grid
   const nextRankIdx = RANKS.indexOf(state.rank) + 1;
   const btnExam = document.getElementById('btnExamQuick');
   if (nextRankIdx >= RANKS.length) {
@@ -1492,8 +1504,8 @@ function updateUI() {
     const canExam = myCp >= reqCpTable[nextRank] && state.fame >= reqFameTable[nextRank];
 
     if (canExam) {
-      document.getElementById('txtExamBtn').textContent = `⚔️ ${nextRank}급 승급 심사 가능!`;
-      document.getElementById('txtExamDesc').textContent = '1년 수행 시 4분기 결투 신청 가능';
+      document.getElementById('txtExamBtn').textContent = `⚔️ ${nextRank}급 승급 조건 달성!`;
+      document.getElementById('txtExamDesc').textContent = '심사 개시 연도에 4분기 결투 신청 가능';
       if (btnExam) btnExam.style.borderColor = '#a855f7';
     } else {
       document.getElementById('txtExamBtn').textContent = `🔒 ${nextRank}급 요건 확인`;
@@ -1521,8 +1533,8 @@ function clearLogs() {
   saveGameToLocalStorage();
 }
 
-/* ==================== 1-YEAR STREAMLINED PROGRESSION ==================== */
-function executeOneYear() {
+/* ==================== 1-YEAR WITH 3-SECOND LOADING BAR & DYNAMIC 4 EVENTS ==================== */
+function startOneYearWithLoading() {
   if (state.isRetired) return;
 
   if (state.age >= 50) {
@@ -1531,7 +1543,7 @@ function executeOneYear() {
     return;
   }
 
-  // Check if player qualifies for next promotion exam in 4th quarter
+  // Check Promotion Qualification & whether the Guild Board opens this year (60% chance)
   const nextRankIdx = RANKS.indexOf(state.rank) + 1;
   const myCp = calculateCP();
   const reqCpTable = { 'E': 60, 'D': 130, 'C': 260, 'B': 450, 'A': 750, 'S': 1200, 'LEGEND': 1800 };
@@ -1541,10 +1553,16 @@ function executeOneYear() {
                      myCp >= reqCpTable[RANKS[nextRankIdx]] &&
                      state.fame >= reqFameTable[RANKS[nextRankIdx]];
 
-  if (isEligible) {
+  // Guild promotion board opens on certain years (approx 60% chance)
+  const guildExamHeldThisYear = Math.random() < 0.60;
+
+  if (isEligible && guildExamHeldThisYear) {
     openExamChoiceModal(RANKS[nextRankIdx]);
   } else {
-    runOneYearCycle(false);
+    if (isEligible && !guildExamHeldThisYear) {
+      addLog(`📜 길드 본부 공지: 올해(${state.age}세)는 정기 승급 심사가 열리지 않는 해입니다. 내년을 기약합니다.`, 'normal');
+    }
+    launchThreeSecondLoading(false);
   }
 }
 
@@ -1558,12 +1576,12 @@ function openExamChoiceModal(nextRank) {
   body.innerHTML = `
     <div style="background: rgba(15,23,42,0.6); border: 1px solid var(--border); border-radius: 10px; padding: 14px;">
       <div style="font-size: 1.05rem; font-weight: 800; color: #a855f7; margin-bottom: 6px;">
-        🎉 [${nextRank}급] 승급 자격 요건 충족!
+        🎉 길드 공인 [${nextRank}급] 정기 심사 개시!
       </div>
       <p style="font-size: 0.85rem; color: #cbd5e1; line-height: 1.5; margin-bottom: 12px;">
-        현재 전투력 <b>${myCp.toLocaleString()} CP</b>, 명성 <b>${state.fame.toLocaleString()}</b>으로 
-        길드 공인 [${nextRank}급] 정기 심사 자격을 획득했습니다.<br>
-        올해 <b>4분기(겨울)</b>에 승급 결투 심사에 도전하시겠습니까?
+        현재 전투력 <b>${myCp.toLocaleString()} CP</b>, 명성 <b>${state.fame.toLocaleString()}</b>으로 승급 자격을 갖추었으며, 
+        <b>올해 길드 본부의 정기 결투 심사가 공식 개시</b>되었습니다!<br>
+        올해 모험 중 승급 결투 심사에 도전하시겠습니까?
       </p>
 
       <div style="background: #0f172a; border-radius: 8px; padding: 10px; font-size: 0.82rem; line-height: 1.6; border: 1px solid #334155; margin-bottom: 8px;">
@@ -1575,7 +1593,7 @@ function openExamChoiceModal(nextRank) {
       </div>
 
       <div style="font-size: 0.78rem; color: #94a3b8;">
-        💡 승급 심사를 미루면 4분기에 일반 모험 랜덤 이벤트가 대신 진행됩니다.
+        💡 승급 심사를 미루면 4개의 사건이 모두 일반 모험으로 진행됩니다.
       </div>
     </div>
   `;
@@ -1585,10 +1603,57 @@ function openExamChoiceModal(nextRank) {
 
 function chooseExamAndRun(challenge) {
   closeModal('modalExamChoice');
-  runOneYearCycle(challenge);
+  launchThreeSecondLoading(challenge);
 }
 
-function runOneYearCycle(challengeExam) {
+function launchThreeSecondLoading(challengeExam) {
+  playSound('click');
+  const btn = document.getElementById('btnRunYear');
+  if (btn) btn.disabled = true;
+
+  const modal = document.getElementById('modalYearLoading');
+  const title = document.getElementById('loadingTitle');
+  const desc = document.getElementById('loadingDesc');
+  const fill = document.getElementById('loadingFill');
+
+  title.textContent = `⏳ [${state.age}세] 한 해의 모험을 떠나는 중...`;
+  desc.textContent = `🌸 봄: 장비를 챙겨 새로운 모험지로 출발합니다... (25%)`;
+  fill.style.width = '0%';
+  modal.style.display = 'flex';
+
+  const startTime = Date.now();
+  const duration = 3000; // Exact 3 seconds
+
+  const steps = [
+    { at: 750, text: `☀️ 여름: 뜨거운 태양 아래 혈투와 수련에 몰두합니다... (50%)`, pct: 50 },
+    { at: 1500, text: `🍁 가을: 길드에 의뢰를 보고하고 결실을 수확합니다... (75%)`, pct: 75 },
+    { at: 2250, text: `❄️ 겨울: 한 해의 모험을 갈무리하고 결산을 준비합니다... (100%)`, pct: 100 }
+  ];
+
+  let nextStepIdx = 0;
+
+  const timer = setInterval(() => {
+    const elapsed = Date.now() - startTime;
+    const progress = Math.min(100, Math.round((elapsed / duration) * 100));
+    fill.style.width = `${progress}%`;
+
+    if (nextStepIdx < steps.length && elapsed >= steps[nextStepIdx].at) {
+      desc.textContent = steps[nextStepIdx].text;
+      playSound('tick');
+      nextStepIdx++;
+    }
+
+    if (elapsed >= duration) {
+      clearInterval(timer);
+      modal.style.display = 'none';
+      if (btn) btn.disabled = false;
+      executeDynamicYear(challengeExam);
+    }
+  }, 50);
+}
+
+/* ==================== EXECUTE DYNAMIC 4-EVENT YEAR ==================== */
+function executeDynamicYear(challengeExam) {
   const currentAge = state.age;
   const startGold = state.gold;
   const startFame = state.fame;
@@ -1598,37 +1663,68 @@ function runOneYearCycle(challengeExam) {
   const startDef = state.def;
   const startCp = calculateCP();
 
-  // 1. SPRING (1분기: 봄) - Dungeon
-  const spring = runSpringDungeon();
+  const eventPool = ['dungeon', 'training', 'quest', 'event'];
+  const eventResults = [];
 
-  // 2. SUMMER (2분기: 여름) - Training with rebalanced probabilities
-  const summer = runSummerTraining();
-
-  // 3. AUTUMN (3분기: 가을) - Guild Quest
-  const autumn = runAutumnQuest();
-
-  // 4. WINTER (4분기: 겨울) - Promotion Duel or Random Event
+  // Determine 4 event types
+  let yearSlotTypes = [];
   if (challengeExam) {
-    pendingYearContext = {
-      age: currentAge,
-      spring, summer, autumn,
-      startGold, startFame, startStr, startInt, startDex, startDef, startCp
-    };
-    startPromotionDuelWinter();
-    return;
+    // 3 random events + 1 promotion duel as the 4th climax!
+    yearSlotTypes = [
+      eventPool[Math.floor(Math.random() * eventPool.length)],
+      eventPool[Math.floor(Math.random() * eventPool.length)],
+      eventPool[Math.floor(Math.random() * eventPool.length)],
+      'exam'
+    ];
+  } else {
+    // 4 completely random events!
+    yearSlotTypes = [
+      eventPool[Math.floor(Math.random() * eventPool.length)],
+      eventPool[Math.floor(Math.random() * eventPool.length)],
+      eventPool[Math.floor(Math.random() * eventPool.length)],
+      eventPool[Math.floor(Math.random() * eventPool.length)]
+    ];
   }
 
-  const winter = runWinterRandomEvent();
+  const seasonIcons = ['🌸 제 1사건', '☀️ 제 2사건', '🍁 제 3사건', '❄️ 제 4사건'];
 
-  finishYearExecution({
+  for (let i = 0; i < 4; i++) {
+    const type = yearSlotTypes[i];
+    const prefix = seasonIcons[i];
+
+    if (type === 'dungeon') {
+      const dRes = runDungeonAction();
+      eventResults.push({ prefix, title: dRes.title, desc: dRes.desc, icon: '🗺️' });
+    } else if (type === 'training') {
+      const tRes = runTrainingAction();
+      eventResults.push({ prefix, title: tRes.title, desc: tRes.desc, icon: '🏋️' });
+    } else if (type === 'quest') {
+      const qRes = runQuestAction();
+      eventResults.push({ prefix, title: qRes.title, desc: qRes.desc, icon: '📜' });
+    } else if (type === 'event') {
+      const evRes = runRandomEventAction();
+      eventResults.push({ prefix, title: evRes.title, desc: evRes.desc, icon: '🎲' });
+    } else if (type === 'exam') {
+      // Climax Duel Exam!
+      pendingYearContext = {
+        age: currentAge,
+        events: eventResults,
+        startGold, startFame, startStr, startInt, startDex, startDef, startCp
+      };
+      startPromotionDuelArena();
+      return;
+    }
+  }
+
+  finishYearRollover({
     age: currentAge,
-    spring, summer, autumn, winter,
+    events: eventResults,
     startGold, startFame, startStr, startInt, startDex, startDef, startCp
   });
 }
 
-/* 1분기: 봄 던전 탐험 */
-function runSpringDungeon() {
+/* Individual Action Handlers */
+function runDungeonAction() {
   const myCp = calculateCP();
   const playerRankIdx = RANKS.indexOf(state.rank);
 
@@ -1667,30 +1763,27 @@ function runSpringDungeon() {
       dropLog = ` (전리품 [${d.drop}] +${dropBonus.toLocaleString()}G)`;
     }
 
-    addLog(`👑 [1분기 봄 던전] [${d.name}] 토벌 성공! 보스 <b>${d.boss}</b> 격파 (+${goldEarned.toLocaleString()}G, 명성 +${fameEarned})${dropLog}`, 'reward');
+    addLog(`👑 [던전 탐험] 제${d.id}구역 [${d.name}] 토벌 성공! 보스 <b>${d.boss}</b> 격파 (+${goldEarned.toLocaleString()}G, 명성 +${fameEarned})${dropLog}`, 'reward');
 
     return {
-      success: true,
       title: `👑 제${d.id}구역 [${d.name}] 토벌 성공`,
       desc: `보스 [${d.boss}] 격파! 획득: +${goldEarned.toLocaleString()}G, 명성 +${fameEarned}${dropLog}`
     };
   } else {
     const halfGold = Math.round(d.gold[0] * 0.35);
     state.gold += halfGold;
-    addLog(`⚠️ [1분기 봄 던전] [${d.name}] 보스전 고전으로 일부 전리품만 수습하고 퇴각했습니다. (+${halfGold}G)`, 'normal');
+    addLog(`⚠️ [던전 탐험] [${d.name}] 보스전 고전으로 전리품 일부만 회수 후 퇴각했습니다. (+${halfGold}G)`, 'normal');
     return {
-      success: false,
       title: `⚠️ 제${d.id}구역 [${d.name}] 탐색 퇴각`,
       desc: `보스 [${d.boss}]의 맹공에 밀려 안전하게 퇴각했습니다. (수색 전리품 +${halfGold}G)`
     };
   }
 }
 
-/* 2분기: 여름 전신 수련 (밸런스 완벽 조정: -2~0 17%, +1~2 70%, +3 10%, 대성공 3%) */
 function rollRebalancedStat() {
   const r = Math.random() * 100;
   if (r < 17) {
-    // -2 ~ +0 확률 17%
+    // -2 ~ 0 확률 17%
     const sub = Math.random() * 3;
     if (sub < 1) return -2;
     if (sub < 2) return -1;
@@ -1702,12 +1795,12 @@ function rollRebalancedStat() {
     // +3 확률 10%
     return 3;
   } else {
-    // 대성공 3% (한계 돌파 +4~6)
+    // 대성공 3% (+4~6)
     return Math.floor(Math.random() * 3) + 4;
   }
 }
 
-function runSummerTraining() {
+function runTrainingAction() {
   const gStr = rollRebalancedStat();
   const gInt = rollRebalancedStat();
   const gDex = rollRebalancedStat();
@@ -1724,16 +1817,15 @@ function runSummerTraining() {
   function fmt(v) { return v > 0 ? `+${v}` : `${v}`; }
   const desc = `근력 ${fmt(gStr)}, 마력 ${fmt(gInt)}, 민첩 ${fmt(gDex)}, 방어 ${fmt(gDef)}${critBadge}`;
 
-  addLog(`🏋️ [2분기 여름 수련] 전신 집중 수련 완료: ${desc}`, hasCrit ? 'crit' : 'growth');
+  addLog(`🏋️ [전신 집중 수련] 능력치 단련: ${desc}`, hasCrit ? 'crit' : 'growth');
 
   return {
-    title: `🏋️ 2분기 전신 종합 수련${critBadge}`,
+    title: `🏋️ 전신 집중 수련${critBadge}`,
     desc: desc
   };
 }
 
-/* 3분기: 가을 길드 의뢰 (90% 주스탯/방어, 9% 타스탯, 1% 실패) */
-function runAutumnQuest() {
+function runQuestAction() {
   let primaryStat = 'str';
   let unrelatedStats = ['int', 'dex'];
   if (state.charClass === 'warrior') { primaryStat = 'str'; unrelatedStats = ['int', 'dex']; }
@@ -1750,11 +1842,10 @@ function runAutumnQuest() {
   const statVal = (rankIdx >= 4) ? 2 : 1;
 
   if (roll < 1.0) {
-    // 1% Ambush Failure
     state.fame = Math.max(0, state.fame - 3);
-    addLog(`⚠️ [3분기 가을 의뢰] [1% 돌발 사고] 마수의 매복으로 의뢰 완수에 실패했습니다. (명성 -3)`, 'danger');
+    addLog(`⚠️ [길드 의뢰] [1% 돌발 사고] 마수의 매복으로 의뢰 수행에 실패했습니다. (명성 -3)`, 'danger');
     return {
-      title: `⚠️ 3분기 가을 의뢰 [1% 돌발 사고]`,
+      title: `⚠️ 길드 의뢰 [1% 돌발 사고]`,
       desc: `현장 기습으로 의뢰가 취소되고 무사히 탈출했습니다. (보수 없음, 명성 -3)`
     };
   }
@@ -1763,12 +1854,10 @@ function runAutumnQuest() {
   let qTitle = '';
 
   if (roll < 91.0) {
-    // 90%: Primary stat or DEF
     const isDef = Math.random() < 0.4;
     targetStat = isDef ? 'def' : primaryStat;
     qTitle = isDef ? '성벽 방파제 수호 임무' : (targetStat === 'str' ? '광산 오크 토벌 지원' : (targetStat === 'int' ? '고대 마도 결계 복구' : '위험 절벽 약초 채집'));
   } else {
-    // 9%: Unrelated stat
     targetStat = unrelatedStats[Math.floor(Math.random() * unrelatedStats.length)];
     qTitle = '학술원 고문서 필사 및 도심 보조';
   }
@@ -1780,30 +1869,29 @@ function runAutumnQuest() {
   state.gold += finalGold;
   state.fame += baseFame;
 
-  addLog(`📜 [3분기 가을 의뢰] [${qTitle}] 완수! (+${finalGold.toLocaleString()}G, 명성 +${baseFame}, ${statNames[targetStat]} +${statVal})`, 'reward');
+  addLog(`📜 [길드 의뢰] [${qTitle}] 완수! (+${finalGold.toLocaleString()}G, 명성 +${baseFame}, ${statNames[targetStat]} +${statVal})`, 'reward');
 
   return {
-    title: `📜 3분기 가을 의뢰 [${qTitle}]`,
+    title: `📜 길드 의뢰 [${qTitle}]`,
     desc: `임무 완수! +${finalGold.toLocaleString()}G, 명성 +${baseFame}, ${statNames[targetStat]} +${statVal}`
   };
 }
 
-/* 4분기: 겨울 랜덤 이벤트 (+ / - 풀) */
-function runWinterRandomEvent() {
+function runRandomEventAction() {
   const ev = RANDOM_EVENTS[Math.floor(Math.random() * RANDOM_EVENTS.length)];
   const resultText = ev.apply(state);
   const typeTag = ev.type === 'pos' ? 'reward' : 'danger';
 
-  addLog(`🎲 [4분기 겨울 이벤트] [${ev.title}] ${resultText}`, typeTag);
+  addLog(`🎲 [랜덤 이벤트] [${ev.title}] ${resultText}`, typeTag);
 
   return {
-    title: `🎲 4분기 겨울 이벤트 [${ev.title}]`,
+    title: `🎲 랜덤 모험 이벤트 [${ev.title}]`,
     desc: `${ev.desc}<br><b style="color:${ev.type === 'pos' ? '#10b981' : '#f87171'};">${resultText}</b>`
   };
 }
 
-/* 4분기 승급 결투 심사 시작 */
-function startPromotionDuelWinter() {
+/* ==================== PROMOTION DUEL ==================== */
+function startPromotionDuelArena() {
   const nextRankIdx = RANKS.indexOf(state.rank) + 1;
   const nextRank = RANKS[nextRankIdx];
 
@@ -1930,7 +2018,7 @@ function duelTurn(action) {
 
 function concludeDuelOutcome(isWin) {
   const nextRank = duelBoss.rank;
-  let winterRes = null;
+  let duelEventRes = null;
 
   if (isWin) {
     state.rank = nextRank;
@@ -1946,33 +2034,37 @@ function concludeDuelOutcome(isWin) {
     const sal = RANK_SALARIES[nextRank];
     addLog(`🏆 <b>[${nextRank}급 승급 통과!]</b> 모든 스탯 +${perk.allStats}, 축하금 +${perk.gold.toLocaleString()}G, 분기 급여 ${sal.toLocaleString()}G 인상!`, 'rank');
 
-    winterRes = {
-      title: `🏆 4분기 겨울: [${nextRank}급] 승급 결투 통과!`,
+    duelEventRes = {
+      prefix: '❄️ 제 4사건',
+      icon: '🏆',
+      title: `🏆 [${nextRank}급] 승급 결투 통과!`,
       desc: `심사관을 제압하고 <b>${nextRank}급 공인 모험가</b>로 공식 승급했습니다!<br>축하금 +${perk.gold.toLocaleString()}G, 전 스탯 +${perk.allStats}, ${perk.dungeonText}`
     };
   } else {
-    addLog(`⚠️ 4분기 겨울: [${nextRank}급] 승급 심사에서 아쉽게 탈락했습니다. 내년에 다시 도전할 수 있습니다.`, 'normal');
-    winterRes = {
-      title: `⚠️ 4분기 겨울: [${nextRank}급] 승급 심사 탈락`,
-      desc: `심사관의 벽을 넘지 못했습니다. 내년 4분기에 다시 승급 심사에 도전할 수 있습니다.`
+    addLog(`⚠️ [${nextRank}급] 승급 심사에서 아쉽게 탈락했습니다. 내년에 다시 도전할 수 있습니다.`, 'normal');
+    duelEventRes = {
+      prefix: '❄️ 제 4사건',
+      icon: '⚠️',
+      title: `⚠️ [${nextRank}급] 승급 심사 탈락`,
+      desc: `심사관의 벽을 넘지 못했습니다. 내년에 다시 승급 심사에 도전할 수 있습니다.`
     };
   }
 
   const ctx = pendingYearContext;
   pendingYearContext = null;
-  ctx.winter = winterRes;
+  ctx.events.push(duelEventRes);
 
-  finishYearExecution(ctx);
+  finishYearRollover(ctx);
 }
 
-/* 1년 결산 마무리 */
-function finishYearExecution(summary) {
+/* ==================== YEAR ROLLOVER & SUMMARY ==================== */
+function finishYearRollover(summary) {
   // Pay Annual Guild Salary
   const salary = (RANK_SALARIES[state.rank] || 250) * 4;
   state.gold += salary;
   addLog(`💰 [길드 연간 정기 급여] 공인 ${state.rank}급 1년분 유지비 <b>+${salary.toLocaleString()}G</b> 수령!`, 'reward');
 
-  // Kickru Style Natural Growth
+  // Kickru Natural Growth
   applyYearlyRandomGrowth();
 
   // Age increments
@@ -2040,42 +2132,27 @@ function renderAnnualReport(s, salary) {
   const netCp = calculateCP() - s.startCp;
 
   const body = document.getElementById('reportBody');
+  let eventsHtml = '';
+
+  s.events.forEach((ev, idx) => {
+    const colors = ['#60a5fa', '#10b981', '#fbbf24', '#c084fc'];
+    eventsHtml += `
+      <div class="season-card">
+        <div class="season-card-header" style="color: ${colors[idx % 4]};">
+          <span>${ev.prefix}</span>
+        </div>
+        <div><b>${ev.icon} ${ev.title}</b></div>
+        <div style="color: var(--text-muted); font-size: 0.8rem; margin-top:2px;">${ev.desc}</div>
+      </div>
+    `;
+  });
+
   body.innerHTML = `
     <div style="font-size: 0.88rem; color: #cbd5e1; margin-bottom: 8px;">
-      <b>${state.name}</b>의 ${s.age}세 한 해 모험 4분기가 모두 성공적으로 마무리되었습니다.
+      <b>${state.name}</b>의 ${s.age}세 한 해 동안 4개의 사건이 다이내믹하게 전개되었습니다.
     </div>
 
-    <div class="season-card">
-      <div class="season-card-header" style="color: #60a5fa;">
-        <span>🌸 1분기 (봄): 던전 탐험</span>
-      </div>
-      <div><b>${s.spring.title}</b></div>
-      <div style="color: var(--text-muted); font-size: 0.8rem;">${s.spring.desc}</div>
-    </div>
-
-    <div class="season-card">
-      <div class="season-card-header" style="color: #10b981;">
-        <span>☀️ 2분기 (여름): 전신 수련</span>
-      </div>
-      <div><b>${s.summer.title}</b></div>
-      <div style="color: var(--text-muted); font-size: 0.8rem;">${s.summer.desc}</div>
-    </div>
-
-    <div class="season-card">
-      <div class="season-card-header" style="color: #fbbf24;">
-        <span>🍁 3분기 (가을): 길드 의뢰</span>
-      </div>
-      <div><b>${s.autumn.title}</b></div>
-      <div style="color: var(--text-muted); font-size: 0.8rem;">${s.autumn.desc}</div>
-    </div>
-
-    <div class="season-card">
-      <div class="season-card-header" style="color: #c084fc;">
-        <span>❄️ 4분기 (겨울): 이벤트 및 심사</span>
-      </div>
-      <div><b>${s.winter.title}</b></div>
-      <div style="color: var(--text-muted); font-size: 0.8rem;">${s.winter.desc}</div>
-    </div>
+    ${eventsHtml}
 
     <div style="background: #0f172a; border: 1px solid var(--border); border-radius: 10px; padding: 12px; margin-top: 4px; font-size: 0.85rem; line-height: 1.6;">
       <div style="font-weight: 800; color: #fff; margin-bottom: 4px;">📊 ${s.age}세 연간 성장 총정산</div>
@@ -2110,11 +2187,11 @@ function advanceClass(cls) {
   state.isAdvanced = true;
   const c = CLASS_CONFIG[cls];
 
-  // Grant 1st tier equipment
+  // Grant 1st tier equipment of chosen class
   const wpnList = CLASS_WEAPONS[cls];
   const armList = CLASS_ARMORS[cls];
-  state.weapon = { name: wpnList[0].name, plus: 0, power: wpnList[0].stat, tier: 1 };
-  state.armor = { name: armList[0].name, plus: 0, power: armList[0].stat, tier: 1 };
+  state.weapon = { name: wpnList[0].name, power: wpnList[0].stat, defBonus: wpnList[0].defBonus || 0, tier: 1 };
+  state.armor = { name: armList[0].name, power: armList[0].stat, atkBonus: armList[0].atkBonus || 0, tier: 1 };
   state.unlockedWpnTier = 1;
   state.unlockedArmTier = 1;
 
@@ -2132,6 +2209,8 @@ function advanceClass(cls) {
   addLog(`✨ 18세 성인의 분기점에서 <b>[${c.name}]</b>으로 정식 전직을 완료했습니다! 직업 각성 완료!`, 'rank');
 
   updateUI();
+  renderWeaponShop();
+  renderArmorShop();
 }
 
 /* ==================== PROMOTION STATUS MODAL ==================== */
@@ -2163,7 +2242,7 @@ function showPromotionStatusModal() {
       <div style="background: rgba(15,23,42,0.6); border: 1px solid var(--border); border-radius: 10px; padding: 14px;">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 10px;">
           <span style="font-size: 1.1rem; font-weight: 800; color: #a855f7;">차기 승급: [${nextRank}급 공인]</span>
-          <span style="font-size: 0.78rem; background: #1e1b4b; padding: 3px 8px; border-radius: 6px; border: 1px solid #4338ca; color:#a5b4fc;">연례 4분기 심사</span>
+          <span style="font-size: 0.78rem; background: #1e1b4b; padding: 3px 8px; border-radius: 6px; border: 1px solid #4338ca; color:#a5b4fc;">길드 심사 개시제</span>
         </div>
 
         <div style="background: #0f172a; border-radius: 8px; padding: 10px; font-size: 0.84rem; line-height: 1.7; border: 1px solid #1e293b; margin-bottom: 12px;">
@@ -2180,7 +2259,7 @@ function showPromotionStatusModal() {
         </div>
 
         <div style="font-size: 0.78rem; color: #94a3b8; margin-top: 10px;">
-          💡 1년 모험 수행 버튼을 누를 때 두 요건을 모두 충족하면, 4분기에 자동으로 승급 심사 신청 팝업이 노출됩니다.
+          💡 길드 정기 심사는 특정 연도에 개시됩니다. 요건을 갖춘 상태에서 심사가 열리면 1년 수행 시작 시 승급 결투 도전 여부를 묻습니다.
         </div>
       </div>
     `;
@@ -2189,142 +2268,46 @@ function showPromotionStatusModal() {
   openModal('modalPromotionStatus');
 }
 
-/* ==================== FORGE & SEQUENTIAL TIER SHOP ==================== */
-function openForgeModal() {
+/* ==================== EXPANDED SHOP SYSTEM (NO ENHANCEMENT) ==================== */
+function openShopModal() {
   playSound('click');
-  switchForgeSubTab('upgrade');
-  selectForgeTarget(forgeTarget);
+  switchShopTab('weapon');
   renderWeaponShop();
   renderArmorShop();
-  document.getElementById('forgeResultToast').style.display = 'none';
   document.getElementById('shopGoldText').textContent = state.gold.toLocaleString() + ' G';
-  openModal('modalForge');
+  openModal('modalShop');
 }
 
-function switchForgeSubTab(tab) {
+function switchShopTab(tab) {
   playSound('click');
-  document.getElementById('forgeSubUpgrade').style.display = tab === 'upgrade' ? 'flex' : 'none';
-  document.getElementById('forgeSubWeapon').style.display = tab === 'weapon' ? 'flex' : 'none';
-  document.getElementById('forgeSubArmor').style.display = tab === 'armor' ? 'flex' : 'none';
+  document.getElementById('shopTabWeapon').style.display = tab === 'weapon' ? 'flex' : 'none';
+  document.getElementById('shopTabArmor').style.display = tab === 'armor' ? 'flex' : 'none';
 
-  document.getElementById('btnForgeTabUpgrade').className = tab === 'upgrade' ? 'btn-sm active' : 'btn-sm';
-  document.getElementById('btnForgeTabWpn').className = tab === 'weapon' ? 'btn-sm active' : 'btn-sm';
-  document.getElementById('btnForgeTabArm').className = tab === 'armor' ? 'btn-sm active' : 'btn-sm';
-
+  document.getElementById('btnShopTabWpn').className = tab === 'weapon' ? 'btn-sm active' : 'btn-sm';
+  document.getElementById('btnShopTabArm').className = tab === 'armor' ? 'btn-sm active' : 'btn-sm';
   document.getElementById('shopGoldText').textContent = state.gold.toLocaleString() + ' G';
-}
-
-function selectForgeTarget(type) {
-  playSound('click');
-  forgeTarget = type;
-  document.getElementById('btnTargetWpn').style.background = type === 'weapon' ? 'var(--primary)' : '#334155';
-  document.getElementById('btnTargetWpn').style.color = type === 'weapon' ? '#000' : '#fff';
-  document.getElementById('btnTargetArm').style.background = type === 'armor' ? 'var(--primary)' : '#334155';
-  document.getElementById('btnTargetArm').style.color = type === 'armor' ? '#000' : '#fff';
-
-  const item = state[type];
-  document.getElementById('forgeItemName').textContent = `${item.name} (+${item.plus})`;
-
-  const mBonus = getMilestoneBonus(item.plus);
-  const mText = mBonus > 0 ? ` (🔥 5강 보너스 +${mBonus})` : '';
-  const statType = type === 'weapon' ? (state.charClass === 'mage' ? '마력' : '공격') : '방어';
-  document.getElementById('forgeItemStat').textContent = `기본 수치: ${item.power} | ${statType} 추가: +${Math.round(item.plus * 3.5 + mBonus)}${mText}`;
-
-  const curPlus = item.plus;
-  let successRate = curPlus < 20 ? FORGE_RATES[curPlus] : 0;
-  let failPenalty = curPlus >= 15 ? '⚠️ 1강 하락 (파손 없음)' : '등급 유지 (안전)';
-
-  let cost = curPlus < 20 ? FORGE_COSTS[curPlus] : FORGE_COSTS[19];
-  document.getElementById('forgeRateSuccess').textContent = curPlus >= 20 ? 'MAX' : (successRate + '%');
-  document.getElementById('forgeRateFailPenalty').textContent = failPenalty;
-  document.getElementById('forgeCost').textContent = curPlus >= 20 ? '최고단계' : (cost.toLocaleString() + ' G');
-}
-
-function showForgeToast(type, text) {
-  const toast = document.getElementById('forgeResultToast');
-  toast.className = `forge-toast ${type}`;
-  toast.innerHTML = text;
-  toast.style.display = 'block';
-}
-
-function attemptForge() {
-  const item = state[forgeTarget];
-  const curPlus = item.plus;
-  if (curPlus >= 20) {
-    showForgeToast('success', '👑 이미 최고 한계치(+20강 MAX)에 도달한 신화급 장비입니다!');
-    return;
-  }
-
-  let cost = curPlus < 20 ? FORGE_COSTS[curPlus] : FORGE_COSTS[19];
-  if (state.gold < cost) {
-    showForgeToast('downgrade', '❌ 골드가 부족합니다! 연간 모험을 수행하여 골드를 모으세요.');
-    return;
-  }
-
-  state.gold -= cost;
-  updateUI();
-
-  playSound('hammer');
-  const btn = document.getElementById('btnDoForge');
-  btn.disabled = true;
-  btn.textContent = '🔨 제련 중...';
-
-  setTimeout(() => {
-    btn.disabled = false;
-    btn.textContent = '🔥 망치질하기';
-
-    const isCrit = Math.random() < 0.03;
-
-    if (isCrit) {
-      item.plus = Math.min(20, item.plus + 2);
-      playSound('crit');
-      const leapText = `🌟 [대성공!! 3% 확률 발동] 2단계 폭풍 상승! (+${item.plus}강 달성!)`;
-      showForgeToast('crit', leapText);
-      addLog(`🌟 대장간 제련 중 경이로운 빛이 뿜어져 나와 [${item.name}]이(가) <b>2단계 대성공(+${item.plus}강)</b>을 달성했습니다!`, 'crit');
-    } else {
-      const successRate = FORGE_RATES[curPlus];
-      const roll = Math.random() * 100;
-
-      if (roll < successRate) {
-        item.plus++;
-        playSound('victory');
-        const milestoneMsg = (item.plus % 5 === 0) ? ' [🔥 5강 달성 스탯 대폭 증가!]' : '';
-        showForgeToast('success', `🎉 강화 성공! +${item.plus}강 달성!${milestoneMsg}`);
-        addLog(`🔥 대장간 강화 성공! [${item.name}]이(가) <b>+${item.plus}강</b>에 도달했습니다!${milestoneMsg}`, 'forge');
-      } else {
-        playSound('fail');
-        if (curPlus < 15) {
-          showForgeToast('fail', `🛡️ 강화 실패... 안전 구간이므로 등급이 유지되었습니다 (+${item.plus}강)`);
-          addLog(`대장간 강화 실패... 안전 구간이므로 등급이 유지되었습니다 (+${item.plus})`, 'forge');
-        } else {
-          item.plus = Math.max(14, item.plus - 1);
-          showForgeToast('downgrade', `⚠️ 강화 실패 충격으로 1강 하락했습니다 (+${item.plus}강)`);
-          addLog(`대장간 강화 실패 충격으로 장비가 1강 하락했습니다 (+${item.plus})`, 'danger');
-        }
-      }
-    }
-
-    selectForgeTarget(forgeTarget);
-    updateUI();
-  }, 500);
 }
 
 function renderWeaponShop() {
   const list = document.getElementById('weaponShopList');
   list.innerHTML = '';
   const items = CLASS_WEAPONS[state.charClass] || [];
-  const currentUnlockedTier = state.unlockedWpnTier || 0;
+  const currentUnlockedTier = state.unlockedWpnTier || 1;
 
   items.forEach(it => {
     const row = document.createElement('div');
     const isEquipped = state.weapon.name === it.name;
+    // Sequential unlock: tier 1 is always unlocked. Tier N requires tier N-1 unlocked.
     const isUnlocked = it.tier === 1 || currentUnlockedTier >= (it.tier - 1);
 
     row.className = `item-row ${!isUnlocked ? 'locked' : ''}`;
+    const tagClass = it.isEndGame ? 'endgame-tag' : 'tier-tag';
+    const tagText = it.isEndGame ? '👑 종결선택' : `${it.tier}티어`;
+
     row.innerHTML = `
       <div class="item-row-info">
         <div class="item-row-title">
-          <span class="tier-tag">${it.tier}티어</span>
+          <span class="${tagClass}">${tagText}</span>
           <span>${it.name}</span> 
           ${isEquipped ? '<span style="color:#10b981; font-size:0.75rem;">[착용 중]</span>' : ''} 
           <span style="color:var(--gold); font-size:0.82rem;">(${it.cost.toLocaleString()}G)</span>
@@ -2345,7 +2328,7 @@ function renderArmorShop() {
   const list = document.getElementById('armorShopList');
   list.innerHTML = '';
   const items = CLASS_ARMORS[state.charClass] || [];
-  const currentUnlockedTier = state.unlockedArmTier || 0;
+  const currentUnlockedTier = state.unlockedArmTier || 1;
 
   items.forEach(it => {
     const row = document.createElement('div');
@@ -2353,10 +2336,13 @@ function renderArmorShop() {
     const isUnlocked = it.tier === 1 || currentUnlockedTier >= (it.tier - 1);
 
     row.className = `item-row ${!isUnlocked ? 'locked' : ''}`;
+    const tagClass = it.isEndGame ? 'endgame-tag' : 'tier-tag';
+    const tagText = it.isEndGame ? '👑 종결선택' : `${it.tier}티어`;
+
     row.innerHTML = `
       <div class="item-row-info">
         <div class="item-row-title">
-          <span class="tier-tag">${it.tier}티어</span>
+          <span class="${tagClass}">${tagText}</span>
           <span>${it.name}</span> 
           ${isEquipped ? '<span style="color:#10b981; font-size:0.75rem;">[착용 중]</span>' : ''} 
           <span style="color:var(--gold); font-size:0.82rem;">(${it.cost.toLocaleString()}G)</span>
@@ -2384,13 +2370,12 @@ function buyWeapon(id) {
   }
 
   state.gold -= it.cost;
-  state.weapon = { name: it.name, plus: 0, power: it.stat, tier: it.tier };
-  state.unlockedWpnTier = Math.max(state.unlockedWpnTier || 0, it.tier);
+  state.weapon = { name: it.name, power: it.stat, defBonus: it.defBonus || 0, tier: it.tier };
+  state.unlockedWpnTier = Math.max(state.unlockedWpnTier || 1, it.tier);
 
   playSound('victory');
   addLog(`🗡️ 상점에서 [${it.tier}티어: ${it.name}]을(를) 구매하여 장착했습니다! (-${it.cost.toLocaleString()}G)`, 'reward');
   renderWeaponShop();
-  selectForgeTarget('weapon');
   updateUI();
 }
 
@@ -2405,13 +2390,12 @@ function buyArmor(id) {
   }
 
   state.gold -= it.cost;
-  state.armor = { name: it.name, plus: 0, power: it.stat, tier: it.tier };
-  state.unlockedArmTier = Math.max(state.unlockedArmTier || 0, it.tier);
+  state.armor = { name: it.name, power: it.stat, atkBonus: it.atkBonus || 0, tier: it.tier };
+  state.unlockedArmTier = Math.max(state.unlockedArmTier || 1, it.tier);
 
   playSound('victory');
   addLog(`🛡️ 상점에서 [${it.tier}티어: ${it.name}]을(를) 구매하여 장착했습니다! (-${it.cost.toLocaleString()}G)`, 'reward');
   renderArmorShop();
-  selectForgeTarget('armor');
   updateUI();
 }
 
@@ -2449,8 +2433,8 @@ function retireHero(reason) {
     finalGold: state.gold,
     finalFame: state.fame,
     bossesDefeated: state.bossesDefeated,
-    weaponText: `${state.weapon.name} (+${state.weapon.plus})`,
-    armorText: `${state.armor.name} (+${state.armor.plus})`,
+    weaponText: `${state.weapon.name} [${state.weapon.tier}티어]`,
+    armorText: `${state.armor.name} [${state.armor.tier}티어]`,
     score: score,
     futureJob: futureJob,
     reason: reason,
@@ -2471,8 +2455,8 @@ function retireHero(reason) {
       <div>• <b>종합 전투력</b>: <b>${cp.toLocaleString()} CP</b></div>
       <div>• <b>축적 자산</b>: 💰 ${state.gold.toLocaleString()} G | 🎖️ 명성 ${state.fame.toLocaleString()}</div>
       <div>• <b>보스 격파</b>: 👑 총 ${state.bossesDefeated}체 토벌</div>
-      <div>• <b>최종 무기</b>: ${state.weapon.name} (+${state.weapon.plus}) [${state.weapon.tier}티어]</div>
-      <div>• <b>최종 방어구</b>: ${state.armor.name} (+${state.armor.plus}) [${state.armor.tier}티어]</div>
+      <div>• <b>최종 무기</b>: ${state.weapon.name} [${state.weapon.tier}티어]</div>
+      <div>• <b>최종 방어구</b>: ${state.armor.name} [${state.armor.tier}티어]</div>
       <div style="border-top: 1px solid #334155; margin-top: 8px; padding-top: 8px;">
         🔮 <b>은퇴 후 진로</b>: <span style="color:#38bdf8; font-weight:800;">${futureJob}</span><br>
         ⭐ <b>커리어 평점 (Score)</b>: <span style="color:var(--gold); font-size:1.15rem; font-weight:900;">${score.toLocaleString()} 점</span>
@@ -2510,10 +2494,10 @@ function executeCreateNewHero() {
     int: 10,
     dex: 11,
     def: 10,
-    unlockedWpnTier: 0,
-    unlockedArmTier: 0,
-    weapon: { name: '낡은 단검', plus: 0, power: 6, tier: 0 },
-    armor: { name: '수습생 조끼', plus: 0, power: 5, tier: 0 },
+    unlockedWpnTier: 1,
+    unlockedArmTier: 1,
+    weapon: { name: '수습생 나무검', power: 6, defBonus: 0, tier: 1 },
+    armor: { name: '수습생 가죽 조끼', power: 6, atkBonus: 0, tier: 1 },
     gold: 300,
     fame: 10,
     bossesDefeated: 0,
