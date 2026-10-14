@@ -781,7 +781,7 @@
   <div class="modal-box">
     <div class="modal-header">
       <h3 id="reportTitle">📅 연간 모험 결산 리포트</h3>
-      <button class="btn-close-icon" onclick="closeModal('modalAnnualReport')">✕</button>
+      <button class="btn-close-icon" onclick="finishAnnualReport()">✕</button>
     </div>
     <div class="modal-body" id="reportBody">
       <!-- Dynamically filled with 4 seasons result -->
@@ -1025,13 +1025,16 @@ let audioCtx = null;
 let soundEnabled = true;
 
 function initAudio() {
-  if (!audioCtx) {
-    const AudioContext = window.AudioContext || window.webkitAudioContext;
-    audioCtx = new AudioContext();
-  }
-  if (audioCtx.state === 'suspended') {
-    audioCtx.resume();
-  }
+  try {
+    if (!audioCtx) {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (!AudioCtx) return;
+      audioCtx = new AudioCtx();
+    }
+    if (audioCtx && audioCtx.state === 'suspended') {
+      audioCtx.resume();
+    }
+  } catch (e) {}
 }
 
 document.addEventListener('click', initAudio, { once: true, passive: true });
@@ -1817,7 +1820,10 @@ function launchThreeSecondLoading(challengeExam) {
     }
 
     if (elapsed >= duration) {
-      clearInterval(timer);
+      if (window.loadingTimer) {
+        clearInterval(window.loadingTimer);
+        window.loadingTimer = null;
+      }
       modal.style.display = 'none';
       if (btn) btn.disabled = false;
       executeDynamicYear(challengeExam);
@@ -2107,6 +2113,8 @@ function startPromotionDuelArena() {
   const btnSkill = document.getElementById('btnDuelSkill');
   btnSkill.textContent = `✨ ${skillNames[state.charClass] || '고유기'} (3/3)`;
   btnSkill.disabled = false;
+  const btnPotion = document.getElementById('btnDuelPotion');
+  if (btnPotion) btnPotion.disabled = false;
 
   openModal('modalPromotion');
 }
@@ -2452,7 +2460,8 @@ function showPromotionStatusModal() {
     openMastersModal();
     return;
   }
-  const body = document.getElementById('promoStatusBody'); else {
+  const body = document.getElementById('promoStatusBody');
+  {
     const nextRank = RANKS[nextRankIdx];
     const reqCpTable = { 'E': 60, 'D': 130, 'C': 260, 'B': 450, 'A': 750, 'S': 1200, 'LEGEND': 1800 };
     const reqFameTable = { 'E': 20, 'D': 60, 'C': 150, 'B': 300, 'A': 600, 'S': 1200, 'LEGEND': 2500 };
@@ -2571,6 +2580,8 @@ function challengeHiddenMaster(id) {
   const btnSkill = document.getElementById('btnDuelSkill');
   btnSkill.textContent = `✨ ${skillNames[state.charClass] || '고유기'} (3/3)`;
   btnSkill.disabled = false;
+  const btnPotion = document.getElementById('btnDuelPotion');
+  if (btnPotion) btnPotion.disabled = false;
 
   openModal('modalPromotion');
 }
@@ -3026,6 +3037,10 @@ function executeCreateNewHero() {
     gold: 300,
     fame: 10,
     bossesDefeated: 0,
+    mastersDefeated: 0,
+    defeatedMasterIds: [],
+    elixirsConsumed: 0,
+    salaryMultiplier: 1.0,
     isRetired: false,
     logs: []
   };
@@ -3033,6 +3048,9 @@ function executeCreateNewHero() {
   saveGameToLocalStorage();
   clearLogs();
   addLog(`15세의 봄, <b>${state.name}</b>이(가) 수습 모험가로 길드에 등록되었습니다. (18세 성인이 되는 해에 전문직 전직)`, 'event');
+  renderWeaponShop();
+  renderArmorShop();
+  renderElixirShop();
   updateUI();
   playSound('victory');
 }
@@ -3084,6 +3102,12 @@ function closeModal(id) {
 document.querySelectorAll('.modal-overlay').forEach(overlay => {
   overlay.addEventListener('click', (e) => {
     if (e.target === overlay) {
+      const nonDismissible = ['modalYearLoading', 'modalPromotion', 'modalAdvancement', 'modalEnding'];
+      if (nonDismissible.includes(overlay.id)) return;
+      if (overlay.id === 'modalAnnualReport') {
+        finishAnnualReport();
+        return;
+      }
       overlay.style.display = 'none';
     }
   });
