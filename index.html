@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>견습에서 전설까지 v3.6 : 나만의 모험가 키우기</title>
+<title>견습에서 전설까지 v4.0 : 나만의 모험가 키우기</title>
 <style>
   :root {
     --bg-main: #0a0d14;
@@ -250,7 +250,6 @@
     align-items: center;
   }
 
-  /* Primary Combat Stat Banner */
   .primary-atk-banner {
     background: #091222;
     border: 1px solid #1e3a8a;
@@ -422,6 +421,7 @@
   .log-entry.rank { border-left-color: #a855f7; background: #191424; }
   .log-entry.forge { border-left-color: #f97316; background: #1f1610; }
   .log-entry.crit { border-left-color: #eab308; background: #261f0c; }
+  .log-entry.growth { border-left-color: #06b6d4; background: #082f49; }
   .log-season { color: var(--text-muted); font-size: 0.75rem; margin-right: 4px; }
 
   /* Modals */
@@ -720,6 +720,24 @@
   }
   .combat-btns .btn-sm { min-height: 48px; }
 
+  /* Class Advancement Cards */
+  .advance-card {
+    background: #090e17;
+    border: 1px solid #334155;
+    border-radius: 12px;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .advance-card:hover {
+    border-color: var(--primary);
+    background: #111a2e;
+    transform: translateY(-2px);
+  }
+
   /* Ranking Table */
   .ranking-table {
     width: 100%;
@@ -751,8 +769,8 @@
 <div class="container">
   <header>
     <div class="logo-title">
-      <h1>⚔️ 견습에서 전설까지 <span style="font-size: 0.72rem; background: #f59e0b22; color: var(--primary); padding: 2px 7px; border-radius: 10px; border: 1px solid #f59e0b44;">v3.6</span></h1>
-      <p>순차 장비 해금 · 승급 특권 체계 · 나만의 모험가 육성기</p>
+      <h1>⚔️ 견습에서 전설까지 <span style="font-size: 0.72rem; background: #f59e0b22; color: var(--primary); padding: 2px 7px; border-radius: 10px; border: 1px solid #f59e0b44;">v4.0 Career</span></h1>
+      <p>15세 수습생 시작 · 18세 운명의 전직 · 1년 단위 랜덤 성장</p>
     </div>
     <div class="header-actions">
       <div class="nav-tabs">
@@ -772,21 +790,21 @@
       <div class="char-header">
         <div class="char-identity">
           <h2 id="uiName">카엘</h2>
-          <div class="char-class" id="uiClass">클래스: 전사 (Warrior)</div>
+          <div class="char-class" id="uiClass">클래스: 수습 모험가</div>
         </div>
         <div class="badge-rank rank-F" id="uiRank">F급</div>
       </div>
 
       <!-- Class Passive Badge -->
       <div class="passive-badge" id="uiPassive">
-        <div class="passive-title">고유 특성: 강철의 의지</div>
-        <div id="uiPassiveDesc" style="color: #cbd5e1;">받는 피해 20% 감소, 던전 보스 치명타 +20% | <b>[신의 기적] 체력 0 도달 시 20% 생환</b></div>
+        <div class="passive-title">고유 특성: 무한한 잠재력</div>
+        <div id="uiPassiveDesc" style="color: #cbd5e1;">성장 가능성이 무궁무진한 수습생. 18세 성인이 되는 해에 전문 클래스로 전직합니다. | <b>[신의 기적] 체력 0 도달 시 20% 생환</b></div>
       </div>
 
       <div>
         <div class="status-row">
           <span style="color: var(--text-muted); font-weight: 700;">생명력 (HP)</span>
-          <span id="uiHpText" style="font-weight: 900; color:#fff;">120 / 120</span>
+          <span id="uiHpText" style="font-weight: 900; color:#fff;">100 / 100</span>
         </div>
         <div class="gauge-wrap">
           <div class="gauge-bar hp-bar" id="uiHpBar" style="width: 100%;"></div>
@@ -796,7 +814,7 @@
       <div class="overall-power">
         <div>
           <div style="font-size: 0.78rem; color: #93c5fd; font-weight: 800;">종합 전투력 (CP)</div>
-          <div style="font-size: 1.45rem; font-weight: 900; color: #fff;" id="uiCp">58</div>
+          <div style="font-size: 1.45rem; font-weight: 900; color: #fff;" id="uiCp">42</div>
         </div>
         <div style="text-align: right;">
           <div style="font-size: 0.75rem; color: var(--text-muted);">전투 등급</div>
@@ -806,38 +824,38 @@
 
       <!-- Primary Combat Stat Banner -->
       <div class="primary-atk-banner" id="uiPrimaryAtkBanner">
-        <div class="primary-atk-label" id="uiPrimaryAtkLabel">⚔️ 물리 공격력</div>
-        <div class="primary-atk-value" id="uiPrimaryAtkValue">26</div>
+        <div class="primary-atk-label" id="uiPrimaryAtkLabel">⚔️ 기초 전투력</div>
+        <div class="primary-atk-value" id="uiPrimaryAtkValue">20</div>
       </div>
 
       <!-- 4 Base Attributes -->
       <div class="stats-matrix">
         <div class="stat-item">
           <span class="stat-label">⚔️ 근력 (STR)</span>
-          <span class="stat-value" id="uiStr">18</span>
+          <span class="stat-value" id="uiStr">12</span>
         </div>
         <div class="stat-item">
           <span class="stat-label">✨ 마력 (INT)</span>
-          <span class="stat-value" id="uiInt">6</span>
+          <span class="stat-value" id="uiInt">10</span>
         </div>
         <div class="stat-item">
           <span class="stat-label">🏃 민첩 (DEX)</span>
-          <span class="stat-value" id="uiDex">10</span>
+          <span class="stat-value" id="uiDex">11</span>
         </div>
         <div class="stat-item">
           <span class="stat-label">🛡️ 방어 (DEF)</span>
-          <span class="stat-value" id="uiDef">20</span>
+          <span class="stat-value" id="uiDef">10</span>
         </div>
       </div>
 
       <div class="equipment-box">
         <div class="equip-slot">
           <span style="color: var(--text-muted); font-weight:600;">무기:</span>
-          <span class="equip-name" id="uiWeapon">훈련용 대검 (+0)</span>
+          <span class="equip-name" id="uiWeapon">낡은 단검 (+0)</span>
         </div>
         <div class="equip-slot">
           <span style="color: var(--text-muted); font-weight:600;">방어구:</span>
-          <span class="equip-name" id="uiArmor">가죽 덧댄 갑옷 (+0)</span>
+          <span class="equip-name" id="uiArmor">수습생 조끼 (+0)</span>
         </div>
         <div class="equip-slot">
           <span style="color: var(--text-muted); font-weight:600;">장신구:</span>
@@ -973,7 +991,7 @@
 
 <!-- ==================== MODALS ==================== -->
 
-<!-- MODAL: 12 DUNGEONS SELECT (RANK-LOCKED!) -->
+<!-- MODAL: 12 DUNGEONS SELECT -->
 <div class="modal-overlay" id="modalDungeonSelect">
   <div class="modal-box">
     <div class="sheet-handle"></div>
@@ -1036,7 +1054,7 @@
         <div class="item-row">
           <div class="item-row-info">
             <div class="item-row-title">✨ 고대 마도서 명상 (마나 정제)</div>
-            <div class="item-row-desc">정신력과 마나 친화력 강화: <b>마력(INT) +3~6</b> (마법사는 1.5배 보너스!)</div>
+            <div class="item-row-desc">정신력과 마나 친화력 강화: <b>마력(INT) +3~6</b></div>
           </div>
           <button class="btn-sm" onclick="trainStat('int')">마력 수련</button>
         </div>
@@ -1062,7 +1080,7 @@
   </div>
 </div>
 
-<!-- MODAL: FORGE & SEQUENTIAL TIER SHOP (v3.6) -->
+<!-- MODAL: FORGE & SEQUENTIAL TIER SHOP -->
 <div class="modal-overlay" id="modalForge">
   <div class="modal-box">
     <div class="sheet-handle"></div>
@@ -1076,9 +1094,8 @@
       </div>
     </div>
     <div class="modal-body">
-      <!-- Live Gold Display -->
       <div style="display: flex; justify-content: space-between; align-items: center; background: #0c1424; padding: 10px 14px; border-radius: 8px; border: 1px solid var(--border);">
-        <span style="font-size: 0.85rem; color: #94a3b8;">현재 모험가: <b id="shopClassNotice" style="color: #60a5fa;">[전사]</b></span>
+        <span style="font-size: 0.85rem; color: #94a3b8;">현재 모험가: <b id="shopClassNotice" style="color: #60a5fa;">[수습 모험가]</b></span>
         <span style="font-size: 0.95rem; font-weight: 800; color: var(--gold);">💰 보유 금액: <b id="shopGoldText">300 G</b></span>
       </div>
 
@@ -1090,7 +1107,7 @@
             <button class="btn-sm" id="btnTargetArm" style="flex:1; background:#334155; color:#fff;" onclick="selectForgeTarget('armor')">방어구 제련</button>
           </div>
 
-          <div class="forge-item-title" id="forgeItemName">훈련용 대검 (+0)</div>
+          <div class="forge-item-title" id="forgeItemName">낡은 단검 (+0)</div>
           <div style="font-size: 0.88rem; color: #93c5fd;" id="forgeItemStat">+0강 스탯</div>
 
           <div class="forge-rate-box">
@@ -1101,14 +1118,12 @@
           </div>
 
           <div style="font-size: 0.78rem; color: #cbd5e1; background: #0c1424; padding: 8px 10px; border-radius: 8px; width: 100%; text-align: left; line-height: 1.45; border: 1px solid #1e293b;">
-            🔥 <b>v3.6 대장간 밸런스 규칙</b>:<br>
+            🔥 <b>대장간 밸런스 규칙</b>:<br>
             • <b>1~10강 90% 고정</b> | <b>11~15강 88%~80%</b> | <b>16~20강 75%~55%</b><br>
             • <b>전 구간 3% 확률로 2단계 대성공(+2강)</b> 발동!<br>
-            • <b>5강마다(+5, 10, 15, 20) 스탯 폭증</b> | <b>15강부터 실패 시 1강 하락</b><br>
-            • 고강화는 많은 골드가 소모되어 신중한 도전이 필요합니다.
+            • <b>5강마다(+5, 10, 15, 20) 스탯 폭증</b> | <b>15강부터 실패 시 1강 하락</b>
           </div>
 
-          <!-- Rapid Feedback Toast -->
           <div id="forgeResultToast" class="forge-toast"></div>
 
           <button class="btn-sm" id="btnDoForge" style="width: 100%; padding: 14px; font-size: 1.05rem; background: linear-gradient(135deg, #f59e0b, #d97706);" onclick="attemptForge()">
@@ -1117,18 +1132,18 @@
         </div>
       </div>
 
-      <!-- Weapon Shop SubTab (Sequential Progression!) -->
+      <!-- Weapon Shop SubTab -->
       <div id="forgeSubWeapon" style="display: none; flex-direction: column; gap: 8px;">
         <div style="font-size: 0.82rem; color: var(--text-muted); line-height: 1.4;">
-          🛡️ <b>순차 티어 해금</b>: 이전 단계(하위) 장비를 구매해야 다음 티어의 상위 무기가 해금됩니다. 중간급 장비를 거쳐가며 모험가를 성장시키세요.
+          🛡️ <b>순차 티어 해금</b>: 이전 단계 장비를 구매해야 다음 티어의 상위 무기가 해금됩니다.
         </div>
         <div class="item-list" id="weaponShopList"></div>
       </div>
 
-      <!-- Armor Shop SubTab (Sequential Progression!) -->
+      <!-- Armor Shop SubTab -->
       <div id="forgeSubArmor" style="display: none; flex-direction: column; gap: 8px;">
         <div style="font-size: 0.82rem; color: var(--text-muted); line-height: 1.4;">
-          🛡️ <b>순차 티어 해금</b>: 이전 단계(하위) 방어구를 구매해야 다음 티어의 방어구가 해금됩니다.
+          🛡️ <b>순차 티어 해금</b>: 이전 단계 방어구를 구매해야 다음 티어의 방어구가 해금됩니다.
         </div>
         <div class="item-list" id="armorShopList"></div>
       </div>
@@ -1139,7 +1154,7 @@
   </div>
 </div>
 
-<!-- MODAL: PROMOTION DUEL & BENEFITS SHOWCASE -->
+<!-- MODAL: PROMOTION DUEL & BENEFITS -->
 <div class="modal-overlay" id="modalPromotion">
   <div class="modal-box">
     <div class="sheet-handle"></div>
@@ -1148,9 +1163,8 @@
       <button class="btn-close-icon" onclick="closeModal('modalPromotion')">✕</button>
     </div>
     <div class="modal-body">
-      <!-- Promotion Perks Showcase Box -->
       <div id="promotionPerksBox" style="background: linear-gradient(135deg, #1e1b4b, #172554); border: 1px solid #6366f1; border-radius: 10px; padding: 12px; font-size: 0.85rem; line-height: 1.5;">
-        <div style="font-weight: 800; color: #a5b4fc; margin-bottom: 4px; display: flex; align-items: center; gap: 6px;">
+        <div style="font-weight: 800; color: #a5b4fc; margin-bottom: 4px;">
           <span>🎯 승급 시 영구 부여되는 길드 특권</span>
         </div>
         <div id="promotionPerksContent" style="color: #e2e8f0;"></div>
@@ -1189,7 +1203,69 @@
   </div>
 </div>
 
-<!-- MODAL: NEW CHARACTER -->
+<!-- MODAL: CLASS ADVANCEMENT CROSSROADS (18세 성인 전직의 분기점!) -->
+<div class="modal-overlay" id="modalAdvancement">
+  <div class="modal-box" style="max-width: 600px;">
+    <div class="sheet-handle"></div>
+    <div class="modal-header">
+      <h3 style="color: var(--primary);">✨ 운명의 분기점: 18세 정식 전문 클래스 전직</h3>
+    </div>
+    <div class="modal-body">
+      <p style="font-size: 0.88rem; line-height: 1.5; color: #cbd5e1;">
+        18세 성인이 된 당신은 이제 수습생 딱지를 떼고 정식 전문 모험가로 거듭납니다!<br>
+        선택한 전문 직업에 따라 <b>연간 성장 가중치, 전용 1티어 장비, 고유 패시브, 주력 전투력</b>이 완전히 달라집니다.
+      </p>
+
+      <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 4px;">
+        <div class="advance-card" onclick="advanceClass('warrior')">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <b style="color: #f87171; font-size: 1.05rem;">⚔️ 전사 (Warrior)</b>
+            <span style="font-size: 0.78rem; background: #7f1d1d; color: #fecaca; padding: 2px 8px; border-radius: 6px;">근력 & 체력 특화</span>
+          </div>
+          <div style="font-size: 0.8rem; color: var(--text-muted);">
+            주력: <b>물리 공격력 (근력 기반)</b> | 패시브: <b>강철의 의지</b> (받는 피해 20% 감소, 보스 치명타 +20%)<br>
+            매년 근력·방어·체력 집중 성장 | <b>[전직 보너스] 1티어 대검 & 판금갑옷 즉시 지급</b>
+          </div>
+        </div>
+
+        <div class="advance-card" onclick="advanceClass('mage')">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <b style="color: #60a5fa; font-size: 1.05rem;">🔮 마법사 (Mage)</b>
+            <span style="font-size: 0.78rem; background: #1e3a8a; color: #bfdbfe; padding: 2px 8px; border-radius: 6px;">마력 폭발 특화</span>
+          </div>
+          <div style="font-size: 0.8rem; color: var(--text-muted);">
+            주력: <b>마법 주문력 (마력 기반)</b> | 패시브: <b>마나 폭주</b> (INT 수련 1.5배, 전투 시 30% 광역 마법)<br>
+            매년 마력 폭발적 성장 | <b>[전직 보너스] 1티어 오크우드 스태프 & 실크 로브 즉시 지급</b>
+          </div>
+        </div>
+
+        <div class="advance-card" onclick="advanceClass('rogue')">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <b style="color: #34d399; font-size: 1.05rem;">🗡️ 도적 (Rogue)</b>
+            <span style="font-size: 0.78rem; background: #064e3b; color: #a7f3d0; padding: 2px 8px; border-radius: 6px;">민첩 & 재화 특화</span>
+          </div>
+          <div style="font-size: 0.8rem; color: var(--text-muted);">
+            주력: <b>치명 공격력 (민첩 기반)</b> | 패시브: <b>그림자 걸음 & 약탈</b> (회피 30%, 골드 +35%, 패배 시 도주)<br>
+            매년 민첩 집중 성장 | <b>[전직 보너스] 1티어 그림자 비수 & 밤의 은신 가죽옷 즉시 지급</b>
+          </div>
+        </div>
+
+        <div class="advance-card" onclick="advanceClass('paladin')">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <b style="color: #fbbf24; font-size: 1.05rem;">🛡️ 성기사 (Paladin)</b>
+            <span style="font-size: 0.78rem; background: #78350f; color: #fde68a; padding: 2px 8px; border-radius: 6px;">신성 & 불멸 특화</span>
+          </div>
+          <div style="font-size: 0.8rem; color: var(--text-muted);">
+            주력: <b>신성 공격력 (신성/근력 기반)</b> | 패시브: <b>신의 은총</b> (턴 종료 시 HP +15 자가 회복, 1회 부활)<br>
+            매년 방어·체력 집중 성장 | <b>[전직 보너스] 1티어 정의의 전투망치 & 기사단 축복 성갑 즉시 지급</b>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: NEW CHARACTER (NOVICE ADVENTURER START!) -->
 <div class="modal-overlay" id="modalNewChar">
   <div class="modal-box">
     <div class="sheet-handle"></div>
@@ -1198,49 +1274,25 @@
       <button class="btn-close-icon" onclick="closeModal('modalNewChar')">✕</button>
     </div>
     <div class="modal-body">
-      <p style="font-size: 0.85rem; color: var(--text-muted);">직업별 주력 전투 지표와 전용 장비가 다릅니다.</p>
+      <p style="font-size: 0.85rem; color: var(--text-muted);">
+        모든 모험가는 15세의 무명 <b>「수습 모험가」</b>로 길드에 입단합니다.<br>
+        18세 성인이 되는 해에 전문 클래스(전사·마법사·도적·성기사)로 전직하게 됩니다.
+      </p>
       
       <div style="display: flex; gap: 8px;">
         <input type="text" id="inCharName" placeholder="모험가 이름" style="flex: 1; padding: 12px; background: #070a10; border: 1px solid var(--border); border-radius: 8px; color: #fff; font-size: 1rem;">
         <button class="btn-sm" onclick="randomizeName()">주사위 🎲</button>
       </div>
 
-      <div style="display: flex; flex-direction: column; gap: 8px; max-height: 280px; overflow-y: auto;">
-        <label style="background: #070a10; border: 1px solid var(--border); padding: 12px; border-radius: 8px; cursor: pointer; display: flex; gap: 10px;">
-          <input type="radio" name="charClassRadio" value="warrior" checked style="margin-top: 3px;">
-          <div>
-            <div style="font-weight: 800; color: #f87171;">⚔️ 전사 (Warrior)</div>
-            <div style="font-size: 0.8rem; color: var(--text-muted);">주력: <b>물리 공격력 (근력 기반)</b>. 받는 피해 20% 감소, 대검·판금갑옷.</div>
-          </div>
-        </label>
-
-        <label style="background: #070a10; border: 1px solid var(--border); padding: 12px; border-radius: 8px; cursor: pointer; display: flex; gap: 10px;">
-          <input type="radio" name="charClassRadio" value="mage" style="margin-top: 3px;">
-          <div>
-            <div style="font-weight: 800; color: #60a5fa;">🔮 마법사 (Mage)</div>
-            <div style="font-size: 0.8rem; color: var(--text-muted);">주력: <b>마법 주문력 (마력 기반)</b>. INT 수련 1.5배, 지팡이·마도로브.</div>
-          </div>
-        </label>
-
-        <label style="background: #070a10; border: 1px solid var(--border); padding: 12px; border-radius: 8px; cursor: pointer; display: flex; gap: 10px;">
-          <input type="radio" name="charClassRadio" value="rogue" style="margin-top: 3px;">
-          <div>
-            <div style="font-weight: 800; color: #34d399;">🗡️ 도적 (Rogue)</div>
-            <div style="font-size: 0.8rem; color: var(--text-muted);">주력: <b>치명 공격력 (민첩 기반)</b>. 회피 30%, 골드 +35%, 단검·은신복.</div>
-          </div>
-        </label>
-
-        <label style="background: #070a10; border: 1px solid var(--border); padding: 12px; border-radius: 8px; cursor: pointer; display: flex; gap: 10px;">
-          <input type="radio" name="charClassRadio" value="paladin" style="margin-top: 3px;">
-          <div>
-            <div style="font-weight: 800; color: #fbbf24;">🛡️ 성기사 (Paladin)</div>
-            <div style="font-size: 0.8rem; color: var(--text-muted);">주력: <b>신성 공격력 (신성/근력 기반)</b>. 턴 종료 시 HP +15 자가 회복, 메이스·성갑.</div>
-          </div>
-        </label>
+      <div style="background: #090e17; border: 1px solid #1e293b; padding: 12px; border-radius: 10px; font-size: 0.82rem; line-height: 1.5; color: #cbd5e1;">
+        🌱 <b>초기 상태</b>: 15세 봄 / F급 견습생<br>
+        • 시작 스탯: STR 12, INT 10, DEX 11, DEF 10 / HP 100<br>
+        • 시작 장비: 낡은 단검 & 수습생 조끼<br>
+        • <b>킥루 스타일 성장</b>: 매년 한 해의 활약에 따라 스탯이 무작위 자연 성장합니다!
       </div>
     </div>
     <div class="modal-footer" style="flex-direction: column;">
-      <button class="btn-sm" style="padding: 14px; font-size: 1rem; width: 100%;" onclick="startNewCareerFromModal()">모험 시작 (15세 봄)</button>
+      <button class="btn-sm" style="padding: 14px; font-size: 1rem; width: 100%;" onclick="startNewCareerFromModal()">수습 모험가로 모험 시작 (15세 봄)</button>
       <button class="btn-close" onclick="closeModal('modalNewChar')">취소</button>
     </div>
   </div>
@@ -1317,6 +1369,15 @@ function playSound(type) {
       gain.gain.setValueAtTime(0.2, now);
       gain.gain.linearRampToValueAtTime(0.01, now + 0.45);
       osc.start(now); osc.stop(now + 0.45);
+    } else if (type === 'growth') {
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(440, now);
+      osc.frequency.setValueAtTime(554.37, now + 0.1);
+      osc.frequency.setValueAtTime(659.25, now + 0.2);
+      osc.frequency.setValueAtTime(880, now + 0.3);
+      gain.gain.setValueAtTime(0.25, now);
+      gain.gain.linearRampToValueAtTime(0.01, now + 0.45);
+      osc.start(now); osc.stop(now + 0.45);
     } else if (type === 'crit') {
       osc.type = 'sine';
       osc.frequency.setValueAtTime(783.99, now);
@@ -1353,16 +1414,9 @@ function toggleSound() {
 const SEASONS = ['🌸 봄', '☀️ 여름', '🍁 가을', '❄️ 겨울'];
 const RANKS = ['F', 'E', 'D', 'C', 'B', 'A', 'S', 'LEGEND'];
 
-// Rank Salaries & Perks (PROMOTION BENEFIT SYSTEM!)
+// Rank Salaries & Perks
 const RANK_SALARIES = {
-  'F': 0,
-  'E': 250,
-  'D': 600,
-  'C': 1400,
-  'B': 3000,
-  'A': 6500,
-  'S': 15000,
-  'LEGEND': 35000
+  'F': 0, 'E': 250, 'D': 600, 'C': 1400, 'B': 3000, 'A': 6500, 'S': 15000, 'LEGEND': 35000
 };
 
 const RANK_PERKS = {
@@ -1375,7 +1429,17 @@ const RANK_PERKS = {
   'LEGEND': { maxHp: 400, allStats: 40, gold: 30000, dungeonText: '대륙 전 구역 절대 권한 인가' }
 };
 
+// Class Config including Novice Adventurer
 const CLASS_CONFIG = {
+  novice: {
+    name: '수습 모험가 (Novice)',
+    primaryName: '⚔️ 기초 전투력',
+    primaryDesc: '기초 신체 능력치 기반',
+    passive: '무한한 잠재력',
+    passiveDesc: '성장 가능성이 무궁무진한 수습생. 18세 성인이 되는 해에 전문 클래스로 전직합니다. | [신의 기적] 체력 0 도달 시 20% 생환',
+    baseHp: 100, baseStr: 12, baseInt: 10, baseDex: 11, baseDef: 10,
+    wpnName: '낡은 단검', armName: '수습생 조끼'
+  },
   warrior: {
     name: '전사 (Warrior)',
     primaryName: '⚔️ 물리 공격력',
@@ -1383,7 +1447,7 @@ const CLASS_CONFIG = {
     passive: '강철의 의지',
     passiveDesc: '받는 피해 20% 감소, 던전 보스 치명타 +20% | [신의 기적] 체력 0 도달 시 20% 생환',
     baseHp: 120, baseStr: 18, baseInt: 6, baseDex: 10, baseDef: 14,
-    wpnName: '훈련용 대검', armName: '가죽 덧댄 갑옷'
+    wpnName: '강철 츠바이헨더', armName: '강철 판금 갑옷'
   },
   mage: {
     name: '마법사 (Mage)',
@@ -1392,7 +1456,7 @@ const CLASS_CONFIG = {
     passive: '마나 폭주',
     passiveDesc: 'INT 수련 1.5배, 전투 시 30% 광역 마법 발동 | [신의 기적] 체력 0 도달 시 20% 생환',
     baseHp: 85, baseStr: 6, baseInt: 20, baseDex: 10, baseDef: 8,
-    wpnName: '견습 마법봉', armName: '수습 사제복'
+    wpnName: '오크우드 스태프', armName: '실크 마도 로브'
   },
   rogue: {
     name: '도적 (Rogue)',
@@ -1401,7 +1465,7 @@ const CLASS_CONFIG = {
     passive: '그림자 걸음 & 약탈',
     passiveDesc: '전투 회피 30%, 골드/전리품 +35%, 패배 시 도주 | [신의 기적] 체력 0 도달 시 20% 생환',
     baseHp: 95, baseStr: 10, baseInt: 8, baseDex: 20, baseDef: 9,
-    wpnName: '훈련용 단검', armName: '가죽 은신 조끼'
+    wpnName: '그림자 비수', armName: '밤의 은신 가죽 갑옷'
   },
   paladin: {
     name: '성기사 (Paladin)',
@@ -1410,11 +1474,10 @@ const CLASS_CONFIG = {
     passive: '신의 은총',
     passiveDesc: '턴 종료 시 HP +15 자가 회복, 언데드 피해 100%, 1회 부활 | [신의 기적] 체력 0 도달 시 20% 생환',
     baseHp: 115, baseStr: 13, baseInt: 12, baseDex: 8, baseDef: 18,
-    wpnName: '은빛 메이스', armName: '축복받은 사슬 갑옷'
+    wpnName: '정의의 전투망치', armName: '기사단 축복 성갑'
   }
 };
 
-// 12 Dungeons with Minimum Guild Rank Clearance Requirements!
 const DUNGEONS_12 = [
   { id: 1, name: '슬라임 웅덩이', minRank: 'F', reqCp: 35, boss: '킹 슬라임', hpCost: 15, gold: [120, 220], fame: 5, drop: '슬라임 젤리 코어' },
   { id: 2, name: '고블린 야영지', minRank: 'F', reqCp: 70, boss: '고블린 주술사', hpCost: 20, gold: [220, 380], fame: 8, drop: '주술사의 뼈 피리' },
@@ -1430,8 +1493,12 @@ const DUNGEONS_12 = [
   { id: 12, name: '혼돈의 마왕성 심연', minRank: 'S', reqCp: 2300, boss: '혼돈의 마왕 벨리알 (최종보스)', hpCost: 95, gold: [16000, 30000], fame: 350, drop: '종언의 묵시록' }
 ];
 
-// Sequential Tier Weapons (Tier 1..6)
+// Sequential Tier Weapons
 const CLASS_WEAPONS = {
+  novice: [
+    { id: 'nw1', tier: 1, name: '수습생 강철검', stat: 12, cost: 200, desc: '1티어: 기본 공격력 +12' },
+    { id: 'nw2', tier: 2, name: '숙련된 모험가의 검', stat: 25, cost: 600, desc: '2티어: 기본 공격력 +25' }
+  ],
   warrior: [
     { id: 'w1', tier: 1, name: '강철 츠바이헨더', stat: 15, cost: 250, desc: '1티어: 물리 공격력 +15' },
     { id: 'w2', tier: 2, name: '미스릴 클레이모어', stat: 35, cost: 750, desc: '2티어: 물리 공격력 +35' },
@@ -1466,8 +1533,12 @@ const CLASS_WEAPONS = {
   ]
 };
 
-// Sequential Tier Armors (Tier 1..6)
+// Sequential Tier Armors
 const CLASS_ARMORS = {
+  novice: [
+    { id: 'na1', tier: 1, name: '단단한 가죽 조끼', stat: 10, hpBonus: 15, cost: 200, desc: '1티어: 방어 +10, HP +15' },
+    { id: 'na2', tier: 2, name: '경비대 체인메일', stat: 22, hpBonus: 35, cost: 600, desc: '2티어: 방어 +22, HP +35' }
+  ],
   warrior: [
     { id: 'a1', tier: 1, name: '강철 판금 갑옷', stat: 16, hpBonus: 25, cost: 250, desc: '1티어: 방어 +16, HP +25' },
     { id: 'a2', tier: 2, name: '티탄 사슬 중갑', stat: 36, hpBonus: 60, cost: 750, desc: '2티어: 방어 +36, HP +60' },
@@ -1527,7 +1598,6 @@ const FORGE_RATES = [
   75, 70, 65, 60, 55
 ];
 
-// High-Stakes Gold Costs
 const FORGE_COSTS = [
   150, 220, 320, 450, 650,
   950, 1400, 2000, 2900, 4200,
@@ -1538,22 +1608,23 @@ const FORGE_COSTS = [
 /* ==================== STATE ==================== */
 let state = {
   name: '카엘',
-  charClass: 'warrior',
+  charClass: 'novice', // Starts as Novice Adventurer!
+  isAdvanced: false,
   age: 15,
   seasonIdx: 0,
   turnCount: 1,
   rank: 'F',
-  hp: 120,
-  maxHp: 120,
-  baseMaxHp: 120,
-  str: 18,
-  int: 6,
-  dex: 10,
-  def: 14,
-  unlockedWpnTier: 0, // starts at starter weapon
+  hp: 100,
+  maxHp: 100,
+  baseMaxHp: 100,
+  str: 12,
+  int: 10,
+  dex: 11,
+  def: 10,
+  unlockedWpnTier: 0,
   unlockedArmTier: 0,
-  weapon: { name: '훈련용 대검', plus: 0, power: 8, tier: 0 },
-  armor: { name: '가죽 덧댄 갑옷', plus: 0, power: 6, hpBonus: 0, tier: 0 },
+  weapon: { name: '낡은 단검', plus: 0, power: 6, tier: 0 },
+  armor: { name: '수습생 조끼', plus: 0, power: 5, hpBonus: 0, tier: 0 },
   artifact: { name: '용기의 부적', power: 3 },
   gold: 300,
   fame: 10,
@@ -1587,8 +1658,10 @@ function getPrimaryCombatPower() {
     return Math.round(state.dex * 1.5 + wpnBonus);
   } else if (state.charClass === 'paladin') {
     return Math.round(state.str * 0.9 + state.int * 0.8 + wpnBonus);
+  } else {
+    // Novice
+    return Math.round((state.str + state.int + state.dex) * 0.5 + wpnBonus);
   }
-  return Math.round(state.str + wpnBonus);
 }
 
 function calculateCP() {
@@ -1671,6 +1744,9 @@ function updateUI() {
   const shopGold = document.getElementById('shopGoldText');
   if (shopGold) shopGold.textContent = state.gold.toLocaleString() + ' G';
 
+  const shopClass = document.getElementById('shopClassNotice');
+  if (shopClass) shopClass.textContent = `[${c.name}]`;
+
   const nextRankIdx = RANKS.indexOf(state.rank) + 1;
   if (nextRankIdx < RANKS.length) {
     document.getElementById('txtExamBtn').textContent = `${RANKS[nextRankIdx]}급 결투 심사`;
@@ -1698,6 +1774,67 @@ function clearLogs() {
   state.logs = [];
 }
 
+/* ==================== KICKRU-STYLE YEARLY RANDOM GROWTH ==================== */
+function applyYearlyRandomGrowth() {
+  let gStr = 0, gInt = 0, gDex = 0, gDef = 0, gHp = 0;
+
+  if (state.age <= 18 && !state.isAdvanced) {
+    // Novice youth growth (balanced across all traits)
+    gStr = Math.floor(Math.random() * 3) + 1;
+    gInt = Math.floor(Math.random() * 3) + 1;
+    gDex = Math.floor(Math.random() * 3) + 1;
+    gDef = Math.floor(Math.random() * 3) + 1;
+    gHp = Math.floor(Math.random() * 11) + 10;
+  } else if (state.age <= 38) {
+    // Prime Career Growth based on Specialized Class!
+    if (state.charClass === 'warrior') {
+      gStr = Math.floor(Math.random() * 4) + 4; // +4~7
+      gDef = Math.floor(Math.random() * 3) + 3; // +3~5
+      gHp = Math.floor(Math.random() * 21) + 25; // +25~45
+      gDex = Math.floor(Math.random() * 2) + 1;
+    } else if (state.charClass === 'mage') {
+      gInt = Math.floor(Math.random() * 5) + 5; // +5~9
+      gHp = Math.floor(Math.random() * 11) + 15; // +15~25
+      gDef = Math.floor(Math.random() * 2) + 1;
+      gDex = Math.floor(Math.random() * 2) + 1;
+    } else if (state.charClass === 'rogue') {
+      gDex = Math.floor(Math.random() * 4) + 5; // +5~8
+      gStr = Math.floor(Math.random() * 3) + 2; // +2~4
+      gHp = Math.floor(Math.random() * 16) + 15; // +15~30
+      gDef = Math.floor(Math.random() * 2) + 1;
+    } else if (state.charClass === 'paladin') {
+      gDef = Math.floor(Math.random() * 4) + 4; // +4~7
+      gStr = Math.floor(Math.random() * 3) + 3; // +3~5
+      gHp = Math.floor(Math.random() * 21) + 30; // +30~50
+      gInt = Math.floor(Math.random() * 2) + 2;
+    }
+  } else if (state.age <= 44) {
+    // Veteran Plateau Growth
+    gStr = Math.floor(Math.random() * 2) + 1;
+    gDef = Math.floor(Math.random() * 2) + 1;
+    gInt = Math.floor(Math.random() * 2) + 1;
+    gDex = Math.floor(Math.random() * 2) + 1;
+    gHp = Math.floor(Math.random() * 10) + 5;
+  } else {
+    // Aging Decline
+    const dropStat = Math.random() < 0.5 ? 'str' : 'dex';
+    state[dropStat] = Math.max(10, state[dropStat] - 1);
+    addLog(`노화로 인한 신체 피지컬 감퇴가 발생했습니다 (${dropStat.toUpperCase()} -1)`, 'danger');
+    return;
+  }
+
+  state.str += gStr;
+  state.int += gInt;
+  state.dex += gDex;
+  state.def += gDef;
+  state.baseMaxHp += gHp;
+  state.maxHp += gHp;
+
+  playSound('growth');
+  const summaryText = `[🎂 ${state.age}세 연간 성장 결산 (Kickru Style)] 올 한 해의 실전 경험으로 신체 능력이 자연 개화했습니다! (근력 +${gStr}, 마력 +${gInt}, 민첩 +${gDex}, 방어 +${gDef}, 최대 HP +${gHp})`;
+  addLog(summaryText, 'growth');
+}
+
 /* ==================== DEATH & MIRACLE OF GOD ==================== */
 function checkHeroDeath(cause) {
   if (state.hp <= 0) {
@@ -1721,11 +1858,11 @@ ${state.name}이(가) ${cause} 도중 장렬히 전사했습니다...
   return false;
 }
 
-/* ==================== ADVANCE SEASON (WITH GUILD SALARY!) ==================== */
+/* ==================== ADVANCE SEASON ==================== */
 function advanceSeason() {
   if (state.isRetired) return;
 
-  // Pay Quarterly Guild Salary by Rank!
+  // Pay Quarterly Salary
   const salary = RANK_SALARIES[state.rank] || 0;
   if (salary > 0) {
     state.gold += salary;
@@ -1743,12 +1880,15 @@ function advanceSeason() {
     state.age++;
     addLog(`🎂 한 해가 지나 ${state.name}의 나이가 <b>${state.age}세</b>가 되었습니다.`, 'event');
 
-    if (state.age > 42) {
-      const dropStat = Math.random() < 0.5 ? 'str' : 'dex';
-      if (state[dropStat] > 12) {
-        state[dropStat] -= 1;
-        addLog(`노화로 인한 신체 쇠퇴가 시작되었습니다. (${dropStat.toUpperCase()} -1)`, 'danger');
-      }
+    // 1-Year Kickru Random Growth Simulation!
+    applyYearlyRandomGrowth();
+
+    // Check 18-Year-old Class Advancement Crossroads!
+    if (state.age === 18 && !state.isAdvanced) {
+      setTimeout(() => {
+        openModal('modalAdvancement');
+        playSound('victory');
+      }, 500);
     }
   }
   state.turnCount++;
@@ -1771,7 +1911,42 @@ function refreshSeasonalQuests() {
   state.seasonalQuests = shuffled.slice(0, 6);
 }
 
-/* ==================== 1-CLICK STREAMLINED DUNGEONS (RANK-LOCKED!) ==================== */
+/* ==================== CLASS ADVANCEMENT (18세 전직 선택) ==================== */
+function advanceClass(cls) {
+  closeModal('modalAdvancement');
+  state.charClass = cls;
+  state.isAdvanced = true;
+  const c = CLASS_CONFIG[cls];
+
+  // Grant 1st tier weapon & armor gift of the chosen class
+  const wpnList = CLASS_WEAPONS[cls];
+  const armList = CLASS_ARMORS[cls];
+  state.weapon = { name: wpnList[0].name, plus: 0, power: wpnList[0].stat, tier: 1 };
+  state.armor = { name: armList[0].name, plus: 0, power: armList[0].stat, hpBonus: armList[0].hpBonus || 0, tier: 1 };
+  state.unlockedWpnTier = 1;
+  state.unlockedArmTier = 1;
+
+  // Class stat awakening boost
+  if (cls === 'warrior') { state.str += 8; state.def += 5; state.baseMaxHp += 20; }
+  else if (cls === 'mage') { state.int += 12; state.baseMaxHp += 10; }
+  else if (cls === 'rogue') { state.dex += 10; state.str += 3; state.baseMaxHp += 15; }
+  else if (cls === 'paladin') { state.def += 8; state.str += 4; state.baseMaxHp += 25; }
+
+  playSound('victory');
+  alert(`🎉 축하합니다! 18세 성인을 맞아 [${c.name}]으로 공식 전직을 완료했습니다!
+
+[전직 특권]
+• 전용 1티어 장비 [${state.weapon.name}], [${state.armor.name}] 즉시 지급
+• 직업 각성 능력치 및 고유 패시브 [${c.passive}] 활성화
+• 매년 직업별 특화 스탯이 폭풍 성장합니다!`);
+  addLog(`✨ 18세 성인의 분기점에서 <b>[${c.name}]</b>으로 정식 전직을 완료했습니다! 직업 각성 완료!`, 'rank');
+
+  updateUI();
+  renderWeaponShop();
+  renderArmorShop();
+}
+
+/* ==================== 1-CLICK STREAMLINED DUNGEONS ==================== */
 function openDungeonSelectModal() {
   playSound('click');
   const list = document.getElementById('dungeonSelectList');
@@ -1987,7 +2162,7 @@ function trainStat(stat) {
   let gain = Math.floor(Math.random() * 4) + 3;
   if (state.charClass === 'mage' && stat === 'int') {
     gain = Math.round(gain * 1.5);
-    addLog('마법사의 마나 폭주 특성으로 마력 성장 폭이 대폭 증폭되었습니다!', 'reward');
+    addLog('마법사의 마나 폭주 특성으로 마력 수련 효율이 증폭되었습니다!', 'reward');
   }
 
   state[stat] += gain;
@@ -2018,7 +2193,7 @@ function takeRestAction() {
   advanceSeason();
 }
 
-/* ==================== FORGE & SEQUENTIAL TIER SHOP (v3.6) ==================== */
+/* ==================== FORGE & SEQUENTIAL TIER SHOP ==================== */
 function openForgeModal() {
   playSound('click');
   switchForgeSubTab('upgrade');
@@ -2147,7 +2322,6 @@ function attemptForge() {
   }, 500);
 }
 
-// Sequential Weapon Shop: Must buy Tier 1 to unlock Tier 2, etc.!
 function renderWeaponShop() {
   const list = document.getElementById('weaponShopList');
   list.innerHTML = '';
@@ -2180,7 +2354,6 @@ function renderWeaponShop() {
   });
 }
 
-// Sequential Armor Shop: Must buy Tier 1 to unlock Tier 2, etc.!
 function renderArmorShop() {
   const list = document.getElementById('armorShopList');
   list.innerHTML = '';
@@ -2274,7 +2447,7 @@ function buyArmor(itemId) {
 다음 상위 티어 장비 구매가 해금되었습니다.`);
 }
 
-/* ==================== REAL-TIME PROMOTION DUEL (WITH PROMOTION PERKS!) ==================== */
+/* ==================== PROMOTION DUEL & PERKS ==================== */
 let duelBoss = { name: '', maxHp: 100, hp: 100, atk: 20, rank: 'E' };
 let duelUsedPotion = false;
 let duelSkillUsesLeft = 3;
@@ -2343,9 +2516,9 @@ function openPromotionModal() {
   document.getElementById('duelLog').innerHTML = `<div>[${duelBoss.name}] "모험가 길드의 엄격한 기준을 통과해 보게나!"</div>`;
   document.getElementById('duelActionBtns').style.display = 'grid';
 
-  const skillNames = { warrior: '광폭 베기', mage: '메테오 스트라이크', rogue: '급소 암살검', paladin: '홀리 스마이트 & 힐' };
+  const skillNames = { novice: '연속 찌르기', warrior: '광폭 베기', mage: '메테오 스트라이크', rogue: '급소 암살검', paladin: '홀리 스마이트 & 힐' };
   const btnSkill = document.getElementById('btnDuelSkill');
-  btnSkill.textContent = `✨ ${skillNames[state.charClass]} (3/3)`;
+  btnSkill.textContent = `✨ ${skillNames[state.charClass] || '고유기'} (3/3)`;
   btnSkill.disabled = false;
 
   const btnAttack = document.getElementById('btnDuelAttack');
@@ -2372,12 +2545,12 @@ function duelTurn(action) {
     }
     duelSkillUsesLeft--;
 
-    const skillNames = { warrior: '광폭 베기', mage: '메테오 스트라이크', rogue: '급소 암살검', paladin: '홀리 스마이트 & 힐' };
+    const skillNames = { novice: '연속 찌르기', warrior: '광폭 베기', mage: '메테오 스트라이크', rogue: '급소 암살검', paladin: '홀리 스마이트 & 힐' };
     const btnSkill = document.getElementById('btnDuelSkill');
-    btnSkill.textContent = `✨ ${skillNames[state.charClass]} (${duelSkillUsesLeft}/3)`;
+    btnSkill.textContent = `✨ ${skillNames[state.charClass] || '고유기'} (${duelSkillUsesLeft}/3)`;
     if (duelSkillUsesLeft === 0) {
       btnSkill.disabled = true;
-      btnSkill.textContent = `✨ ${skillNames[state.charClass]} (소진됨)`;
+      btnSkill.textContent = `✨ ${skillNames[state.charClass] || '고유기'} (소진됨)`;
     }
 
     let skillDmg = Math.round(playerDmg * 1.85);
@@ -2403,7 +2576,7 @@ function duelTurn(action) {
     log.innerHTML += `<div style="color:#f43f5e;">🧪 영약을 복용하여 HP를 50 회복했습니다!</div>`;
   }
 
-  // Boss Defeated -> PROMOTION REWARD CELEBRATION!
+  // Boss Defeated
   if (duelBoss.hp <= 0) {
     playSound('victory');
     log.innerHTML += `<div style="color:#f59e0b; font-weight:800;">🎉 심사관 격파! 승급 심사 통과!</div>`;
@@ -2413,11 +2586,10 @@ function duelTurn(action) {
     state.rank = newRank;
     state.fame += 50;
 
-    // Apply Rank Perks!
     const perk = RANK_PERKS[newRank];
     state.baseMaxHp += perk.maxHp;
     state.maxHp += perk.maxHp;
-    state.hp = state.maxHp; // Full recovery on promotion!
+    state.hp = state.maxHp;
     state.str += perk.allStats;
     state.int += perk.allStats;
     state.dex += perk.allStats;
@@ -2506,7 +2678,7 @@ function retireHero(reason) {
 
   hallOfFame.push(record);
   hallOfFame.sort((a, b) => b.score - a.score);
-  localStorage.setItem('fantasy_rpg_hall_v3', JSON.stringify(hallOfFame));
+  localStorage.setItem('fantasy_rpg_hall_v4', JSON.stringify(hallOfFame));
 
   showRetirementSummary(record);
 }
@@ -2590,27 +2762,27 @@ function randomizeName() {
 
 function startNewCareerFromModal() {
   const name = document.getElementById('inCharName').value.trim() || '카엘';
-  const charClass = document.querySelector('input[name="charClassRadio"]:checked').value;
-  const c = CLASS_CONFIG[charClass];
 
+  // Always starts as Novice Adventurer at age 15!
   state = {
     name: name,
-    charClass: charClass,
+    charClass: 'novice',
+    isAdvanced: false,
     age: 15,
     seasonIdx: 0,
     turnCount: 1,
     rank: 'F',
-    hp: c.baseHp,
-    maxHp: c.baseHp,
-    baseMaxHp: c.baseHp,
-    str: c.baseStr,
-    int: c.baseInt,
-    dex: c.baseDex,
-    def: c.baseDef,
+    hp: 100,
+    maxHp: 100,
+    baseMaxHp: 100,
+    str: 12,
+    int: 10,
+    dex: 11,
+    def: 10,
     unlockedWpnTier: 0,
     unlockedArmTier: 0,
-    weapon: { name: c.wpnName, plus: 0, power: 8, tier: 0 },
-    armor: { name: c.armName, plus: 0, power: 6, hpBonus: 0, tier: 0 },
+    weapon: { name: '낡은 단검', plus: 0, power: 6, tier: 0 },
+    armor: { name: '수습생 조끼', plus: 0, power: 5, hpBonus: 0, tier: 0 },
     artifact: { name: '용기의 부적', power: 3 },
     gold: 300,
     fame: 10,
@@ -2624,9 +2796,11 @@ function startNewCareerFromModal() {
   closeModal('modalNewChar');
   clearLogs();
   refreshSeasonalQuests();
-  addLog(`⚔️ 15세의 봄, [${c.name}] <b>${state.name}</b>이(가) 길드에 입단했습니다!`, 'event');
+  addLog(`⚔️ 15세의 봄, 무명의 <b>수습 모험가 [${state.name}]</b>이(가) 길드에 첫 발을 내딛었습니다! (18세에 전직 분기 도래)`, 'event');
   switchTab('play');
   updateUI();
+  renderWeaponShop();
+  renderArmorShop();
   playSound('victory');
 }
 
@@ -2673,21 +2847,21 @@ function renderHallOfFame() {
 
 function saveGameToLocalStorage() {
   try {
-    localStorage.setItem('fantasy_rpg_state_v3', JSON.stringify(state));
+    localStorage.setItem('fantasy_rpg_state_v4', JSON.stringify(state));
   } catch (e) {}
 }
 
 function loadGameFromLocalStorage() {
   try {
-    const savedState = localStorage.getItem('fantasy_rpg_state_v3');
+    const savedState = localStorage.getItem('fantasy_rpg_state_v4');
     if (savedState) state = JSON.parse(savedState);
-    const savedHall = localStorage.getItem('fantasy_rpg_hall_v3');
+    const savedHall = localStorage.getItem('fantasy_rpg_hall_v4');
     if (savedHall) hallOfFame = JSON.parse(savedHall);
   } catch (e) {}
 }
 
 function exportSaveData() {
-  const data = { version: '3.6', state: state, hallOfFame: hallOfFame };
+  const data = { version: '4.0', state: state, hallOfFame: hallOfFame };
   const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
@@ -2706,11 +2880,13 @@ function importSaveData(event) {
       const data = JSON.parse(e.target.result);
       if (data.state) state = data.state;
       if (data.hallOfFame) hallOfFame = data.hallOfFame;
-      localStorage.setItem('fantasy_rpg_state_v3', JSON.stringify(state));
-      localStorage.setItem('fantasy_rpg_hall_v3', JSON.stringify(hallOfFame));
+      localStorage.setItem('fantasy_rpg_state_v4', JSON.stringify(state));
+      localStorage.setItem('fantasy_rpg_hall_v4', JSON.stringify(hallOfFame));
       alert('데이터 복원 완료!');
       switchTab('play');
       updateUI();
+      renderWeaponShop();
+      renderArmorShop();
     } catch (err) { alert('올바르지 않은 세이브 파일입니다.'); }
   };
   reader.readAsText(file);
@@ -2718,8 +2894,8 @@ function importSaveData(event) {
 
 function resetAllData() {
   if (confirm('정말로 모든 진행 상황과 랭킹을 초기화하시겠습니까?')) {
-    localStorage.removeItem('fantasy_rpg_state_v3');
-    localStorage.removeItem('fantasy_rpg_hall_v3');
+    localStorage.removeItem('fantasy_rpg_state_v4');
+    localStorage.removeItem('fantasy_rpg_hall_v4');
     location.reload();
   }
 }
@@ -2729,6 +2905,8 @@ window.addEventListener('DOMContentLoaded', () => {
   loadGameFromLocalStorage();
   refreshSeasonalQuests();
   updateUI();
+  renderWeaponShop();
+  renderArmorShop();
   if (state.logs && state.logs.length > 0) {
     const logBox = document.getElementById('logBox');
     state.logs.forEach(l => {
@@ -2738,7 +2916,7 @@ window.addEventListener('DOMContentLoaded', () => {
       logBox.appendChild(div);
     });
   } else {
-    addLog(`15세의 봄, <b>${state.name}</b>이(가) 길드에 정식 등록되었습니다.`, 'event');
+    addLog(`15세의 봄, <b>${state.name}</b>이(가) 수습 모험가로 길드에 등록되었습니다. (18세 성인이 되는 해에 전문직 전직)`, 'event');
   }
 });
 </script>
