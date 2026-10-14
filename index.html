@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>견습에서 전설까지 v6.0 : 나만의 모험가 키우기 (DynRoutine Edition)</title>
+<title>견습에서 전설까지 v7.0 : 나만의 모험가 키우기 (Masters & Epilogue Edition)</title>
 <style>
   :root {
     --bg-main: #0a0d14;
@@ -576,6 +576,38 @@
     background: #ef4444;
     transition: width 0.2s;
   }
+  /* Ending Modal Styles */
+  .ending-banner {
+    border-radius: 12px;
+    padding: 16px;
+    text-align: center;
+    margin-bottom: 12px;
+    border: 2px solid var(--gold);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+  }
+  .ending-story-box {
+    background: #0f172a;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px;
+    font-size: 0.88rem;
+    line-height: 1.7;
+    color: #e2e8f0;
+    margin-bottom: 12px;
+    white-space: pre-line;
+  }
+  .ending-stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    font-size: 0.82rem;
+    background: #090d16;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #1e293b;
+    margin-bottom: 10px;
+  }
+
   .duel-log {
     height: 110px;
     overflow-y: auto;
@@ -699,7 +731,7 @@
         <button class="act-btn shop-act" onclick="openShopModal()">
           <span class="icon">🛒</span>
           <span>길드 장비 상점</span>
-          <span class="desc">무기 & 방어구 직업별 10단계 확장 (종결 2종 선택)</span>
+          <span class="desc">장비 10티어 및 무한 스탯 영약 & 명성 투자</span>
         </button>
 
         <button class="act-btn boss-act" id="btnExamQuick" onclick="showPromotionStatusModal()">
@@ -868,8 +900,9 @@
     <div class="modal-header">
       <h3>🛒 길드 장비 상점 (무기 & 방어구)</h3>
       <div style="display: flex; gap: 5px; align-items: center;">
-        <button class="btn-sm" id="btnShopTabWpn" style="padding: 6px 12px; min-height: 32px; font-size: 0.82rem; background: var(--primary); color: #000;" onclick="switchShopTab('weapon')">🗡️ 무기 상점</button>
-        <button class="btn-sm" id="btnShopTabArm" style="padding: 6px 12px; min-height: 32px; font-size: 0.82rem; background: #334155; color: #fff;" onclick="switchShopTab('armor')">🛡️ 방어구 상점</button>
+        <button class="btn-sm" id="btnShopTabWpn" style="padding: 6px 10px; min-height: 32px; font-size: 0.8rem; background: var(--primary); color: #000;" onclick="switchShopTab('weapon')">🗡️ 무기</button>
+        <button class="btn-sm" id="btnShopTabArm" style="padding: 6px 10px; min-height: 32px; font-size: 0.8rem; background: #334155; color: #fff;" onclick="switchShopTab('armor')">🛡️ 방어구</button>
+        <button class="btn-sm" id="btnShopTabElx" style="padding: 6px 10px; min-height: 32px; font-size: 0.8rem; background: #334155; color: #fff;" onclick="switchShopTab('elixir')">🏺 비약·투자</button>
         <button class="btn-close-icon" onclick="closeModal('modalShop')">✕</button>
       </div>
     </div>
@@ -887,10 +920,49 @@
       <div id="shopTabArmor" style="display: none; flex-direction: column; gap: 8px;">
         <div class="item-list" id="armorShopList"></div>
       </div>
+
+      <!-- ELIXIRS & INVESTMENTS (GOLD SINK) -->
+      <div id="shopTabElixir" style="display: none; flex-direction: column; gap: 8px;">
+        <div class="item-list" id="elixirShopList"></div>
+      </div>
     </div>
     <div class="modal-footer" style="display:flex; justify-content:space-between; align-items:center;">
       <div style="font-size:0.88rem; font-weight:800; color:var(--gold);">보유 골드: <span id="shopGoldText">0 G</span></div>
       <button class="btn-close" onclick="closeModal('modalShop')">닫기</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: HIDDEN MASTERS ARENA (LEGEND ENDGAME) -->
+<div class="modal-overlay" id="modalMasters">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3>⚔️ 재야의 은둔 고수 결투장 (LEGEND 특권)</h3>
+      <button class="btn-close-icon" onclick="closeModal('modalMasters')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div style="font-size: 0.82rem; color: #cbd5e1; background: #0f172a; padding: 10px 12px; border-radius: 8px; border: 1px solid #4338ca; line-height:1.5;">
+        🌟 대륙 최고 지위인 <b>LEGEND 등급</b>에 오른 모험가에게 세속을 떠나 은둔하던 5인의 전설적 무투가들이 도전을 청해옵니다.<br>
+        결투 승리 시 <b>막대한 영구 스탯 보상</b>과 전설의 무명을 획득하며, <b>신화 진엔딩 조건</b>이 해금됩니다!
+      </div>
+      <div class="item-list" id="mastersList"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-close" onclick="closeModal('modalMasters')">닫기</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: RICH NARRATIVE ENDING -->
+<div class="modal-overlay" id="modalEnding" style="z-index: 2100;">
+  <div class="modal-box" style="max-width: 660px;">
+    <div class="modal-header">
+      <h3 id="endingHeaderTitle">👑 모험가 일대기 최종 엔딩</h3>
+    </div>
+    <div class="modal-body" id="endingBody"></div>
+    <div class="modal-footer" style="display:flex; gap:8px;">
+      <button class="btn-sm" style="flex:1; background: #2563eb; color:#fff; font-size:0.95rem; padding:12px;" onclick="startNewCareerFromEnding()">✨ 새로운 전설 시작하기</button>
+      <button class="btn-close" onclick="viewHallFromEnding()">🏆 명예의 전당 보기</button>
     </div>
   </div>
 </div>
@@ -1378,6 +1450,86 @@ const CLASS_ARMORS = {
   ]
 };
 
+/* ==================== ELIXIRS & INVESTMENTS DATA (GOLD SINK) ==================== */
+const SHOP_ELIXIRS = [
+  { id: 'elx_str', name: '거인의 완력 비약', cost: 15000, stat: 'str', val: 3, icon: '🔴', desc: '고대 거인의 힘이 농축되어 근력(STR)이 +3 영구 상승합니다.' },
+  { id: 'elx_int', name: '대현자의 마나 영약', cost: 15000, stat: 'int', val: 3, icon: '🔵', desc: '순수 아케인 정수가 깃들어 마력(INT)이 +3 영구 상승합니다.' },
+  { id: 'elx_dex', name: '바람의 신속 비약', cost: 15000, stat: 'dex', val: 3, icon: '🟢', desc: '바람 정령의 가호로 민첩(DEX)이 +3 영구 상승합니다.' },
+  { id: 'elx_def', name: '강철 수호의 성수', cost: 15000, stat: 'def', val: 3, icon: '🟡', desc: '성스러운 성수가 신체를 감싸 방어(DEF)가 +3 영구 상승합니다.' },
+  { id: 'elx_all', name: '궁극의 용사 영약', cost: 35000, stat: 'all', val: 2, icon: '🌟', desc: '전설의 만능 비약으로 모든 스탯(근력/마력/민첩/방어)이 +2 영구 상승합니다.' },
+  { id: 'inv_monument', name: '길드 기념비 건립 기부', cost: 20000, stat: 'fame', val: 80, icon: '🏛️', desc: '길드 중앙 광장에 기념비를 세워 길드 명성이 +80 상승합니다.' },
+  { id: 'inv_library', name: '왕립 도서관 장서 기증', cost: 50000, stat: 'fame', val: 200, icon: '👑', desc: '왕립 아카데미에 대형 도서관을 기증하여 길드 명성이 +200 상승합니다.' }
+];
+
+/* ==================== HIDDEN MASTERS ROSTER ==================== */
+const HIDDEN_MASTERS = [
+  {
+    id: 'hm1',
+    name: '은둔한 검선 풍호',
+    title: '바람의 검사',
+    desc: '대륙 최북단 설산에 은둔하며 자연의 검을 깨우친 전설의 검선입니다.',
+    reqCp: 1800,
+    hp: 3200,
+    atk: 240,
+    statReward: { str: 8, dex: 8, int: 0, def: 0 },
+    rewardText: '근력 +8, 민첩 +8',
+    gold: 15000,
+    fame: 50
+  },
+  {
+    id: 'hm2',
+    name: '심연의 흑마도사 모건',
+    title: '어둠의 심령 대마도사',
+    desc: '금지된 차원 마법을 홀로 연구하여 심연의 마나를 다루는 원로 마법사입니다.',
+    reqCp: 2400,
+    hp: 4400,
+    atk: 300,
+    statReward: { str: 0, dex: 0, int: 16, def: 8 },
+    rewardText: '마력 +16, 방어 +8',
+    gold: 25000,
+    fame: 80
+  },
+  {
+    id: 'hm3',
+    name: '불패의 철권왕 바르칸',
+    title: '황야의 무투패왕',
+    desc: '무기 없이 맨주먹만으로 용을 때려잡았다는 전설의 맨몸 격투가입니다.',
+    reqCp: 3000,
+    hp: 5800,
+    atk: 360,
+    statReward: { str: 16, dex: 0, int: 0, def: 16 },
+    rewardText: '근력 +16, 방어 +16',
+    gold: 40000,
+    fame: 120
+  },
+  {
+    id: 'hm4',
+    name: '그림자 암살단주 야영',
+    title: '환영의 지배자',
+    desc: '대륙 역사상 가장 은밀하고 치명적인 암살단을 홀로 이끌었던 전설의 닌자입니다.',
+    reqCp: 3700,
+    hp: 7500,
+    atk: 430,
+    statReward: { str: 5, dex: 22, int: 5, def: 5 },
+    rewardText: '민첩 +22, 전 스탯 +5',
+    gold: 60000,
+    fame: 180
+  },
+  {
+    id: 'hm5',
+    name: '대륙의 무신 천마',
+    title: '궁극의 은둔 무신 (최강자)',
+    desc: '무의 극의에 도달하여 인간의 한계를 초월한 대륙 최강의 은둔 절대자입니다.',
+    reqCp: 4500,
+    hp: 9900,
+    atk: 520,
+    statReward: { str: 25, dex: 25, int: 25, def: 25 },
+    rewardText: '모든 스탯 +25 영구 폭증!!',
+    gold: 100000,
+    fame: 300
+  }
+];
+
 /* ==================== STATE MANAGEMENT ==================== */
 let state = {
   name: '카엘',
@@ -1397,6 +1549,9 @@ let state = {
   gold: 300,
   fame: 10,
   bossesDefeated: 0,
+  mastersDefeated: 0,
+  defeatedMasterIds: [],
+  elixirsConsumed: 0,
   isRetired: false,
   logs: []
 };
@@ -1493,8 +1648,9 @@ function updateUI() {
   const nextRankIdx = RANKS.indexOf(state.rank) + 1;
   const btnExam = document.getElementById('btnExamQuick');
   if (nextRankIdx >= RANKS.length) {
-    document.getElementById('txtExamBtn').textContent = '👑 최고 등급 (LEGEND)';
-    document.getElementById('txtExamDesc').textContent = '대륙 최고의 영웅';
+    const mastersCount = state.mastersDefeated || 0;
+    document.getElementById('txtExamBtn').textContent = `⚔️ 재야의 고수 결투장 (${mastersCount}/5)`;
+    document.getElementById('txtExamDesc').textContent = '은둔한 전설의 고수들과 무예 대결! (스탯 보상)';
     if (btnExam) btnExam.style.borderColor = 'var(--gold)';
   } else {
     const nextRank = RANKS[nextRankIdx];
@@ -1977,9 +2133,45 @@ function duelTurn(action) {
   // Check Boss Defeat
   if (duelBoss.hp <= 0) {
     playSound('victory');
-    log.innerHTML += `<div style="color:#f59e0b; font-weight:800;">🎉 심사관 격파! 승급 심사 통과!</div>`;
     document.getElementById('duelActionBtns').style.display = 'none';
 
+    if (duelBoss.isMaster) {
+      const m = duelBoss.masterObj;
+      log.innerHTML += `<div style="color:#f59e0b; font-weight:800;">🎉 [${m.name}] 격파! 영구 스탯 보상 획득!</div>`;
+
+      state.str += m.statReward.str;
+      state.int += m.statReward.int;
+      state.dex += m.statReward.dex;
+      state.def += m.statReward.def;
+      state.gold += m.gold;
+      state.fame += m.fame;
+
+      if (!state.defeatedMasterIds) state.defeatedMasterIds = [];
+      if (!state.defeatedMasterIds.includes(m.id)) {
+        state.defeatedMasterIds.push(m.id);
+        state.mastersDefeated = (state.mastersDefeated || 0) + 1;
+      }
+
+      addLog(`🌟 <b>[재야의 고수 격파!]</b> 전설의 은둔자 [${m.name}]을(를) 꺾고 <b>${m.rewardText}</b> 영구 스탯 보상을 획득했습니다!`, 'crit');
+      updateUI();
+
+      setTimeout(() => {
+        alert(`🎉 [재야의 고수 제패!!]
+${m.name}과의 결투에서 승리했습니다!
+
+[획득 보상]
+• 영구 능력치: ${m.rewardText}
+• 보상금: +${m.gold.toLocaleString()} G
+• 명성: +${m.fame}
+
+대륙의 전설적인 은둔자를 꺾어 신화적 위업에 다가섰습니다!`);
+        closeModal('modalPromotion');
+        openMastersModal();
+      }, 900);
+      return;
+    }
+
+    log.innerHTML += `<div style="color:#f59e0b; font-weight:800;">🎉 심사관 격파! 승급 심사 통과!</div>`;
     setTimeout(() => {
       closeModal('modalPromotion');
       concludeDuelOutcome(true);
@@ -2006,9 +2198,20 @@ function duelTurn(action) {
   // Check Player Knockout
   if (duelPlayerHp <= 0) {
     playSound('fail');
-    log.innerHTML += `<div style="color:#ef4444; font-weight:800;">⚠️ LP 소진! 심사관에게 제압당했습니다...</div>`;
     document.getElementById('duelActionBtns').style.display = 'none';
 
+    if (duelBoss.isMaster) {
+      log.innerHTML += `<div style="color:#ef4444; font-weight:800;">⚠️ LP 소진! [${duelBoss.name}]에게 제압당했습니다...</div>`;
+      setTimeout(() => {
+        alert(`[결투 패배]
+${duelBoss.name}: "아직 나의 경지에 도달하지 못했군. 상점에서 비약을 섭취하고 더 수련을 쌓은 뒤 찾아오게나!"`);
+        closeModal('modalPromotion');
+        openMastersModal();
+      }, 900);
+      return;
+    }
+
+    log.innerHTML += `<div style="color:#ef4444; font-weight:800;">⚠️ LP 소진! 심사관에게 제압당했습니다...</div>`;
     setTimeout(() => {
       closeModal('modalPromotion');
       concludeDuelOutcome(false);
@@ -2217,17 +2420,13 @@ function advanceClass(cls) {
 function showPromotionStatusModal() {
   playSound('click');
   const nextRankIdx = RANKS.indexOf(state.rank) + 1;
-  const body = document.getElementById('promoStatusBody');
 
   if (nextRankIdx >= RANKS.length) {
-    body.innerHTML = `
-      <div style="text-align: center; padding: 20px;">
-        <div style="font-size: 1.5rem; margin-bottom: 8px;">👑</div>
-        <div style="font-size: 1.1rem; font-weight: 900; color: var(--gold); margin-bottom: 6px;">대륙 최고의 지위 (LEGEND) 달성</div>
-        <div style="font-size: 0.85rem; color: var(--text-muted);">이미 모험가 길드 최고위 지위에 올랐습니다. 대륙 전설의 영웅입니다!</div>
-      </div>
-    `;
-  } else {
+    // Redirect LEGEND heroes to the Hidden Masters Arena!
+    openMastersModal();
+    return;
+  }
+  const body = document.getElementById('promoStatusBody'); else {
     const nextRank = RANKS[nextRankIdx];
     const reqCpTable = { 'E': 60, 'D': 130, 'C': 260, 'B': 450, 'A': 750, 'S': 1200, 'LEGEND': 1800 };
     const reqFameTable = { 'E': 20, 'D': 60, 'C': 150, 'B': 300, 'A': 600, 'S': 1200, 'LEGEND': 2500 };
@@ -2269,11 +2468,93 @@ function showPromotionStatusModal() {
 }
 
 /* ==================== EXPANDED SHOP SYSTEM (NO ENHANCEMENT) ==================== */
+
+/* ==================== HIDDEN MASTERS ARENA ==================== */
+function openMastersModal() {
+  playSound('click');
+  renderMastersList();
+  openModal('modalMasters');
+}
+
+function renderMastersList() {
+  const list = document.getElementById('mastersList');
+  list.innerHTML = '';
+  const myCp = calculateCP();
+  const defeatedIds = state.defeatedMasterIds || [];
+
+  HIDDEN_MASTERS.forEach((m, idx) => {
+    const isDefeated = defeatedIds.includes(m.id);
+    const isLocked = myCp < m.reqCp;
+    const row = document.createElement('div');
+    row.className = `item-row ${isLocked ? 'locked' : ''}`;
+
+    row.innerHTML = `
+      <div class="item-row-info">
+        <div class="item-row-title">
+          <span style="color:#fbbf24;">#${idx + 1}</span>
+          <span style="font-weight:900; color:#fff;">${m.name}</span>
+          <span style="font-size:0.75rem; color:#a855f7; background:#1e1b4b; padding:1px 6px; border-radius:4px;">${m.title}</span>
+          ${isDefeated ? '<span style="color:#10b981; font-size:0.75rem; font-weight:800;">[✅ 격파 완료]</span>' : ''}
+        </div>
+        <div class="item-row-desc">
+          ${m.desc}<br>
+          요구 전투력: <b>${m.reqCp.toLocaleString()} CP</b> | 🎁 격파 보상: <b style="color:#34d399;">${m.rewardText}</b>, 💰 ${m.gold.toLocaleString()}G, 🎖️ +${m.fame}
+        </div>
+      </div>
+      <button class="btn-sm" style="background:${isDefeated ? '#059669' : (isLocked ? '#334155' : '#8b5cf6')}; color:#fff;" ${isLocked ? 'disabled' : ''} onclick="challengeHiddenMaster('${m.id}')">
+        ${isDefeated ? '재대결' : (isLocked ? `🔒 CP ${m.reqCp} 필요` : '⚔️ 결투 도전')}
+      </button>
+    `;
+    list.appendChild(row);
+  });
+}
+
+function challengeHiddenMaster(id) {
+  closeModal('modalMasters');
+  const m = HIDDEN_MASTERS.find(x => x.id === id);
+  if (!m) return;
+
+  duelBoss = {
+    name: `${m.name} [${m.title}]`,
+    maxHp: m.hp,
+    hp: m.hp,
+    atk: m.atk,
+    isMaster: true,
+    masterObj: m
+  };
+
+  duelPlayerMaxHp = 100 + state.def * 2 + Math.round(calculateCP() * 0.1);
+  duelPlayerHp = duelPlayerMaxHp;
+  duelUsedPotion = false;
+  duelSkillUsesLeft = 3;
+
+  document.getElementById('duelMyName').textContent = `${state.name} (LEGEND)`;
+  document.getElementById('duelMyMaxHp').textContent = duelPlayerMaxHp;
+  document.getElementById('duelMyHp').textContent = duelPlayerHp;
+  document.getElementById('duelMyHpBar').style.width = '100%';
+
+  document.getElementById('duelBossName').textContent = duelBoss.name;
+  document.getElementById('duelBossMaxHp').textContent = duelBoss.maxHp;
+  document.getElementById('duelBossHp').textContent = duelBoss.hp;
+  document.getElementById('duelBossHpBar').style.width = '100%';
+
+  document.getElementById('duelLog').innerHTML = `<div>[${m.name}] "오호라, 대륙의 LEGEND 모험가가 나를 찾아왔군. 전력을 다해 보게나!"</div>`;
+  document.getElementById('duelActionBtns').style.display = 'grid';
+
+  const skillNames = { novice: '연속 찌르기', warrior: '광폭 베기', mage: '메테오 스트라이크', rogue: '급소 암살검', paladin: '홀리 스마이트' };
+  const btnSkill = document.getElementById('btnDuelSkill');
+  btnSkill.textContent = `✨ ${skillNames[state.charClass] || '고유기'} (3/3)`;
+  btnSkill.disabled = false;
+
+  openModal('modalPromotion');
+}
+
 function openShopModal() {
   playSound('click');
   switchShopTab('weapon');
   renderWeaponShop();
   renderArmorShop();
+  renderElixirShop();
   document.getElementById('shopGoldText').textContent = state.gold.toLocaleString() + ' G';
   openModal('modalShop');
 }
@@ -2282,10 +2563,72 @@ function switchShopTab(tab) {
   playSound('click');
   document.getElementById('shopTabWeapon').style.display = tab === 'weapon' ? 'flex' : 'none';
   document.getElementById('shopTabArmor').style.display = tab === 'armor' ? 'flex' : 'none';
+  document.getElementById('shopTabElixir').style.display = tab === 'elixir' ? 'flex' : 'none';
 
   document.getElementById('btnShopTabWpn').className = tab === 'weapon' ? 'btn-sm active' : 'btn-sm';
   document.getElementById('btnShopTabArm').className = tab === 'armor' ? 'btn-sm active' : 'btn-sm';
+  document.getElementById('btnShopTabElx').className = tab === 'elixir' ? 'btn-sm active' : 'btn-sm';
   document.getElementById('shopGoldText').textContent = state.gold.toLocaleString() + ' G';
+}
+
+function renderElixirShop() {
+  const list = document.getElementById('elixirShopList');
+  if (!list) return;
+  list.innerHTML = '';
+
+  SHOP_ELIXIRS.forEach(it => {
+    const row = document.createElement('div');
+    row.className = 'item-row';
+    const canAfford = state.gold >= it.cost;
+
+    row.innerHTML = `
+      <div class="item-row-info">
+        <div class="item-row-title">
+          <span>${it.icon}</span>
+          <span style="font-weight:900; color:#fff;">${it.name}</span>
+          <span style="color:var(--gold); font-size:0.82rem;">(${it.cost.toLocaleString()}G)</span>
+        </div>
+        <div class="item-row-desc">
+          ${it.desc}
+        </div>
+      </div>
+      <button class="btn-sm" style="background:${canAfford ? '#f59e0b' : '#334155'}; color:${canAfford ? '#000' : '#94a3b8'}; font-weight:800;" ${!canAfford ? 'disabled' : ''} onclick="buyElixir('${it.id}')">
+        ${canAfford ? '구매 섭취' : '골드 부족'}
+      </button>
+    `;
+    list.appendChild(row);
+  });
+}
+
+function buyElixir(id) {
+  const item = SHOP_ELIXIRS.find(x => x.id === id);
+  if (!item) return;
+
+  if (state.gold < item.cost) {
+    alert(`골드가 부족합니다! (필요: ${item.cost.toLocaleString()}G / 보유: ${state.gold.toLocaleString()}G)`);
+    return;
+  }
+
+  state.gold -= item.cost;
+  if (item.stat === 'all') {
+    state.str += item.val;
+    state.int += item.val;
+    state.dex += item.val;
+    state.def += item.val;
+  } else if (item.stat === 'fame') {
+    state.fame += item.val;
+  } else {
+    state[item.stat] += item.val;
+  }
+
+  state.elixirsConsumed = (state.elixirsConsumed || 0) + 1;
+  playSound('growth');
+
+  const statNames = { str: '근력', int: '마력', dex: '민첩', def: '방어', fame: '명성', all: '모든 스탯' };
+  addLog(`🏺 [비약 섭취] <b>${item.name}</b>을(를) 구매하여 <b>${statNames[item.stat]} +${item.val}</b> 영구 성장! (-${item.cost.toLocaleString()}G)`, 'growth');
+
+  renderElixirShop();
+  updateUI();
 }
 
 function renderWeaponShop() {
@@ -2407,21 +2750,107 @@ function confirmRetirement() {
   }
 }
 
+function determineEnding() {
+  const cp = calculateCP();
+  const mastersCount = state.mastersDefeated || 0;
+  const isMasterOfMasters = state.defeatedMasterIds && state.defeatedMasterIds.includes('hm5');
+
+  // 1. Mythic True Ending (신화의 구원자 진엔딩)
+  if (state.rank === 'LEGEND' && (isMasterOfMasters || mastersCount >= 3 || cp >= 2600)) {
+    return {
+      id: 'ending_mythic',
+      grade: '👑 SSS급 신화 진엔딩',
+      gradeColor: '#fbbf24',
+      title: '대륙의 신화적 수호자 & 불멸의 전설',
+      banner: '🌟 [TRUE ENDING: 대륙의 영원한 신화]',
+      story: `혼돈의 위협을 완전히 종식시키고 재야의 은둔 절대자들마저 모두 무릎 꿇린 당신의 이름은 이제 인간의 영역을 넘어섰습니다.
+대륙의 모든 음유시인들은 당신의 일대기를 영웅 서사시로 노래하며, 수도 한복판에는 순금 거신상이 세워졌습니다.
+수백 년의 세월이 흐른 뒤에도 대륙에 어둠이 드리울 때마다 사람들은 하늘을 바라보며 당신의 이름을 부를 것입니다.`,
+      bgStyle: 'linear-gradient(135deg, #451a03, #78350f, #1e1b4b)'
+    };
+  }
+
+  // 2. Hermit God of War (재야의 무신 엔딩)
+  if (mastersCount >= 1 || (state.rank === 'LEGEND' && cp >= 1900)) {
+    return {
+      id: 'ending_war_god',
+      grade: '🥋 S급 무투 엔딩',
+      gradeColor: '#a855f7',
+      title: '천하무적의 고독한 은둔 무신',
+      banner: '⚔️ [극의의 무신 엔딩]',
+      story: `세속의 권력과 길드의 직책을 모두 사양한 당신은 구름 위 험준한 영봉으로 홀연히 자취를 감추었습니다.
+그러나 당신이 남긴 무예와 신기의 자취는 대륙 무투가들의 영원한 성지가 되었습니다.
+지금도 전 대륙에서 목숨을 걸고 산을 오르는 수많은 검사와 마도사들이 당신의 처소 문앞에서 가르침을 청하고 있습니다.`,
+      bgStyle: 'linear-gradient(135deg, #3b0764, #1e1b4b, #0f172a)'
+    };
+  }
+
+  // 3. Imperial Grand Marshall / Archmage (제국 총사령관 / 대마도탑주)
+  if (state.rank === 'LEGEND' || state.rank === 'S') {
+    const jobTitle = state.charClass === 'mage' ? '왕립 상아탑 최고 대마도탑주' : '제국 왕립 기사단 총사령관';
+    return {
+      id: 'ending_imperial',
+      grade: '⚔️ S급 영웅 엔딩',
+      gradeColor: '#38bdf8',
+      title: `${jobTitle} & 제국의 최고 기둥`,
+      banner: '🏰 [제국 수호자 엔딩]',
+      story: `황실의 간곡한 삼고초려 끝에 제국 최고위 사령관 자리에 올랐습니다.
+당신의 엄격하고도 자애로운 통솔 아래 제국군은 역사상 가장 강력한 전성기를 맞이했으며,
+당신이 집무실 창밖을 내다보는 것만으로도 변경의 침략자들은 감히 국경을 넘볼 엄두를 내지 못합니다.`,
+      bgStyle: 'linear-gradient(135deg, #172554, #1e3a8a, #0f172a)'
+    };
+  }
+
+  // 4. Golden Merchant Emperor (황금 제국 거상)
+  if (state.gold >= 70000) {
+    return {
+      id: 'ending_merchant',
+      grade: '💰 A+급 부호 엔딩',
+      gradeColor: '#fbbf24',
+      title: '대륙 전역을 움직이는 황금 제국의 상단주',
+      banner: '💎 [황금 거상 엔딩]',
+      story: `모험을 통해 벌어들인 막대한 자금과 인맥을 바탕으로 7대 상단을 하나로 통합한 대상회를 창립했습니다.
+이제 대륙의 식량, 무기, 마도구 유통의 80%가 당신의 상단을 거쳐 갑니다.
+황제조차 국책 사업이나 대규모 원정을 시작하기 전, 당신의 저택을 찾아와 재정적 협조를 정중히 구걸해야 합니다.`,
+      bgStyle: 'linear-gradient(135deg, #422006, #713f12, #0f172a)'
+    };
+  }
+
+  // 5. Guild Grandmaster (길드 총재)
+  if (state.fame >= 500 || state.rank === 'A') {
+    return {
+      id: 'ending_guildmaster',
+      grade: '📜 A급 명예 엔딩',
+      gradeColor: '#34d399',
+      title: '왕립 모험가 길드 연합 총재',
+      banner: '🎖️ [길드 총마스터 엔딩]',
+      story: `대륙 전역 수만 명의 모험가들이 만장일치로 당신을 길드 총마스터로 추대했습니다.
+견습 시절의 고된 고생을 잊지 않은 당신은 공정한 보상 체계와 복지를 확립하여 모험가의 위상을 비약적으로 끌어올렸습니다.
+길드 본부 홀에는 당신의 초상화가 가장 높은 자리에 걸려 후배 모험가들에게 영원한 나침반이 되어 줍니다.`,
+      bgStyle: 'linear-gradient(135deg, #064e3b, #047857, #0f172a)'
+    };
+  }
+
+  // 6. Peaceful Veteran (평온한 귀향)
+  return {
+    id: 'ending_peaceful',
+    grade: '🌾 B급 낭만 엔딩',
+    gradeColor: '#94a3b8',
+    title: '평온한 고향 마을의 전설적 촌장',
+    banner: '🏡 [평온한 귀향 엔딩]',
+    story: `화려했던 칼날의 영광을 내려놓고, 모험을 시작했던 고향의 작은 마을로 조용히 귀향했습니다.
+마을 촌장이 된 당신은 따뜻한 화로 곁에서 동네 아이들에게 옛 모험담을 들려주며 평온한 여생을 보냅니다.
+가끔 마을을 위협하는 마수 무리가 나타나지만, 당신이 가볍게 나뭇가지를 휘두르는 것만으로도 혼비백산하여 도망칩니다.`,
+    bgStyle: 'linear-gradient(135deg, #1e293b, #334155, #0f172a)'
+  };
+}
+
 function retireHero(reason) {
   state.isRetired = true;
   const cp = calculateCP();
-  const score = Math.round(cp * 2.0 + state.fame * 1.5 + state.gold * 0.15 + state.bossesDefeated * 80);
-
-  let futureJob = '평온한 시골 마을의 작은 여관 주인';
-  if (state.rank === 'LEGEND' || state.bossesDefeated >= 10) {
-    futureJob = '왕립 모험가 길드 총사령관 및 대륙의 수호신';
-  } else if (state.rank === 'S' || state.rank === 'A') {
-    futureJob = '왕도 왕립 아카데미의 최고 명예 석좌교수';
-  } else if (state.gold >= 100000) {
-    futureJob = '대륙 전역의 대상단을 총괄하는 대재벌 상단주';
-  } else if (state.int >= 70) {
-    futureJob = '상아탑의 전설적인 원로 대현자';
-  }
+  const mastersCount = state.mastersDefeated || 0;
+  const score = Math.round(cp * 2.0 + state.fame * 1.5 + state.gold * 0.15 + state.bossesDefeated * 80 + mastersCount * 200);
+  const ending = determineEnding();
 
   const record = {
     id: Date.now(),
@@ -2433,10 +2862,12 @@ function retireHero(reason) {
     finalGold: state.gold,
     finalFame: state.fame,
     bossesDefeated: state.bossesDefeated,
+    mastersDefeated: mastersCount,
     weaponText: `${state.weapon.name} [${state.weapon.tier}티어]`,
     armorText: `${state.armor.name} [${state.armor.tier}티어]`,
     score: score,
-    futureJob: futureJob,
+    endingTitle: ending.title,
+    endingGrade: ending.grade,
     reason: reason,
     date: new Date().toLocaleDateString('ko-KR')
   };
@@ -2444,28 +2875,51 @@ function retireHero(reason) {
   hallOfFame.unshift(record);
   saveGameToLocalStorage();
 
-  const body = document.getElementById('summaryBody');
+  playSound('crit');
+
+  const body = document.getElementById('endingBody');
   body.innerHTML = `
-    <div style="background: #0f172a; border: 1px solid var(--border); border-radius: 10px; padding: 16px; margin-bottom: 12px; line-height: 1.7; font-size: 0.88rem;">
-      <div style="font-size: 1.25rem; font-weight: 900; color: var(--gold); margin-bottom: 6px;">
-        ✨ [${state.name}]의 일대기 결산 (${reason})
-      </div>
-      <div>• <b>은퇴 연령</b>: ${state.age}세 (15세 시작, 총 ${state.age - 15}년간 활동)</div>
-      <div>• <b>최종 지위</b>: <b>${state.rank}급 공인 모험가</b> (${CLASS_CONFIG[state.charClass].name})</div>
-      <div>• <b>종합 전투력</b>: <b>${cp.toLocaleString()} CP</b></div>
-      <div>• <b>축적 자산</b>: 💰 ${state.gold.toLocaleString()} G | 🎖️ 명성 ${state.fame.toLocaleString()}</div>
-      <div>• <b>보스 격파</b>: 👑 총 ${state.bossesDefeated}체 토벌</div>
-      <div>• <b>최종 무기</b>: ${state.weapon.name} [${state.weapon.tier}티어]</div>
-      <div>• <b>최종 방어구</b>: ${state.armor.name} [${state.armor.tier}티어]</div>
-      <div style="border-top: 1px solid #334155; margin-top: 8px; padding-top: 8px;">
-        🔮 <b>은퇴 후 진로</b>: <span style="color:#38bdf8; font-weight:800;">${futureJob}</span><br>
-        ⭐ <b>커리어 평점 (Score)</b>: <span style="color:var(--gold); font-size:1.15rem; font-weight:900;">${score.toLocaleString()} 점</span>
-        <div style="font-size: 0.76rem; color: #94a3b8;">(계산식: CP×2.0 + 명성×1.5 + 골드×0.15 + 보스토벌×80)</div>
-      </div>
+    <div class="ending-banner" style="background: ${ending.bgStyle};">
+      <div style="font-size:0.85rem; font-weight:800; color:var(--gold); margin-bottom:4px;">${ending.banner}</div>
+      <div style="font-size:1.35rem; font-weight:900; color:#fff; margin-bottom:4px;">${ending.title}</div>
+      <div><span style="background:${ending.gradeColor}; color:#000; padding:2px 8px; border-radius:4px; font-weight:900; font-size:0.8rem;">${ending.grade}</span></div>
+    </div>
+
+    <div class="ending-story-box">
+      ${ending.story}
+    </div>
+
+    <div class="ending-stats-grid">
+      <div>👤 <b>모험가</b>: ${state.name} (${CLASS_CONFIG[state.charClass].name})</div>
+      <div>🎂 <b>활동 기간</b>: 15세 ~ ${state.age}세 (${state.age - 15}년간)</div>
+      <div>🎖️ <b>최종 지위</b>: <b style="color:#a855f7;">${state.rank}급 공인</b></div>
+      <div>⚡ <b>종합 전투력</b>: <b style="color:#10b981;">${cp.toLocaleString()} CP</b></div>
+      <div>💰 <b>축적 자산</b>: <b style="color:var(--gold);">${state.gold.toLocaleString()} G</b></div>
+      <div>📜 <b>길드 명성</b>: <b style="color:#38bdf8;">${state.fame.toLocaleString()}</b></div>
+      <div>👑 <b>토벌 보스</b>: ${state.bossesDefeated}체</div>
+      <div>🥋 <b>재야의 고수 격파</b>: <b style="color:#f59e0b;">${mastersCount}명 제패</b></div>
+      <div>🗡️ <b>최종 무기</b>: ${state.weapon.name}</div>
+      <div>🛡️ <b>최종 방어구</b>: ${state.armor.name}</div>
+    </div>
+
+    <div style="background:#0f172a; padding:10px 14px; border-radius:8px; border:1px solid #334155; text-align:center;">
+      <div style="font-size:0.8rem; color:#94a3b8;">⭐ 최종 커리어 평점 (Final Career Score)</div>
+      <div style="font-size:1.4rem; font-weight:900; color:var(--gold);">${score.toLocaleString()} 점</div>
+      <div style="font-size:0.72rem; color:#64748b;">(계산: CP×2.0 + 명성×1.5 + 골드×0.15 + 던전보스×80 + 고수격파×200)</div>
     </div>
   `;
 
-  openModal('modalSummary');
+  openModal('modalEnding');
+}
+
+function startNewCareerFromEnding() {
+  closeModal('modalEnding');
+  openModal('modalNewChar');
+}
+
+function viewHallFromEnding() {
+  closeModal('modalEnding');
+  openHallOfFameModal();
 }
 
 function startNewCareer() {
@@ -2530,10 +2984,11 @@ function openHallOfFameModal() {
             <span>${h.name}</span>
             <span class="class-tag tag-${h.charClass === '마법사' ? 'mage' : (h.charClass === '도적' ? 'rogue' : (h.charClass === '성기사' ? 'paladin' : 'warrior'))}">${h.charClass}</span>
             <span class="rank-badge">${h.finalRank}급</span>
+            ${h.endingGrade ? `<span style="font-size:0.7rem; background:#1e293b; color:#fbbf24; padding:1px 5px; border-radius:4px; font-weight:800;">${h.endingGrade}</span>` : ''}
           </div>
           <div class="item-row-desc">
-            평점: <b style="color:var(--gold);">${h.score.toLocaleString()}점</b> | ${h.finalAge}세 (${h.reason})<br>
-            CP: <b>${h.finalCp.toLocaleString()}</b> | 💰 ${h.finalGold.toLocaleString()}G | 진로: ${h.futureJob}
+            평점: <b style="color:var(--gold);">${h.score.toLocaleString()}점</b> | ${h.finalAge}세 | <b>${h.endingTitle || h.futureJob}</b><br>
+            CP: <b>${h.finalCp.toLocaleString()}</b> | 💰 ${h.finalGold.toLocaleString()}G | 고수격파: <b>${h.mastersDefeated || 0}인</b>
           </div>
         </div>
       `;
