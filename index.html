@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>견습에서 전설까지 v7.1 : 나만의 모험가 키우기 (Definitive Edition)</title>
+<title>견습에서 전설까지 v7.2 : 나만의 모험가 키우기 (Verified Edition)</title>
 <style>
   :root {
     --bg-main: #0a0d14;
@@ -1574,20 +1574,60 @@ let duelUsedPotion = false;
 let duelSkillUsesLeft = 3;
 let lastAnnualSummary = null;
 
+function getDefaultState(heroName = '카엘') {
+  return {
+    name: heroName,
+    charClass: 'novice',
+    isAdvanced: false,
+    age: 15,
+    turnCount: 1,
+    rank: 'F',
+    str: 12,
+    int: 10,
+    dex: 11,
+    def: 10,
+    unlockedWpnTier: 1,
+    unlockedArmTier: 1,
+    weapon: { name: '수습생 나무검', power: 6, defBonus: 0, tier: 1 },
+    armor: { name: '수습생 가죽 조끼', power: 6, atkBonus: 0, tier: 1 },
+    gold: 300,
+    fame: 10,
+    bossesDefeated: 0,
+    mastersDefeated: 0,
+    defeatedMasterIds: [],
+    elixirsConsumed: 0,
+    salaryMultiplier: 1.0,
+    isRetired: false,
+    logs: []
+  };
+}
+
 function saveGameToLocalStorage() {
   try {
-    localStorage.setItem('fantasy_rpg_state_v6', JSON.stringify(state));
+    localStorage.setItem('fantasy_rpg_state_v7_2', JSON.stringify(state));
     localStorage.setItem('fantasy_rpg_hall_v6', JSON.stringify(hallOfFame));
   } catch (e) {}
 }
 
 function loadGameFromLocalStorage() {
   try {
-    const savedState = localStorage.getItem('fantasy_rpg_state_v6');
-    if (savedState) state = JSON.parse(savedState);
     const savedHall = localStorage.getItem('fantasy_rpg_hall_v6');
-    if (savedHall) hallOfFame = JSON.parse(savedHall);
-  } catch (e) {}
+    if (savedHall) {
+      const parsedHall = JSON.parse(savedHall);
+      if (Array.isArray(parsedHall)) hallOfFame = parsedHall;
+    }
+    const savedState = localStorage.getItem('fantasy_rpg_state_v7_2');
+    if (savedState) {
+      const parsed = JSON.parse(savedState);
+      if (parsed && typeof parsed === 'object' && !parsed.isRetired && parsed.age < 50 && parsed.weapon && parsed.armor) {
+        state = Object.assign(getDefaultState(parsed.name || '카엘'), parsed);
+      } else {
+        state = getDefaultState((parsed && parsed.name) ? parsed.name : '카엘');
+      }
+    }
+  } catch (e) {
+    state = getDefaultState('카엘');
+  }
 }
 
 /* ==================== COMBAT POWER & STAT FORMULAS ==================== */
@@ -1700,7 +1740,10 @@ function clearLogs() {
 
 /* ==================== 1-YEAR WITH 3-SECOND LOADING BAR & DYNAMIC 4 EVENTS ==================== */
 function startOneYearWithLoading() {
-  if (state.isRetired) return;
+  if (state.isRetired) {
+    openModal('modalNewChar');
+    return;
+  }
 
   if (state.age >= 50) {
     alert('50세 정년에 도달하여 모험가 길드 규정에 따라 공식 은퇴를 진행합니다.');
@@ -3114,24 +3157,37 @@ document.querySelectorAll('.modal-overlay').forEach(overlay => {
 });
 
 /* ==================== INITIAL BOOT ==================== */
-window.addEventListener('DOMContentLoaded', () => {
+let gameInitialized = false;
+function initGameApp() {
+  if (gameInitialized) return;
+  gameInitialized = true;
   loadGameFromLocalStorage();
-  updateUI();
   renderWeaponShop();
   renderArmorShop();
+  renderElixirShop();
+  updateUI();
 
-  if (state.logs && state.logs.length > 0) {
-    const logBox = document.getElementById('logBox');
-    state.logs.forEach(l => {
-      const div = document.createElement('div');
-      div.className = `log-entry ${l.type}`;
-      div.innerHTML = `<span class="log-season">[${l.age}세]</span> ${l.text}`;
-      logBox.appendChild(div);
-    });
-  } else {
-    addLog(`15세의 봄, <b>${state.name}</b>이(가) 수습 모험가로 길드에 등록되었습니다. (18세 성인이 되는 해에 전문직 전직)`, 'event');
+  const logBox = document.getElementById('logBox');
+  if (logBox) {
+    logBox.innerHTML = '';
+    if (state.logs && state.logs.length > 0) {
+      state.logs.forEach(l => {
+        const div = document.createElement('div');
+        div.className = `log-entry ${l.type || 'normal'}`;
+        div.innerHTML = `<span class="log-season">[${l.age || 15}세]</span> ${l.text || ''}`;
+        logBox.appendChild(div);
+      });
+    } else {
+      addLog(`15세의 봄, <b>${state.name}</b>이(가) 수습 모험가로 길드에 등록되었습니다. (18세 성인이 되는 해에 전문직 전직)`, 'event');
+    }
   }
-});
+}
+
+if (document.readyState === 'loading') {
+  window.addEventListener('DOMContentLoaded', initGameApp);
+} else {
+  initGameApp();
+}
 </script>
 </body>
 </html>
